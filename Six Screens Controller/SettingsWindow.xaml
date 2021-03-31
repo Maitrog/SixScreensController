@@ -1,0 +1,111 @@
+﻿<Window x:Class="Six_Screens_Controller.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Six_Screens_Controller"
+        mc:Ignorable="d"
+        Title="Настройки" x:Name="Settings"
+        Height="390" Width="508"
+        MinHeight="390" MinWidth="508"
+        MaxHeight="390" MaxWidth="508"
+        Style="{DynamicResource Window_Dark}">
+    <Window.DataContext>
+        <local:Config/>
+    </Window.DataContext>
+
+    <Window.Resources>
+        <local:ArrayToStringConverter x:Key="arrayToString"/>
+    </Window.Resources>
+    
+    <StackPanel TextBlock.FontSize="13" Background="#616161" TextBlock.Foreground="#FFE0E0E0">
+        
+        <TextBlock Text="Интерпретатор Python" Margin="10,3,10,3"/>
+        <StackPanel Orientation="Horizontal" Margin="10,3,10,3" Width="auto">
+            <TextBox x:Name="interpreterPython" Margin="0,0,3,0"
+                     Width="400"
+                     Style="{DynamicResource TextBox_Dark}"
+                     Text="{Binding Path=Python, Mode=TwoWay}"/>
+
+            <Button x:Name="interpreterBrowse" Click="interpreterBrowse_Click" 
+                    Margin="3,0,0,0" 
+                    Style="{DynamicResource Button_Dark}">
+
+                <Button.Content>
+                    <TextBlock Text="Обзор..." Margin="5,0,5,0"/>
+                </Button.Content>
+            </Button>
+        </StackPanel>
+        
+        <TextBlock Text="Сервер" Margin="10,3,10,3"/>
+        <StackPanel Orientation="Horizontal" Margin="10,3,10,3" Width="auto">
+            <TextBox x:Name="server" Margin="0,0,3,0"
+                     Width="400"
+                     Style="{DynamicResource TextBox_Dark}"
+                     Text="{Binding Path=Server, Mode=TwoWay}"/>
+
+            <Button x:Name="serverBrowse" Click="serverBrowse_Click" 
+                    Margin="3,0,0,0" 
+                    Style="{DynamicResource Button_Dark}">
+
+                <Button.Content>
+                    <TextBlock Text="Обзор..." Margin="5,0,5,0"/>
+                </Button.Content>
+            </Button>
+        </StackPanel>
+
+        <TextBlock Text="Аргументы сервера" Margin="10,3,10,3"/>
+        <TextBox x:Name="serverArgs" HorizontalAlignment="Left"
+                 Margin="10,3,10,3"
+                 Width="471"
+                 Style="{DynamicResource TextBox_Dark}"
+                 Text="{Binding Path=ServerArgs, Converter={StaticResource arrayToString}, Mode=TwoWay}"/>
+
+        <TextBlock Text="Протокол подключения" Margin="10,3,10,3"/>
+        <TextBox x:Name="protocol" HorizontalAlignment="Left"
+                 Margin="10,3,10,3"
+                 Width="471"
+                 Style="{DynamicResource TextBox_Dark}"
+                 Text="{Binding Path=Protocol, Mode=TwoWay}"/>
+
+        <TextBlock Text="Хост подключения" Margin="10,3,10,3"/>
+        <TextBox x:Name="host" Margin="10,3,10,3"
+                 HorizontalAlignment="Left"
+                 Width="471"
+                 Style="{DynamicResource TextBox_Dark}"
+                 Text="{Binding Path=Host, Mode=TwoWay}"/>
+
+        <TextBlock Text="Порт подключения" Margin="10,3,10,3"/>
+        <TextBox x:Name="port" Margin="10,3,10,3"
+                 HorizontalAlignment="Left"
+                 Width="471"
+                 Style="{DynamicResource TextBox_Dark}"
+                 Text="{Binding Path=Port, Mode=TwoWay}"/>
+
+        <Grid Margin="10,13,10,3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="Ok" Click="Ok_Click" Grid.Column="1" 
+                    Margin="0,0,3,0" Width="68" 
+                    Style="{DynamicResource Button_Dark}" 
+                    HorizontalAlignment="Right">
+
+                <Button.Content>
+                    <TextBlock Text="Ок" Margin="5,0,5,0"/>
+                </Button.Content>
+            </Button>
+            <Button x:Name="Cancel" Click="Cancel_Click" 
+                    Grid.Column="2" Margin="3,0,0,0" Width="68" 
+                    Style="{DynamicResource Button_Dark}">
+
+                <Button.Content>
+                    <TextBlock Text="Отмена" Margin="5,0,5,0"/>
+                </Button.Content>
+            </Button>
+        </Grid>
+
+    </StackPanel>
+</Window>
