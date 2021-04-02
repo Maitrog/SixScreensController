@@ -1,6 +1,6 @@
 {
   "Protocol": "http",
-  "Host": "192.168.1.63",
+  "Host": "",
   "Port": "8888",
   "DefaultImage": "assets/Emblem_of_the_Russian_Ground_Forces.jpg",
   "Python": "",
@@ -9,5 +9,5 @@
     "--config",
     "config.txt"
   ],
-  "FirstStart":  false
+  "FirstStart": true
 }
