@@ -53,19 +53,19 @@ namespace Six_Screens_Controller
 
     public partial class MainWindow : Window
     {
-        Config config { get; set; }
+        Config Config { get; set; }
         public string DefaultImage { get; set; }
         readonly string[] imageExp = new string[] { "jpg", "jepg", "bmp", "png", "gif", "webp" };
-        readonly string[] videoExp = new string[] { "mkv", "mp4", "avi", "3gp", "webm", "mpeg", "3g2" };
+        readonly string[] videoExp = new string[] { "mp4", "avi", "mpeg", "mkv", "3gp", "3g2", "webm" };
 
         public MainWindow()
         {
-            config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
-            if (config.DefaultImage == null)
+            Config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
+            if (Config.DefaultImage == null)
             {
-                config.DefaultImage = "assets/Emblem_of_the_Russian_Ground_Forces.jpg";
+                Config.DefaultImage = "assets/Emblem_of_the_Russian_Ground_Forces.jpg";
             }
-            DefaultImage = config.DefaultImage;
+            DefaultImage = Config.DefaultImage;
             InitializeComponent();
             Loaded += MainPage_Loaded;
         }
@@ -86,16 +86,14 @@ namespace Six_Screens_Controller
             }
         }
 
-        private void Image_Drop(object sender, DragEventArgs e)
+        private void File_Drop(object sender, DragEventArgs e)
         {
             try
             {
                 if (e.Data.GetDataPresent(DataFormats.FileDrop))
                 {
                     string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                    string[] path = files[0].Split("\\");
-                    string[] file = path[path.Length - 1].Split(".");
-                    string exp = file[file.Length - 1];
+                    string exp = files[0].Split("\\").LastOrDefault().Split('.').LastOrDefault();
 
                     if (imageExp.Contains(exp))
                     {
@@ -134,18 +132,16 @@ namespace Six_Screens_Controller
         {
             try
             {
-                string[] path = pickedFile.Text.Split("\\");
-                string[] file = path[path.Length - 1].Split(".");
-                string exp = file[file.Length - 1];
+                string exp = pickedFile.Text.Split("\\").LastOrDefault().Split('.').LastOrDefault();
 
                 if (imageExp.Contains(exp))
                 {
-                    Image img = CreateImage(pickedFile.Text);
 
                     foreach (var i in wrapPanel.Children)
                     {
                         if ((i as CheckBox).IsChecked == true)
                         {
+                            Image img = CreateImage(pickedFile.Text);
                             (i as CheckBox).Content = img;
                             (i as CheckBox).IsChecked = false;
                             put_request(Convert.ToInt32(((CheckBox)i).Uid), pickedFile.Text);
@@ -157,10 +153,10 @@ namespace Six_Screens_Controller
                 {
                     foreach (var i in wrapPanel.Children)
                     {
-                        MediaElement video = CreateVideo(pickedFile.Text);
 
                         if ((i as CheckBox).IsChecked == true)
                         {
+                            MediaElement video = CreateVideo(pickedFile.Text);
                             (i as CheckBox).Content = video;
                             (i as CheckBox).IsChecked = false;
                             put_request(Convert.ToInt32(((CheckBox)i).Uid), pickedFile.Text);
@@ -233,9 +229,7 @@ namespace Six_Screens_Controller
             {
                 for (int i = 0; i < 6; i++)
                 {
-                    string[] path = data[i].Split("\\");
-                    string[] file = path[path.Length - 1].Split(".");
-                    string exp = file[file.Length - 1];
+                    string exp = data[i].Split("\\").LastOrDefault().Split('.').LastOrDefault();
                     if (imageExp.Contains(exp))
                     {
                         Image img = CreateImage(data[i]);
@@ -290,13 +284,14 @@ namespace Six_Screens_Controller
         private void put_request(int number, string file)
         {
             string route = $"screen/{number}";
-            string url = $"{config.Protocol}://{config.Host}:{config.Port}/{route}";
+            string url = $"{Config.Protocol}://{Config.Host}:{Config.Port}/{route}";
             StringBuilder filePath = new StringBuilder(file);
             for (int i = 0; i < filePath.Length; i++)
                 if (filePath[i] == '\\')
                 {
                     filePath[i] = '/';
                 }
+            
 
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
             httpWebRequest.ContentType = "application/json";
@@ -345,10 +340,10 @@ namespace Six_Screens_Controller
             SettingsWindow settingsWindow = new SettingsWindow();
             if (settingsWindow.ShowDialog() == true)
             {
-                if (!config.Equals(settingsWindow.config))
+                if (!Config.Equals(settingsWindow.config))
                 {
 
-                    if (config.Host != settingsWindow.config.Host)
+                    if (Config.Host != settingsWindow.config.Host)
                     {
                         string serverConfig = File.ReadAllText("config.txt");
                         string serverConfigHost = serverConfig.Split("\r\n").Where(x => x.Contains("HOST")).FirstOrDefault();
@@ -356,7 +351,7 @@ namespace Six_Screens_Controller
                         serverConfig = serverConfig.Replace(serverConfigHost, newServerConfigHost);
                         File.WriteAllText("config.txt", serverConfig);
                     }
-                    if(config.Port != settingsWindow.config.Port)
+                    if(Config.Port != settingsWindow.config.Port)
                     {
                         string serverConfig = File.ReadAllText("config.txt");
                         string serverConfigPort = serverConfig.Split("\r\n").Where(x => x.Contains("PORT")).FirstOrDefault();
@@ -365,9 +360,9 @@ namespace Six_Screens_Controller
                         File.WriteAllText("config.txt", serverConfig);
                     }
 
-                    config = settingsWindow.config;
+                    Config = settingsWindow.config;
 
-                    File.WriteAllText("config.json", JsonConvert.SerializeObject(config));
+                    File.WriteAllText("config.json", JsonConvert.SerializeObject(Config));
                     
                     MessageBox.Show("Для вступления изменений в силу перезапустите приложение");
                 }

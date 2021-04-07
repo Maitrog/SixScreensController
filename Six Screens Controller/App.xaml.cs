@@ -30,7 +30,7 @@ namespace Six_Screens_Controller
 
             try
             {
-                if (config.Python != null && config.Server != null)
+                if (config.Python != "" && config.Server != "")
                 {
                     if(config.FirstStart)
                     {

@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:Six_Screens_Controller"
         mc:Ignorable="d"
         
-        Title="Screen Controler" Height="520" Width="595"
-        MinHeight="520" MinWidth="595"
+        Title="Screen Controler" Height="550" Width="595"
+        MinHeight="550" MinWidth="595"
         Background="#616161"
         Icon="assets/Logo50x50.png"
         x:Name="win1" WindowStyle="SingleBorderWindow">
@@ -41,6 +41,7 @@
                         <RowDefinition/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
 
                     <Button x:Name="pickAll" Click="pickAll_Click" Grid.Row="0" 
@@ -57,17 +58,19 @@
                         <WrapPanel x:Name="wrapPanel" Margin="10,5,10,0">
 
                             <CheckBox x:Name="ChBScreen1" x:Uid="1" AllowDrop="True" 
-                                      Drop="Image_Drop" 
+                                      Drop="File_Drop" 
                                       Margin="5">
 
                                 <CheckBox.Content>
-                                    <Image Source="{Binding ElementName=win1, Path=DefaultImage}" 
+                                    <StackPanel>
+                                        <Image Source="{Binding ElementName=win1, Path=DefaultImage}" 
                                            Style="{DynamicResource MainImage}"/>
+                                    </StackPanel>
                                 </CheckBox.Content>
                             </CheckBox>
 
                             <CheckBox x:Name="ChBScreen2" x:Uid="2" AllowDrop="True" 
-                                      Drop="Image_Drop" 
+                                      Drop="File_Drop" 
                                       Margin="5">
 
                                 <CheckBox.Content>
@@ -77,7 +80,7 @@
                             </CheckBox>
 
                             <CheckBox x:Name="ChBScreen3" x:Uid="3" AllowDrop="True" 
-                                      Drop="Image_Drop" 
+                                      Drop="File_Drop" 
                                       Margin="5">
 
                                 <CheckBox.Content>
@@ -87,7 +90,7 @@
                             </CheckBox>
 
                             <CheckBox x:Name="ChBScreen4" x:Uid="4" AllowDrop="True" 
-                                      Drop="Image_Drop" 
+                                      Drop="File_Drop" 
                                       Margin="5">
 
                                 <CheckBox.Content>
@@ -97,7 +100,7 @@
                             </CheckBox>
 
                             <CheckBox x:Name="ChBScreen5" x:Uid="5" AllowDrop="True" 
-                                      Drop="Image_Drop" 
+                                      Drop="File_Drop" 
                                       Margin="5">
 
                                 <CheckBox.Content>
@@ -107,7 +110,7 @@
                             </CheckBox>
 
                             <CheckBox x:Name="ChBScreen6" x:Uid="6" AllowDrop="True" 
-                                      Drop="Image_Drop" 
+                                      Drop="File_Drop" 
                                       Margin="5">
 
                                 <CheckBox.Content>
@@ -117,8 +120,23 @@
                             </CheckBox>
                         </WrapPanel>
                     </ScrollViewer>
-                    
-                    <Grid Grid.Row="3">
+
+                    <StackPanel Grid.Row="3" Margin="0,5,0,0" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button x:Name="screen1PrevSlide" Margin="0,0,5,0" 
+                                                    Style="{DynamicResource Button_Dark}" IsEnabled="False">
+                            <Button.Content>
+                                <TextBlock Text="&lt;&lt;" Margin="5,0,5,0"/>
+                            </Button.Content>
+                        </Button>
+                        <Button x:Name="screen1NextSlide" Margin="5,0,0,0" 
+                                                    Style="{DynamicResource Button_Dark}" IsEnabled="False">
+                            <Button.Content>
+                                <TextBlock Text=">>" Margin="5,0,5,0"/>
+                            </Button.Content>
+                        </Button>
+                    </StackPanel>
+
+                    <Grid Grid.Row="4">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition Width="auto"/>
@@ -139,8 +157,9 @@
                             </Button.Content>
                         </Button>
                     </Grid>
+                    
                     <Button x:Name="Apply" Click="Apply_Click" Grid.Column="2" 
-                            Grid.Row="4" HorizontalAlignment="Right" 
+                            Grid.Row="5" HorizontalAlignment="Right" 
                             Margin="5,5,0,5" 
                             Style="{DynamicResource Button_Dark}">
 

@@ -362,5 +362,5 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-/Six Screens Controller/config.json
-/Six Screens Controller/config.txt
+Six Screens Controller/config.json
+Six Screens Controller/config.txt
