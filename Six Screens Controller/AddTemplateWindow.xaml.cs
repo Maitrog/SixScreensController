@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,60 +25,20 @@ namespace Six_Screens_Controller
             InitializeComponent();
         }
 
-        private void Browse1_Click(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            if (openFileDialog.ShowDialog() == true)
-                screen1.Text = openFileDialog.FileName;
-        }
-
-        private void Browse2_Click(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            if (openFileDialog.ShowDialog() == true)
-                screen2.Text = openFileDialog.FileName;
-        }
-
-        private void Browse3_Click(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            if (openFileDialog.ShowDialog() == true)
-                screen3.Text = openFileDialog.FileName;
-        }
-
-        private void Browse4_Click(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            if (openFileDialog.ShowDialog() == true)
-                screen4.Text = openFileDialog.FileName;
-        }
-
-        private void Browse5_Click(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            if (openFileDialog.ShowDialog() == true)
-                screen5.Text = openFileDialog.FileName;
-        }
-
-        private void Browse6_Click(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            if (openFileDialog.ShowDialog() == true)
-                screen6.Text = openFileDialog.FileName;
-        }
-
         private void Ok_Click(object sender, RoutedEventArgs e)
         {
-            ScreenTemplate = new ScreenTemplate()
+            ScreenTemplate = new ScreenTemplate() { Title = title.Text };
+
+            for (int i = 4; i < StackPanel.Children.Count; i += 2)
             {
-                Screen1 = screen1.Text,
-                Screen2 = screen2.Text,
-                Screen3 = screen3.Text,
-                Screen4 = screen4.Text,
-                Screen5 = screen5.Text,
-                Screen6 = screen6.Text,
-                Title = title.Text
-            };
+                if((StackPanel.Children[i] as ScreenTemplateElementControl).IsPlaylistScreen.IsChecked == false)
+                    ScreenTemplate.ScreenTemplateElements.Add(new ScreenTemplateElement() { Path = (StackPanel.Children[i] as ScreenTemplateElementControl).ElementPath });
+                else if ((StackPanel.Children[i] as ScreenTemplateElementControl).IsPlaylistScreen.IsChecked == true)
+                {
+                    ScreenTemplate.ScreenTemplateElements.Add(new ScreenTemplateElement() { Path = ((StackPanel.Children[i] as ScreenTemplateElementControl).PlaylistScreen.SelectedItem as Playlist).JsonString(), 
+                        IsPlaylist = true });
+                }
+            }  
 
             this.DialogResult = true;
         }

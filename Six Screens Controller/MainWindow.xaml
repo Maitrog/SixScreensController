@@ -29,7 +29,7 @@
             </MenuItem>
         </Menu>
         <TabControl Grid.Row="1" Background="#616161" BorderBrush="{x:Null}" >
-            <TabItem Header="Экраны" Style="{DynamicResource TabItem_Dark}" Foreground="#FFE0E0E0">
+            <TabItem Header="Экраны" Style="{DynamicResource TabItem_Dark}">
 
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -147,7 +147,7 @@
                                  HorizontalAlignment="Stretch" 
                                  Style="{DynamicResource TextBox_Dark}"/>
 
-                        <Button x:Name="pickFile" Click="pickFile_Click" Grid.Column="1" 
+                        <Button x:Name="BrowseFile" Click="BrowseFile_Click" Grid.Column="1" 
                                 HorizontalAlignment="Right" 
                                 Margin="5,5,0,5" 
                                 Style="{DynamicResource Button_Dark}">
@@ -170,7 +170,7 @@
                 </Grid>
             </TabItem>
 
-            <TabItem Header="Шаблоны" Foreground="#FFE0E0E0" Style="{DynamicResource TabItem_Dark}">
+            <TabItem Header="Шаблоны" Style="{DynamicResource TabItem_Dark}">
                 <Grid Background="#616161">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
@@ -227,6 +227,63 @@
                         </Button.Content>
                     </Button>
                 </Grid>
+            </TabItem>
+
+            <TabItem Header="Плейлисты" Style="{DynamicResource TabItem_Dark}">
+                <Grid Background="#616161">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition />
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+
+                    <ListView x:Name="playlistsList" Grid.Row="1" SelectionMode="Single" 
+                              Background="#616161" 
+                              Foreground="#FFE0E0E0">
+
+                        <ListView.Resources>
+                            <ContextMenu x:Key="ItemContextMenu">
+                                <MenuItem Header="Удалить" Click="removePlaylist_Click"/>
+                            </ContextMenu>
+                        </ListView.Resources>
+
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=Title}" FontSize="15"/>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="{x:Type ListViewItem}">
+                                <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+
+                    </ListView>
+
+                    <Button x:Name="addPlaylist" Click="addPlaylist_Click"
+                            Grid.Row="2"  
+                            Margin="0,5,0,5" 
+                            Style="{DynamicResource Button_Dark}" 
+                            HorizontalAlignment="Right">
+
+                        <Button.Content>
+                            <TextBlock Text="Добавить" Margin="5,0,5,0"/>
+                        </Button.Content>
+                    </Button>
+
+                    <Button x:Name="removePlaylist" Click="removePlaylist_Click" 
+                            Grid.Row="2"  
+                            Margin="0,5,0,5" 
+                            Style="{DynamicResource Button_Dark}" 
+                            HorizontalAlignment="Left">
+
+                        <Button.Content>
+                            <TextBlock Text="Удалить" Margin="5,0,5,0"/>
+                        </Button.Content>
+                    </Button>
+                </Grid>
+
             </TabItem>
         </TabControl>
     </Grid>

@@ -103,7 +103,8 @@ namespace Six_Screens_Controller
         {
             try
             {
-                process.Kill();
+                if (config.Python != "" && config.Server != "")
+                    process.Kill();
             }
             catch (Exception ex)
             {

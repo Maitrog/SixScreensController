@@ -22,50 +22,22 @@ using System.Windows.Shapes;
 
 namespace Six_Screens_Controller
 {
-    public class ScreenTemplate
-    {
-        public int Id { get; set; }
-        public string Title { get; set; }
-        public string Screen1 { get; set; }
-        public string Screen2 { get; set; }
-        public string Screen3 { get; set; }
-        public string Screen4 { get; set; }
-        public string Screen5 { get; set; }
-        public string Screen6 { get; set; }
-
-    }
-
-    class TemplateContext : DbContext
-    {
-        public DbSet<ScreenTemplate> ScreenTemplates { get; set; }
-
-        public TemplateContext()
-        {
-            Database.EnsureCreated();
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlite("Filename=VkScreenTemplate.db");
-        }
-    }
-
-
     public partial class MainWindow : Window
     {
         Config Config { get; set; }
         public string DefaultImage { get; set; }
-        readonly string[] imageExp = new string[] { "jpg", "jepg", "bmp", "png", "gif", "webp" };
-        readonly string[] videoExp = new string[] { "mp4", "avi", "mpeg", "mkv", "3gp", "3g2", "webm" };
+        public static readonly string[] imageExp = new string[] { "jpg", "jepg", "bmp", "png", "gif", "webp" };
+        public static readonly string[] videoExp = new string[] { "mp4", "avi", "mpeg", "mkv", "3gp", "3g2" };
 
         public MainWindow()
         {
             Config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
-            if (Config.DefaultImage == null)
+            if (Config.DefaultImage == "")
             {
                 Config.DefaultImage = "assets/Emblem_of_the_Russian_Ground_Forces.jpg";
             }
             DefaultImage = Config.DefaultImage;
+
             InitializeComponent();
             Loaded += MainPage_Loaded;
         }
@@ -75,10 +47,11 @@ namespace Six_Screens_Controller
             try
             {
                 using (TemplateContext db = new TemplateContext())
-                {
-                    List<ScreenTemplate> templates = db.ScreenTemplates.ToList();
-                    templateList.ItemsSource = templates;
-                }
+                templateList.ItemsSource = db.ScreenTemplates.Include(x => x.ScreenTemplateElements).ToList();
+
+                using(PlaylistContext db = new PlaylistContext())
+                playlistsList.ItemsSource = db.Playlists.Include(x=>x.PlaylistElements).ToList();
+
             }
             catch (Exception ex)
             {
@@ -109,7 +82,7 @@ namespace Six_Screens_Controller
                         (sender as CheckBox).Content = video;
                     }
 
-                    put_request(Convert.ToInt32(((CheckBox)sender).Uid), files[0]);
+                    PutRequest(Convert.ToInt32(((CheckBox)sender).Uid), files[0]);
 
                 }
 
@@ -120,7 +93,7 @@ namespace Six_Screens_Controller
             }
         }
 
-        private void pickFile_Click(object sender, RoutedEventArgs e)
+        private void BrowseFile_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
@@ -144,7 +117,7 @@ namespace Six_Screens_Controller
                             Image img = CreateImage(pickedFile.Text);
                             (i as CheckBox).Content = img;
                             (i as CheckBox).IsChecked = false;
-                            put_request(Convert.ToInt32(((CheckBox)i).Uid), pickedFile.Text);
+                            PutRequest(Convert.ToInt32(((CheckBox)i).Uid), pickedFile.Text);
                         }
                     }
                 }
@@ -159,7 +132,7 @@ namespace Six_Screens_Controller
                             MediaElement video = CreateVideo(pickedFile.Text);
                             (i as CheckBox).Content = video;
                             (i as CheckBox).IsChecked = false;
-                            put_request(Convert.ToInt32(((CheckBox)i).Uid), pickedFile.Text);
+                            PutRequest(Convert.ToInt32(((CheckBox)i).Uid), pickedFile.Text);
                         }
                     }
                 }
@@ -201,11 +174,13 @@ namespace Six_Screens_Controller
                 var selectedTemplate = templateList.SelectedItem;
                 using (TemplateContext db = new TemplateContext())
                 {
-                        if (selectedTemplate != null)
-                        {
-                            ScreenTemplate screenTemplate = db.ScreenTemplates.Where(x => x.Id == (selectedTemplate as ScreenTemplate).Id).FirstOrDefault();
-                            db.ScreenTemplates.Remove(screenTemplate);
-                        }
+                    if (selectedTemplate != null)
+                    {
+                        ScreenTemplate screenTemplate = db.ScreenTemplates.Where(x => x.Id == (selectedTemplate as ScreenTemplate).Id).FirstOrDefault();
+                        for (int i = 0; i < screenTemplate.ScreenTemplateElements.Count; i++)
+                            db.ScreenTemplateElements.Remove(screenTemplate.ScreenTemplateElements[i]);
+                        db.ScreenTemplates.Remove(screenTemplate);
+                    }
                     db.SaveChanges();
 
                     var templates = db.ScreenTemplates.ToList();
@@ -217,32 +192,34 @@ namespace Six_Screens_Controller
         private void templateList_MouseDoubleClick(object sender, RoutedEventArgs e)
         {
             var selectedTemplate = templateList.SelectedItem as ScreenTemplate;
-            string[] data = new string[] { selectedTemplate.Screen1,
-                selectedTemplate.Screen2,
-                selectedTemplate.Screen3,
-                selectedTemplate.Screen4,
-                selectedTemplate.Screen5,
-                selectedTemplate.Screen6 };
+            
 
             var screen = wrapPanel.Children;
             try
             {
                 for (int i = 0; i < 6; i++)
                 {
-                    string exp = data[i].Split("\\").LastOrDefault().Split('.').LastOrDefault();
-                    if (imageExp.Contains(exp))
+                    if (selectedTemplate.ScreenTemplateElements[i].IsPlaylist == false)
                     {
-                        Image img = CreateImage(data[i]);
+                        string exp = selectedTemplate.ScreenTemplateElements[i].Path.Split("\\").LastOrDefault().Split('.').LastOrDefault();
+                        if (imageExp.Contains(exp))
+                        {
+                            Image img = CreateImage(selectedTemplate.ScreenTemplateElements[i].Path);
 
-                        (screen[i] as CheckBox).Content = img;
-                        put_request(i + 1, data[i]);
+                            (screen[i] as CheckBox).Content = img;
+                            PutRequest(i + 1, selectedTemplate.ScreenTemplateElements[i].Path);
+                        }
+                        else if (videoExp.Contains(exp))
+                        {
+                            MediaElement video = CreateVideo(selectedTemplate.ScreenTemplateElements[i].Path);
+
+                            (screen[i] as CheckBox).Content = video;
+                            PutRequest(i + 1, selectedTemplate.ScreenTemplateElements[i].Path);
+                        }
                     }
-                    else if (videoExp.Contains(exp))
+                    else
                     {
-                        MediaElement video = CreateVideo(data[i]);
-
-                        (screen[i] as CheckBox).Content = video;
-                        put_request(i + 1, data[i]);
+                        PutRequest(i + 1, selectedTemplate.ScreenTemplateElements[i].Path);
                     }
                 }
             }
@@ -252,66 +229,7 @@ namespace Six_Screens_Controller
             }
         }
 
-        private Image CreateImage(string path)
-        {
-            BitmapImage bmp = new BitmapImage();
-            bmp.BeginInit();
-            bmp.UriSource = new Uri(path, UriKind.Absolute);
-            bmp.EndInit();
-
-            Image img = new Image();
-            img.Source = bmp;
-            img.Width = 500;
-            img.Margin = new Thickness(0, 5, 0, 5);
-            img.Stretch = Stretch.Uniform;
-
-            return img;
-        }
-
-        private MediaElement CreateVideo(string path)
-        {
-            MediaElement video = new MediaElement();
-            video.Source = new Uri(path, UriKind.Absolute);
-            video.Width = 500;
-            video.Stretch = Stretch.Uniform;
-            video.Margin = new Thickness(0, 5, 0, 5);
-            video.Volume = 0;
-            video.LoadedBehavior = MediaState.Play;
-
-            return video;
-        }
-
-        private void put_request(int number, string file)
-        {
-            string route = $"screen/{number}";
-            string url = $"{Config.Protocol}://{Config.Host}:{Config.Port}/{route}";
-            StringBuilder filePath = new StringBuilder(file);
-            for (int i = 0; i < filePath.Length; i++)
-                if (filePath[i] == '\\')
-                {
-                    filePath[i] = '/';
-                }
-            
-
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-            httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = "PUT";
-
-            string json_string = $"{{\n \"url\" : \"{filePath}\" \n}}";
-
-            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-            {
-                streamWriter.Write(json_string);
-            }
-
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-            {
-                var result = streamReader.ReadToEnd();
-                Console.WriteLine(result);
-            }
-        }
-
+        
         private void changeTemplate_Click(object sender, RoutedEventArgs e)
         {
             ChangeTemplateWindow changeTemplateWindow = new ChangeTemplateWindow(templateList.SelectedItem as ScreenTemplate);
@@ -319,14 +237,18 @@ namespace Six_Screens_Controller
             {
                 if (changeTemplateWindow.ShowDialog() == true)
                 {
-                    var temp = db.ScreenTemplates.Where(x => x.Id == changeTemplateWindow.ScreenTemplate.Id).FirstOrDefault();
+                    var temp = db.ScreenTemplates.Include(x => x.ScreenTemplateElements).Where(x => x.Id == changeTemplateWindow.ScreenTemplate.Id).FirstOrDefault();
                     temp.Title = changeTemplateWindow.ScreenTemplate.Title;
-                    temp.Screen1 = changeTemplateWindow.ScreenTemplate.Screen1;
-                    temp.Screen2 = changeTemplateWindow.ScreenTemplate.Screen2;
-                    temp.Screen3 = changeTemplateWindow.ScreenTemplate.Screen3;
-                    temp.Screen4 = changeTemplateWindow.ScreenTemplate.Screen4;
-                    temp.Screen5 = changeTemplateWindow.ScreenTemplate.Screen5;
-                    temp.Screen6 = changeTemplateWindow.ScreenTemplate.Screen6;
+                    for (int i = 0; i < changeTemplateWindow.ScreenTemplate.ScreenTemplateElements.Count; i++)
+                    {
+
+                        if (!temp.ScreenTemplateElements[i].Equals(changeTemplateWindow.ScreenTemplate.ScreenTemplateElements[i]))
+                        {
+                            temp.ScreenTemplateElements.RemoveAt(i);
+                            temp.ScreenTemplateElements.Insert(i, changeTemplateWindow.ScreenTemplate.ScreenTemplateElements[i]);
+                        }
+
+                    }
                     db.SaveChanges();
 
                     var templates = db.ScreenTemplates.ToList();
@@ -369,10 +291,114 @@ namespace Six_Screens_Controller
             }
         }
 
+        private void removePlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            using (PlaylistContext db = new PlaylistContext())
+            {
+                Playlist removedPlaylist = db.Playlists.First(x => x.Id == (playlistsList.SelectedItem as Playlist).Id);
+                db.Playlists.Remove(removedPlaylist);
+                db.SaveChanges();
+
+                playlistsList.ItemsSource = db.Playlists.ToList();
+            }
+        }
+
+        private void addPlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            AddPlaylistWindow addPlaylistWindow = new AddPlaylistWindow();
+            if(addPlaylistWindow.ShowDialog() == true)
+            {
+                using (PlaylistContext db = new PlaylistContext())
+                {
+                    Playlist pl = new Playlist();
+                    pl.Title = addPlaylistWindow.PlaylistTitle;
+                    for(int i = 0; i < addPlaylistWindow.elements.Count; i++)
+                    {
+                        var elem = db.PlaylistElements.Where(x => x.Path == (addPlaylistWindow.elements[i].Path) && x.Duration == (addPlaylistWindow.elements[i].Duration)).ToList();
+                        if (elem.Count == 0)
+                        {
+                            db.PlaylistElements.Add(addPlaylistWindow.elements[i]);
+                            db.SaveChanges();
+                            pl.PlaylistElements.Add(addPlaylistWindow.elements[i]);
+                        }
+                        else
+                        {
+                            pl.PlaylistElements.Add(elem[0]);
+                        }
+                    }
+                    db.Playlists.Add(pl);
+                    db.SaveChanges();
+
+                    playlistsList.ItemsSource = db.Playlists.Include(x => x.PlaylistElements).ToList();
+                }
+            }
+        }
+
+        private Image CreateImage(string path)
+        {
+            BitmapImage bmp = new BitmapImage();
+            bmp.BeginInit();
+            bmp.UriSource = new Uri(path, UriKind.Absolute);
+            bmp.EndInit();
+
+            Image img = new Image();
+            img.Source = bmp;
+            img.Width = 500;
+            img.Margin = new Thickness(0, 5, 0, 5);
+            img.Stretch = Stretch.Uniform;
+
+            return img;
+        }
+
+        private MediaElement CreateVideo(string path)
+        {
+            MediaElement video = new MediaElement();
+            video.Source = new Uri(path, UriKind.Absolute);
+            video.Width = 500;
+            video.Stretch = Stretch.Uniform;
+            video.Margin = new Thickness(0, 5, 0, 5);
+            video.Volume = 0;
+            video.LoadedBehavior = MediaState.Play;
+
+            return video;
+        }
+
+        private bool PutRequest(int number, string file)
+        {
+            try
+            {
+                string route = $"screen/{number}";
+                string url = $"{Config.Protocol}://{Config.Host}:{Config.Port}/{route}";
+                file = file.Replace("\\", "/");
+
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "PUT";
+
+                string json_string = $"{{\n \"url\" : \"{file}\" \n}}";
+
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                {
+                    streamWriter.Write(json_string);
+                }
+
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    Console.WriteLine(result);
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
-            
         }
     }
 }
