@@ -61,7 +61,7 @@ namespace Six_Screens_Controller
 
                         video.Play();
                         while (!video.NaturalDuration.HasTimeSpan) { }  //без этой строчки NaturalDuration не успевает вычислиться, и равен Automatic
-                        double dur = video.NaturalDuration.TimeSpan.TotalMilliseconds;
+                        double dur = video.NaturalDuration.TimeSpan.TotalSeconds;
                         video.Close();
 
                         elements.Add(new PlaylistElement { Path = openFileDialog.FileName.Replace("\\", "/"), Duration = Convert.ToInt32(dur) });

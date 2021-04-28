@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
 using Newtonsoft.Json;
-using Six_Screens_Controller;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -26,7 +25,7 @@ namespace Six_Screens_Controller
     {
         Config Config { get; set; }
         public string DefaultImage { get; set; }
-        public static readonly string[] imageExp = new string[] { "jpg", "jepg", "bmp", "png", "gif", "webp" };
+        public static readonly string[] imageExp = new string[] { "jpg", "jepg", "bmp", "png", "webp" };
         public static readonly string[] videoExp = new string[] { "mp4", "avi", "mpeg", "mkv", "3gp", "3g2" };
 
         public MainWindow()
@@ -73,6 +72,7 @@ namespace Six_Screens_Controller
                         Image img = CreateImage(files[0]);
 
                         (sender as CheckBox).Content = img;
+                        PutRequest(Convert.ToInt32(((CheckBox)sender).Uid), files[0], "img");
                     }
 
                     else if (videoExp.Contains(exp))
@@ -80,11 +80,18 @@ namespace Six_Screens_Controller
                         MediaElement video = CreateVideo(files[0]);
 
                         (sender as CheckBox).Content = video;
+                        PutRequest(Convert.ToInt32(((CheckBox)sender).Uid), files[0], "vid");
                     }
 
-                    PutRequest(Convert.ToInt32(((CheckBox)sender).Uid), files[0]);
+                    else if(exp == "gif")
+                    {
+                        MediaElement video = CreateVideo(files[0]);
 
+                        (sender as CheckBox).Content = video;
+                        PutRequest(Convert.ToInt32(((CheckBox)sender).Uid), files[0], "gif");
+                    }
                 }
+                RefreshRequest();
 
             }
             catch (Exception ex)
@@ -117,7 +124,7 @@ namespace Six_Screens_Controller
                             Image img = CreateImage(pickedFile.Text);
                             (i as CheckBox).Content = img;
                             (i as CheckBox).IsChecked = false;
-                            PutRequest(Convert.ToInt32(((CheckBox)i).Uid), pickedFile.Text);
+                            PutRequest(Convert.ToInt32(((CheckBox)i).Uid), pickedFile.Text, "img");
                         }
                     }
                 }
@@ -132,10 +139,26 @@ namespace Six_Screens_Controller
                             MediaElement video = CreateVideo(pickedFile.Text);
                             (i as CheckBox).Content = video;
                             (i as CheckBox).IsChecked = false;
-                            PutRequest(Convert.ToInt32(((CheckBox)i).Uid), pickedFile.Text);
+                            PutRequest(Convert.ToInt32(((CheckBox)i).Uid), pickedFile.Text, "vid");
                         }
                     }
                 }
+
+                else if(exp == "gif")
+                {
+                    foreach (var i in wrapPanel.Children)
+                    {
+
+                        if ((i as CheckBox).IsChecked == true)
+                        {
+                            MediaElement video = CreateVideo(pickedFile.Text);
+                            (i as CheckBox).Content = video;
+                            (i as CheckBox).IsChecked = false;
+                            PutRequest(Convert.ToInt32(((CheckBox)i).Uid), pickedFile.Text, "gif");
+                        }
+                    }
+                }
+                RefreshRequest();
             }
             catch (Exception ex)
             {
@@ -207,21 +230,32 @@ namespace Six_Screens_Controller
                             Image img = CreateImage(selectedTemplate.ScreenTemplateElements[i].Path);
 
                             (screen[i] as CheckBox).Content = img;
-                            PutRequest(i + 1, selectedTemplate.ScreenTemplateElements[i].Path);
+                            PutRequest(i + 1, selectedTemplate.ScreenTemplateElements[i].Path, "img");
                         }
                         else if (videoExp.Contains(exp))
                         {
                             MediaElement video = CreateVideo(selectedTemplate.ScreenTemplateElements[i].Path);
 
                             (screen[i] as CheckBox).Content = video;
-                            PutRequest(i + 1, selectedTemplate.ScreenTemplateElements[i].Path);
+                            PutRequest(i + 1, selectedTemplate.ScreenTemplateElements[i].Path, "vid");
+                        }
+                        else if(exp == "gif")
+                        {
+                            MediaElement video = CreateVideo(selectedTemplate.ScreenTemplateElements[i].Path);
+
+                            (screen[i] as CheckBox).Content = video;
+                            PutRequest(i + 1, selectedTemplate.ScreenTemplateElements[i].Path, "gif");
                         }
                     }
                     else
                     {
-                        PutRequest(i + 1, selectedTemplate.ScreenTemplateElements[i].Path);
+                        Image img = CreateImage(@"C:\Users\Mihay\Documents\pet-projects\Six Screens Controller\Six Screens Controller\assets\playlist.jpg");
+
+                        (screen[i] as CheckBox).Content = img;
+                        PutRequestPlaylist(i + 1, selectedTemplate.ScreenTemplateElements[i].Path);
                     }
                 }
+                RefreshRequest();
             }
             catch (Exception ex)
             {
@@ -343,7 +377,7 @@ namespace Six_Screens_Controller
 
             Image img = new Image();
             img.Source = bmp;
-            img.Width = 500;
+            img.Width = 590;
             img.Margin = new Thickness(0, 5, 0, 5);
             img.Stretch = Stretch.Uniform;
 
@@ -354,7 +388,7 @@ namespace Six_Screens_Controller
         {
             MediaElement video = new MediaElement();
             video.Source = new Uri(path, UriKind.Absolute);
-            video.Width = 500;
+            video.Width = 590;
             video.Stretch = Stretch.Uniform;
             video.Margin = new Thickness(0, 5, 0, 5);
             video.Volume = 0;
@@ -363,37 +397,76 @@ namespace Six_Screens_Controller
             return video;
         }
 
-        private bool PutRequest(int number, string file)
+        private bool PutRequest(int number, string file, string mediaType, int duration = 1)
         {
-            try
+
+            string route = $"screen/{number}";
+            string url = $"{Config.Protocol}://{Config.Host}:{Config.Port}/{route}";
+            file = file.Replace("\\", "/");
+
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "PUT";
+
+            string jsonString = $"{{\n \"location\": \"{file}\",\n" +
+            $"\"duration\": {duration},\n" +
+            $"\"media_type\": \"{mediaType}\"}}";
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
-                string route = $"screen/{number}";
-                string url = $"{Config.Protocol}://{Config.Host}:{Config.Port}/{route}";
-                file = file.Replace("\\", "/");
-
-                var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-                httpWebRequest.ContentType = "application/json";
-                httpWebRequest.Method = "PUT";
-
-                string json_string = $"{{\n \"url\" : \"{file}\" \n}}";
-
-                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-                {
-                    streamWriter.Write(json_string);
-                }
-
-                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-                {
-                    var result = streamReader.ReadToEnd();
-                    Console.WriteLine(result);
-                }
-                return true;
+                streamWriter.Write(jsonString);
             }
-            catch
+
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
             {
-                return false;
+                var result = streamReader.ReadToEnd();
+                Console.WriteLine(result);
             }
+
+            return true;
+        }
+
+        private bool PutRequestPlaylist(int number, string jsonStr)
+        {
+            string route = $"playlist/{number}";
+            string url = $"{Config.Protocol}://{Config.Host}:{Config.Port}/{route}";
+
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "PUT";
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                streamWriter.Write(jsonStr);
+            }
+
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                var result = streamReader.ReadToEnd();
+                Console.WriteLine(result);
+            }
+
+            return true;
+        }
+
+        private void RefreshRequest()
+        {
+            string route = $"refresh";
+            string url = $"{Config.Protocol}://{Config.Host}:{Config.Port}/{route}";
+
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "GET";
+
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                var result = streamReader.ReadToEnd();
+                Console.WriteLine(result);
+            }
+
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)

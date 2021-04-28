@@ -32,7 +32,7 @@ namespace Six_Screens_Controller
             {
                 if (config.Python != "" && config.Server != "")
                 {
-                    if(config.FirstStart)
+                    if (config.FirstStart)
                     {
                         var pip = new ProcessStartInfo();
                         var pipFiles = Directory.GetFiles($"{config.Python}\\Scripts");
@@ -45,22 +45,24 @@ namespace Six_Screens_Controller
 
                         if (pipTrue == "")
                             pipTrue = $"{config.Python}\\Scripts\\pip3.exe";
+                        for (int i = 1; i < 3; i++)
+                        {
+                            pip.FileName = $"\"{pipTrue}\"";
+                            pip.Arguments = $"install -r requirements{i}.txt";
+                            pip.UseShellExecute = false;
+                            pip.CreateNoWindow = false;
+                            pip.RedirectStandardOutput = true;
+                            pip.RedirectStandardError = true;
 
-                        pip.FileName = $"\"{pipTrue}\"";
-                        pip.Arguments = "\"install\" \"-r\" requirements.txt";
-                        pip.UseShellExecute = false;
-                        pip.CreateNoWindow = false;
-                        pip.RedirectStandardOutput = true;
-                        pip.RedirectStandardError = true;
+                            Process p = new Process();
+                            p.StartInfo = pip;
+                            p.Start();
 
-                        Process p = new Process();
-                        p.StartInfo = pip;
-                        p.Start();
-
-                        p.WaitForExit(120000);
-
+                            p.WaitForExit();
+                        }
                         config.FirstStart = false;
                         File.WriteAllText("config.json", JsonConvert.SerializeObject(config));
+
                     }
 
                     Task.Run(() =>

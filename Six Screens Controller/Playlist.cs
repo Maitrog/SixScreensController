@@ -29,11 +29,11 @@ namespace Six_Screens_Controller
                     mediaType = "vid";
                 if (i != PlaylistElements.Count - 1)
                     json += $"{{\r\n\"location\": \"{PlaylistElements[i].Path}\",\r\n" +
-                        $"\"duration\": {PlaylistElements[i].Duration/1000},\r\n" +
+                        $"\"duration\": {PlaylistElements[i].Duration},\r\n" +
                         $"\"media_type\": \"{mediaType}\"\r\n}},\r\n";
                 else
                     json += $"{{\r\n\"location\": \"{PlaylistElements[i].Path}\",\r\n" +
-                        $"\"duration\": {PlaylistElements[i].Duration/1000},\r\n" +
+                        $"\"duration\": {PlaylistElements[i].Duration},\r\n" +
                         $"\"media_type\": \"{mediaType}\"\r\n}}\r\n";
 
             }

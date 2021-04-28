@@ -20,7 +20,7 @@
     
     <StackPanel TextBlock.FontSize="13" Background="#616161" TextBlock.Foreground="#FFE0E0E0">
         
-        <TextBlock Text="Интерпретатор Python" Margin="10,3,10,3"/>
+        <TextBlock Text="Расположение Python" Margin="10,3,10,3"/>
         <StackPanel Orientation="Horizontal" Margin="10,3,10,3" Width="auto">
             <TextBox x:Name="interpreterPython" Margin="0,0,3,0"
                      Width="400"

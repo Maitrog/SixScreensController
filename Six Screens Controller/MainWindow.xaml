@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:Six_Screens_Controller"
         mc:Ignorable="d"
         
-        Title="Screen Controler" Height="550" Width="595"
-        MinHeight="550" MinWidth="595"
+        Title="Screen Controler" Height="640" Width="685"
+        MinHeight="640" MinWidth="685"
         Background="#616161"
         Icon="assets/Logo50x50.png"
         x:Name="win1" WindowStyle="SingleBorderWindow">
