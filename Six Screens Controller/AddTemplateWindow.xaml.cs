@@ -32,11 +32,12 @@ namespace Six_Screens_Controller
             for (int i = 4; i < StackPanel.Children.Count; i += 2)
             {
                 if((StackPanel.Children[i] as ScreenTemplateElementControl).IsPlaylistScreen.IsChecked == false)
-                    ScreenTemplate.ScreenTemplateElements.Add(new ScreenTemplateElement() { Path = (StackPanel.Children[i] as ScreenTemplateElementControl).ElementPath });
+                    ScreenTemplate.ScreenTemplateElements.Add(new ScreenTemplateElement() { Path = (StackPanel.Children[i] as ScreenTemplateElementControl).ElementPath, 
+                        ScreenNumber = ScreenTemplate.ScreenTemplateElements.Count });
                 else if ((StackPanel.Children[i] as ScreenTemplateElementControl).IsPlaylistScreen.IsChecked == true)
                 {
                     ScreenTemplate.ScreenTemplateElements.Add(new ScreenTemplateElement() { Path = ((StackPanel.Children[i] as ScreenTemplateElementControl).PlaylistScreen.SelectedItem as Playlist).JsonString(), 
-                        IsPlaylist = true });
+                        IsPlaylist = true, ScreenNumber = ScreenTemplate.ScreenTemplateElements.Count });
                 }
             }  
 

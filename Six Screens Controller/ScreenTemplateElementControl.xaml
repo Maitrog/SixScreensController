@@ -28,7 +28,7 @@
             <TextBox x:Name="ElementPathBox"  Grid.Column="0"
                      Margin="0,0,3,0" 
                      Style="{DynamicResource TextBox_Dark}"
-                     Text="{Binding ElementName=ScreenTemplateElement, Path=ElementPath, Mode=TwoWay}"/>
+                     Text="{Binding ElementName=ScreenTemplateElement, Path=ElementPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
             <Button x:Name="ElementBrowse" Click="ElementBrowse_Click" Grid.Column="1" 
                     Margin="3,0,0,0" 

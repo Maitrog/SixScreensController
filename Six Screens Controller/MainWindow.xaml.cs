@@ -285,7 +285,7 @@ namespace Six_Screens_Controller
                     }
                     db.SaveChanges();
 
-                    var templates = db.ScreenTemplates.ToList();
+                    var templates = db.ScreenTemplates.Include(x => x.ScreenTemplateElements).ToList();
                     templateList.ItemsSource = templates;
                 }
             }

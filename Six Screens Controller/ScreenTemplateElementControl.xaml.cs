@@ -13,12 +13,36 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Win32;
+using System.ComponentModel;
 
 namespace Six_Screens_Controller
 {
-    public partial class ScreenTemplateElementControl : UserControl
+    public partial class ScreenTemplateElementControl : UserControl, INotifyPropertyChanged
     {
-        public string ElementPath { get; set; }
+        private string elementPath;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void RaisePropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public string ElementPath
+        {
+            get
+            {
+                return elementPath;
+            }
+            set
+            {
+                if(value != null)
+                {
+                    elementPath = value;
+                    RaisePropertyChanged("ElementPath");
+                }    
+            }
+        }
         public int ElementDefaultId { get; set; } = -1;
 
         public ScreenTemplateElementControl()

@@ -27,6 +27,8 @@ namespace Six_Screens_Controller
         {
             InitializeComponent();
             ScreenTemplate = screenTemplate;
+            ScreenTemplate.ScreenTemplateElements.Sort(new ScreenTemplateElementCopm());
+
             title.Text = screenTemplate.Title;
             for(int i = 4; i < StackPanel.Children.Count; i+=2)
             {
@@ -58,12 +60,15 @@ namespace Six_Screens_Controller
                 }
                 else if ((StackPanel.Children[i] as ScreenTemplateElementControl).IsPlaylistScreen.IsChecked == true)
                 {
-                    ScreenTemplate.ScreenTemplateElements.RemoveAt((i - 4) / 2);
-                    ScreenTemplate.ScreenTemplateElements.Insert((i - 4) / 2, new ScreenTemplateElement()
+                    string path = ((StackPanel.Children[i] as ScreenTemplateElementControl).PlaylistScreen.SelectedItem as Playlist).JsonString();
+                    if (path != null && path != ScreenTemplate.ScreenTemplateElements[(i - 4) / 2].Path) ;
                     {
-                        Path = ((StackPanel.Children[i] as ScreenTemplateElementControl).PlaylistScreen.SelectedItem as Playlist).JsonString(),
-                        IsPlaylist = true
-                    });
+                        ScreenTemplate.ScreenTemplateElements.RemoveAt((i - 4) / 2);
+                        ScreenTemplate.ScreenTemplateElements.Insert((i - 4) / 2, new ScreenTemplateElement()
+                        {
+                            Path = path, IsPlaylist = true 
+                        });
+                    }
                 }
             }
             

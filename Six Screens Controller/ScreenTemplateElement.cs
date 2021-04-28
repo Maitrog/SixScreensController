@@ -9,6 +9,7 @@ namespace Six_Screens_Controller
         public int Id { get; set; }
         public string Path { get; set; }
         public bool IsPlaylist { get; set; } = false;
+        public int ScreenNumber { get; set; }
 
         public ScreenTemplate ScreenTemplate { get; set; }
         public int ScreenTemplateId { get; set; }
