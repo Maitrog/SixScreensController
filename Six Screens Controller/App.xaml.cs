@@ -61,6 +61,7 @@ namespace Six_Screens_Controller
                             p.WaitForExit();
                         }
                         config.FirstStart = false;
+                        config.DefaultImage = Directory.GetCurrentDirectory() + "\\assets\\Emblem_of_the_Russian_Ground_Forces.jpg";
                         File.WriteAllText("config.json", JsonConvert.SerializeObject(config));
 
                     }

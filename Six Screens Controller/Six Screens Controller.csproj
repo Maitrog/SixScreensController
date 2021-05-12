@@ -11,7 +11,6 @@
   <ItemGroup>
     <None Remove="assets\AddIcon50x50.png" />
     <None Remove="assets\BrowseIcon50x50.png" />
-    <None Remove="assets\Emblem_of_the_Russian_Ground_Forces.jpg" />
     <None Remove="assets\Logo50x50.png" />
     <None Remove="assets\PickAllIcon50x50.png" />
     <None Remove="assets\PlaylistIcon50x50.png" />
@@ -34,9 +33,6 @@
   <ItemGroup>
     <Resource Include="assets\AddIcon50x50.png" />
     <Resource Include="assets\BrowseIcon50x50.png" />
-    <Resource Include="assets\Emblem_of_the_Russian_Ground_Forces.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
     <Resource Include="assets\Logo50x50.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -51,6 +47,9 @@
   <ItemGroup>
     <None Update="assets\Default.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="assets\Emblem_of_the_Russian_Ground_Forces.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="assets\playlist.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

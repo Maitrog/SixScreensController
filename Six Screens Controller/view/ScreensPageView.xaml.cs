@@ -295,7 +295,8 @@ namespace Six_Screens_Controller.view
                     }
                     else
                     {
-                        Image img = CreateImage(@"C:\Users\Mihay\Documents\pet-projects\Six Screens Controller\Six Screens Controller\assets\playlist.jpg");
+                        string path = Directory.GetCurrentDirectory() + "\\assets\\playlist.jpg";
+                        Image img = CreateImage(path);
 
                         (Elements.Children[i] as ListViewItem).Content = img;
                         PutRequestPlaylist(i + 1, ScreenTemplateNow.ScreenTemplateElements[i].Path);
