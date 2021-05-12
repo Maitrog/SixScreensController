@@ -41,7 +41,7 @@
         </Grid>
 
         <StackPanel Orientation="Horizontal" Margin="10,3,10,3" Grid.Row="1">
-            <CheckBox x:Name="IsPlaylistScreen" Content="Плейлист" Margin="0,0,3,0" Foreground="#E0E0E0"/>
+            <CheckBox x:Name="IsPlaylistScreen" Content="Плейлист" Margin="0,0,3,0"/>
             <ComboBox x:Name="PlaylistScreen" Width="auto" MinWidth="100" Margin="3,0,0,0" MaxDropDownHeight="50"
                       IsEnabled="{Binding ElementName=IsPlaylistScreen, Path=IsChecked}" SelectedValuePath="Id">
 

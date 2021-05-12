@@ -8,11 +8,9 @@
         x:Name="AddPlaylist"
         Title="AddPlaylistWindow" Height="490" Width="508"
         MinHeight="490" MinWidth="508"
-        MaxHeight="490" MaxWidth="508"
-        Style="{DynamicResource Window_Dark}">
+        MaxHeight="490" MaxWidth="508">
 
-    <Grid TextBlock.Foreground="#FFE0E0E0">
-
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
@@ -29,23 +27,20 @@
 
         <TextBox Grid.Row="2" x:Name="playlistTitle" Width="471" 
                  HorizontalAlignment="Left" 
-                 Margin="10,3,10,3" 
-                 Style="{DynamicResource TextBox_Dark}"
+                 Margin="10,3,10,3"
                  Text="{Binding ElementName=AddPlaylist, Path=PlaylistTitle}"/>
 
         <StackPanel Orientation="Horizontal" Grid.Row="3" Margin="10,3,10,3">
             <TextBlock Text="Элементы" FontSize="15" Margin="0,0,0,3"/>
             <Button x:Name="addElement" Content="Добавить" Margin="3,0,3,0"
                     Click="addElement_Click"
-                    Style="{DynamicResource Button_Dark}"
                     Width="80"/>
             <Button x:Name="removeElement" Content="Удалить" Margin="3,0,0,0"
                     Click="removeElement_Click"
-                    Width="80"
-                    Style="{DynamicResource Button_Dark}"/>
+                    Width="80"/>
         </StackPanel>
 
-        <DataGrid x:Name="elemetsList" Grid.Row="4" Background="#616161" ItemsSource="{Binding}" AutoGenerateColumns="False">
+        <DataGrid x:Name="elemetsList" Grid.Row="4" ItemsSource="{Binding}" AutoGenerateColumns="False">
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Путь" Width="397" Binding="{Binding Path=Path}" CanUserSort="False"/>
@@ -61,8 +56,7 @@
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="Ok" Click="Ok_Click"  Grid.Column="1" 
-                    Margin="0,0,3,0" Width="68" 
-                    Style="{DynamicResource Button_Dark}" 
+                    Margin="0,0,3,0" Width="68"
                     HorizontalAlignment="Right">
 
                 <Button.Content>
@@ -70,8 +64,7 @@
                 </Button.Content>
             </Button>
             <Button x:Name="Cancel" Click="Cancel_Click" 
-                    Grid.Column="2" Margin="3,0,0,0" Width="68" 
-                    Style="{DynamicResource Button_Dark}">
+                    Grid.Column="2" Margin="3,0,0,0" Width="68">
 
                 <Button.Content>
                     <TextBlock Text="Отмена" Margin="5,0,5,0"/>

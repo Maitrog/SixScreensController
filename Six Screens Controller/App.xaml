@@ -3,11 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Six_Screens_Controller"
              StartupUri="MainWindow.xaml" Startup="App_Startup" Exit="App_Exit">
+
     <Application.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Style.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
+        <local:TemplateHeightConverter x:Key="TemplateHeightConverter"/>
     </Application.Resources>
 </Application>

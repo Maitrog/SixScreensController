@@ -9,8 +9,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="assets\AddIcon50x50.png" />
+    <None Remove="assets\BrowseIcon50x50.png" />
     <None Remove="assets\Emblem_of_the_Russian_Ground_Forces.jpg" />
     <None Remove="assets\Logo50x50.png" />
+    <None Remove="assets\PickAllIcon50x50.png" />
+    <None Remove="assets\PlaylistIcon50x50.png" />
+    <None Remove="assets\RefreshIcon50x50.png" />
+    <None Remove="assets\ScreenIcon50x50.png" />
+    <None Remove="assets\TemplateIcon50x50.png" />
+    <None Remove="assets\vk-lable %281%29.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,12 +32,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="assets\AddIcon50x50.png" />
+    <Resource Include="assets\BrowseIcon50x50.png" />
     <Resource Include="assets\Emblem_of_the_Russian_Ground_Forces.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="assets\Logo50x50.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="assets\PickAllIcon50x50.png" />
+    <Resource Include="assets\PlaylistIcon50x50.png" />
+    <Resource Include="assets\RefreshIcon50x50.png" />
+    <Resource Include="assets\ScreenIcon50x50.png" />
+    <Resource Include="assets\TemplateIcon50x50.png" />
+    <Resource Include="assets\vk-lable (1).png" />
   </ItemGroup>
 
   <ItemGroup>

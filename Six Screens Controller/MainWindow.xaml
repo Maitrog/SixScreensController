@@ -4,20 +4,20 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Six_Screens_Controller"
+        xmlns:view="clr-namespace:Six_Screens_Controller.view"
         mc:Ignorable="d"
         
-        Title="Screen Controler" Height="640" Width="685"
-        MinHeight="640" MinWidth="685"
-        Background="#616161"
+        Title="Screen Controler" Height="450" Width="800"
+        MinHeight="450" MinWidth="800"
         Icon="assets/Logo50x50.png"
         x:Name="win1" WindowStyle="SingleBorderWindow">
-
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
+
         <Menu Grid.Row="0">
             <MenuItem Header="Файл">
                 <MenuItem Header="Настройки" Click="Settings_Click"/>
@@ -28,263 +28,107 @@
                 <MenuItem Header="О приложениее"/>
             </MenuItem>
         </Menu>
-        <TabControl Grid.Row="1" Background="#616161" BorderBrush="{x:Null}" >
-            <TabItem Header="Экраны" Style="{DynamicResource TabItem_Dark}">
 
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
+        <Grid x:Name="MainGrid" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="35*" MinWidth="170" MaxWidth="350"/>
+                <ColumnDefinition Width="1.5*"/>
+                <ColumnDefinition Width="155.5*"/>
+            </Grid.ColumnDefinitions>
 
-                    <Button x:Name="pickAll" Click="pickAll_Click" Grid.Row="0" 
-                            HorizontalAlignment="Right"
-                            Margin="5,0,0,5"
-                            Style="{DynamicResource Button_Dark}">
+            <Grid x:Name="LeftMenu" Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="35*"/>
+                    <RowDefinition Height="4*"/>
+                    <RowDefinition Height="12.5*" MaxHeight="80"/>
+                    <RowDefinition Height="12.5*" MaxHeight="80"/>
+                    <RowDefinition Height="12.5*" MaxHeight="80"/>
+                    <RowDefinition Height="31.5*"/>
+                </Grid.RowDefinitions>
 
-                        <Button.Content>
-                            <TextBlock Text="Выбрать всё" Margin="5,0,5,0"/>
-                        </Button.Content>
-                    </Button>
+                <Image Source="assets/vk-lable (1).png" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Center"
+               VerticalAlignment="Top"/>
 
-                    <ScrollViewer x:Name="screenBt1" Grid.Row="1" Grid.Column="2" Grid.RowSpan="2">
-                        <WrapPanel x:Name="wrapPanel" Margin="10,5,10,0">
-
-                            <CheckBox x:Name="ChBScreen1" x:Uid="1" AllowDrop="True" 
-                                      Drop="File_Drop" 
-                                      Margin="5">
-
-                                <CheckBox.Content>
-                                    <StackPanel>
-                                        <Image Source="{Binding ElementName=win1, Path=DefaultImage}" 
-                                           Style="{DynamicResource MainImage}"/>
-                                    </StackPanel>
-                                </CheckBox.Content>
-                            </CheckBox>
-
-                            <CheckBox x:Name="ChBScreen2" x:Uid="2" AllowDrop="True" 
-                                      Drop="File_Drop" 
-                                      Margin="5">
-
-                                <CheckBox.Content>
-                                    <Image Source="{Binding ElementName=win1, Path=DefaultImage}" 
-                                           Style="{DynamicResource MainImage}"/>
-                                </CheckBox.Content>
-                            </CheckBox>
-
-                            <CheckBox x:Name="ChBScreen3" x:Uid="3" AllowDrop="True" 
-                                      Drop="File_Drop" 
-                                      Margin="5">
-
-                                <CheckBox.Content>
-                                    <Image Source="{Binding ElementName=win1, Path=DefaultImage}" 
-                                           Style="{DynamicResource MainImage}"/>
-                                </CheckBox.Content>
-                            </CheckBox>
-
-                            <CheckBox x:Name="ChBScreen4" x:Uid="4" AllowDrop="True" 
-                                      Drop="File_Drop" 
-                                      Margin="5">
-
-                                <CheckBox.Content>
-                                    <Image Source="{Binding ElementName=win1, Path=DefaultImage}" 
-                                           Style="{DynamicResource MainImage}"/>
-                                </CheckBox.Content>
-                            </CheckBox>
-
-                            <CheckBox x:Name="ChBScreen5" x:Uid="5" AllowDrop="True" 
-                                      Drop="File_Drop" 
-                                      Margin="5">
-
-                                <CheckBox.Content>
-                                    <Image Source="{Binding ElementName=win1, Path=DefaultImage}" 
-                                           Style="{DynamicResource MainImage}"/>
-                                </CheckBox.Content>
-                            </CheckBox>
-
-                            <CheckBox x:Name="ChBScreen6" x:Uid="6" AllowDrop="True" 
-                                      Drop="File_Drop" 
-                                      Margin="5">
-
-                                <CheckBox.Content>
-                                    <Image Source="{Binding ElementName=win1, Path=DefaultImage}" 
-                                           Style="{DynamicResource MainImage}"/>
-                                </CheckBox.Content>
-                            </CheckBox>
-                        </WrapPanel>
-                    </ScrollViewer>
-
-                    <StackPanel Grid.Row="3" Margin="0,5,0,0" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <Button x:Name="screen1PrevSlide" Margin="0,0,5,0" 
-                                                    Style="{DynamicResource Button_Dark}" IsEnabled="False">
-                            <Button.Content>
-                                <TextBlock Text="&lt;&lt;" Margin="5,0,5,0"/>
-                            </Button.Content>
-                        </Button>
-                        <Button x:Name="screen1NextSlide" Margin="5,0,0,0" 
-                                                    Style="{DynamicResource Button_Dark}" IsEnabled="False">
-                            <Button.Content>
-                                <TextBlock Text=">>" Margin="5,0,5,0"/>
-                            </Button.Content>
-                        </Button>
-                    </StackPanel>
-
-                    <Grid Grid.Row="4">
+                <Button x:Name="ScreenButton" Grid.Row="2" HorizontalAlignment="Stretch"
+                    Click="ScreenButton_Click"
+                    Height="{Binding ElementName=LeftMenu, Path=Width}"
+                    BorderThickness="0" Background="#C3BEBE">
+                    <Grid Width="{Binding ElementName=ScreenButton, Path=ActualWidth}">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2*"/>
                         </Grid.ColumnDefinitions>
-                        
-                        <TextBox x:Name="pickedFile" Grid.Column="0" 
-                                 Height="auto" Margin="10,5,5,5" 
-                                 HorizontalAlignment="Stretch" 
-                                 Style="{DynamicResource TextBox_Dark}"/>
 
-                        <Button x:Name="BrowseFile" Click="BrowseFile_Click" Grid.Column="1" 
-                                HorizontalAlignment="Right" 
-                                Margin="5,5,0,5" 
-                                Style="{DynamicResource Button_Dark}">
-
-                            <Button.Content>
-                                <TextBlock Text="Обзор..." Margin="5,0,5,0"/>
-                            </Button.Content>
-                        </Button>
+                        <Image Source="assets/ScreenIcon50x50.png" Grid.Column="0" 
+                           Width="30" 
+                           HorizontalAlignment="Left"
+                           Margin="15,0,0,0"/>
+                        <TextBlock Text="экраны" Grid.Column="1" VerticalAlignment="Center" 
+                               Margin="5,0,0,0" Foreground="#595959" FontSize="16"
+                               FontFamily="Rounded Mplus" FontWeight="SemiBold"/>
                     </Grid>
-                    
-                    <Button x:Name="Apply" Click="Apply_Click" Grid.Column="2" 
-                            Grid.Row="5" HorizontalAlignment="Right" 
-                            Margin="5,5,0,5" 
-                            Style="{DynamicResource Button_Dark}">
+                </Button>
 
-                        <Button.Content>
-                            <TextBlock Text="Применить" Margin="5,0,5,0"/>
-                        </Button.Content>
-                    </Button>
-                </Grid>
-            </TabItem>
+                <Button x:Name="TemplateButton" Grid.Row="3" HorizontalAlignment="Stretch" 
+                    Click="TemplateButton_Click"
+                    Height="{Binding ElementName=LeftMenu, Path=Width}"
+                    BorderThickness="0" Background="White">
 
-            <TabItem Header="Шаблоны" Style="{DynamicResource TabItem_Dark}">
-                <Grid Background="#616161">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition />
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
+                    <Grid Width="{Binding ElementName=TemplateButton, Path=ActualWidth}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
 
-                    <ListView x:Name="templateList" Grid.Row="1" SelectionMode="Single" 
-                              Background="#616161" 
-                              Foreground="#FFE0E0E0" 
-                              MouseDoubleClick="templateList_MouseDoubleClick">
+                        <Image Source="assets/TemplateIcon50x50.png" HorizontalAlignment="Left" 
+                           Grid.Column="0" Margin="15,0,0,0" Width="30"/>
+                        <TextBlock Text="шаблоны" Grid.Column="1" VerticalAlignment="Center" 
+                               Margin="5,0,0,0" Foreground="#595959" FontSize="16"
+                               FontFamily="Rounded Mplus" FontWeight="SemiBold"/>
+                    </Grid>
+                </Button>
 
-                        <ListView.Resources>
-                            <ContextMenu x:Key="ItemContextMenu">
-                                <MenuItem Header="Установить" Click="templateList_MouseDoubleClick"/>
-                                <MenuItem Header="Изменить" Click="changeTemplate_Click"/>
-                                <MenuItem Header="Удалить" Click="removeTemplate_Click"/>
-                            </ContextMenu>
-                        </ListView.Resources>
+                <Button Grid.Row="4" x:Name="PlaylistButton" HorizontalAlignment="Stretch" 
+                    Click="PlaylistButton_Click"
+                    Height="{Binding ElementName=LeftMenu, Path=Width}"
+                    BorderThickness="0" Background="White">
 
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Path=Title}" FontSize="15"/>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
+                    <Grid Width="{Binding ElementName=PlaylistButton, Path=ActualWidth}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
 
-                        <ListView.ItemContainerStyle>
-                            <Style TargetType="{x:Type ListViewItem}">
-                                <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}"/>
-                            </Style>
-                        </ListView.ItemContainerStyle>
+                        <Image Source="assets/PlaylistIcon50x50.png" Width="30"
+                           HorizontalAlignment="Left"
+                           Grid.Column="0" Margin="15,0,0,0"/>
+                        <TextBlock Text="плейлисты" Grid.Column="1" VerticalAlignment="Center" 
+                               Margin="5,0,0,0" Foreground="#595959" FontSize="16"
+                               FontFamily="Rounded Mplus" FontWeight="SemiBold"/>
+                    </Grid>
+                </Button>
 
-                    </ListView>
 
-                    <Button x:Name="addTemplate" Click="addTemplate_Click" 
-                            Grid.Row="2"  
-                            Margin="0,5,0,5" 
-                            Style="{DynamicResource Button_Dark}" 
-                            HorizontalAlignment="Right">
+                <StackPanel Grid.Row="5" VerticalAlignment="Bottom" HorizontalAlignment="Center"
+                        Margin="0,0,0,10">
+                    <TextBlock Text="МИЭТ" HorizontalAlignment="Center" Foreground="#B9B9B9" FontSize="17"
+                               FontFamily="Rounded Mplus" FontWeight="SemiBold"/>
+                    <TextBlock Text="Военная кафедра" Foreground="#B9B9B9" FontSize="17"
+                               FontFamily="Rounded Mplus" FontWeight="SemiBold"/>
+                </StackPanel>
+            </Grid>
 
-                        <Button.Content>
-                            <TextBlock Text="Добавить" Margin="5,0,5,0"/>
-                        </Button.Content>
-                    </Button>
-
-                    <Button x:Name="removeTemplate" Click="removeTemplate_Click" 
-                            Grid.Row="2"  
-                            Margin="0,5,0,5" 
-                            Style="{DynamicResource Button_Dark}" 
-                            HorizontalAlignment="Left">
-
-                        <Button.Content>
-                            <TextBlock Text="Удалить" Margin="5,0,5,0"/>
-                        </Button.Content>
-                    </Button>
-                </Grid>
-            </TabItem>
-
-            <TabItem Header="Плейлисты" Style="{DynamicResource TabItem_Dark}">
-                <Grid Background="#616161">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition />
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
-
-                    <ListView x:Name="playlistsList" Grid.Row="1" SelectionMode="Single" 
-                              Background="#616161" 
-                              Foreground="#FFE0E0E0">
-
-                        <ListView.Resources>
-                            <ContextMenu x:Key="ItemContextMenu">
-                                <MenuItem Header="Удалить" Click="removePlaylist_Click"/>
-                            </ContextMenu>
-                        </ListView.Resources>
-
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Path=Title}" FontSize="15"/>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-
-                        <ListView.ItemContainerStyle>
-                            <Style TargetType="{x:Type ListViewItem}">
-                                <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}"/>
-                            </Style>
-                        </ListView.ItemContainerStyle>
-
-                    </ListView>
-
-                    <Button x:Name="addPlaylist" Click="addPlaylist_Click"
-                            Grid.Row="2"  
-                            Margin="0,5,0,5" 
-                            Style="{DynamicResource Button_Dark}" 
-                            HorizontalAlignment="Right">
-
-                        <Button.Content>
-                            <TextBlock Text="Добавить" Margin="5,0,5,0"/>
-                        </Button.Content>
-                    </Button>
-
-                    <Button x:Name="removePlaylist" Click="removePlaylist_Click" 
-                            Grid.Row="2"  
-                            Margin="0,5,0,5" 
-                            Style="{DynamicResource Button_Dark}" 
-                            HorizontalAlignment="Left">
-
-                        <Button.Content>
-                            <TextBlock Text="Удалить" Margin="5,0,5,0"/>
-                        </Button.Content>
-                    </Button>
-                </Grid>
-
-            </TabItem>
-        </TabControl>
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" 
+                      VerticalAlignment="Stretch" Margin="0,0,0,0" 
+                       BorderThickness="0">
+                <GridSplitter.Background>
+                    <LinearGradientBrush StartPoint="0,5" EndPoint="1,5">
+                        <GradientStop Color="#949494" Offset="0"/>
+                        <GradientStop Color="#D4D4D4" Offset="0.7"/>
+                        <GradientStop Color="#EDEDED" Offset="1"/>
+                    </LinearGradientBrush>
+                </GridSplitter.Background>
+            </GridSplitter>
+        </Grid>
     </Grid>
 </Window>

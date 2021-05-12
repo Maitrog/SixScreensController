@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using Six_Screens_Controller.view;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -47,10 +48,10 @@ namespace Six_Screens_Controller
                 {
                     string path = fileName;
                     string exp = path.Split("\\").LastOrDefault().Split('.').LastOrDefault();
-                    if (MainWindow.imageExp.Contains(exp))
+                    if (ScreensPageView.imageExp.Contains(exp))
                         elements.Add(new PlaylistElement { Path = openFileDialog.FileName.Replace("\\", "/") });
 
-                    if (MainWindow.videoExp.Contains(exp))
+                    if (ScreensPageView.videoExp.Contains(exp))
                     {
                         MediaElement video = new MediaElement();
                         video.Source = new Uri(path, UriKind.Absolute);
@@ -91,7 +92,7 @@ namespace Six_Screens_Controller
         }
 
         void media_MediaOpened(object sender, System.Windows.RoutedEventArgs e)
-        { 
+        {
         }
     }
 }

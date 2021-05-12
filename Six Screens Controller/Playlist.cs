@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Six_Screens_Controller.view;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,9 +24,9 @@ namespace Six_Screens_Controller
             {
                 if (PlaylistElements[i].Path.Split("/").LastOrDefault().Split(".").LastOrDefault() == "gif")
                     mediaType = "gif";
-                else if (MainWindow.imageExp.Contains(PlaylistElements[i].Path.Split("/").LastOrDefault().Split(".").LastOrDefault()))
+                else if (ScreensPageView.imageExp.Contains(PlaylistElements[i].Path.Split("/").LastOrDefault().Split(".").LastOrDefault()))
                     mediaType = "img";
-                else if (MainWindow.videoExp.Contains(PlaylistElements[i].Path.Split("/").LastOrDefault().Split(".").LastOrDefault()))
+                else if (ScreensPageView.videoExp.Contains(PlaylistElements[i].Path.Split("/").LastOrDefault().Split(".").LastOrDefault()))
                     mediaType = "vid";
                 if (i != PlaylistElements.Count - 1)
                     json += $"{{\r\n\"location\": \"{PlaylistElements[i].Path}\",\r\n" +

@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Создание нового шаблона" Height="490" Width="508"
         MinHeight="490" MinWidth="508"
-        MaxHeight="490" MaxWidth="508" Style="{DynamicResource Window_Dark}"
+        MaxHeight="490" MaxWidth="508"
         Name="AddTemplate">
 
 
@@ -18,15 +18,14 @@
         </Grid.RowDefinitions>
 
         <ScrollViewer>
-            <StackPanel x:Name="StackPanel" TextBlock.FontSize="13" Background="#616161" TextBlock.Foreground="#FFE0E0E0">
+            <StackPanel x:Name="StackPanel" TextBlock.FontSize="13">
                 <TextBlock Text="Создание нового шаблона" FontSize="20" Margin="10,3,10,3"/>
 
                 <TextBlock Text="Название" Margin="10,3,10,3" FontSize="15"/>
 
                 <TextBox x:Name="title" FontSize="15"
                          HorizontalAlignment="Stretch" 
-                         Margin="10,3,10,3" 
-                         Style="{DynamicResource TextBox_Dark}"/>
+                         Margin="10,3,10,3"/>
 
                 <TextBlock Text="Экран №1" 
                            Margin="10,3,10,3" Grid.Row="0"/>
@@ -56,8 +55,7 @@
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="Ok" Click="Ok_Click" Grid.Column="1" 
-                    Margin="0,0,3,0" Width="68" 
-                    Style="{DynamicResource Button_Dark}" 
+                    Margin="0,0,3,0" Width="68"
                     HorizontalAlignment="Right">
 
                 <Button.Content>
@@ -65,8 +63,7 @@
                 </Button.Content>
             </Button>
             <Button x:Name="Cancel" Click="Cancel_Click" 
-                    Grid.Column="2" Margin="3,0,0,0" Width="68" 
-                    Style="{DynamicResource Button_Dark}">
+                    Grid.Column="2" Margin="3,0,0,0" Width="68">
 
                 <Button.Content>
                     <TextBlock Text="Отмена" Margin="5,0,5,0"/>
