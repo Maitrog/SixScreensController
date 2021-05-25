@@ -14,6 +14,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
+
+//TODO: исправить добавление одинаковых элементов
 namespace Six_Screens_Controller
 {
     public partial class AddPlaylistWindow : Window
@@ -30,35 +32,42 @@ namespace Six_Screens_Controller
 
         public void AddPlaylist_Loaded(object sender, RoutedEventArgs e)
         {
-            Binding OkIsEnabledBinding = new Binding();
-            OkIsEnabledBinding.ElementName = "playlistTitle";
-            OkIsEnabledBinding.Path = new PropertyPath("Text.Length");
-            OkIsEnabledBinding.Converter = new IntToBoolConverter();
+            Binding OkIsEnabledBinding = new Binding
+            {
+                ElementName = "playlistTitle",
+                Path = new PropertyPath("Text.Length"),
+                Converter = new IntToBoolConverter()
+            };
 
             Ok.SetBinding(IsEnabledProperty, OkIsEnabledBinding);
         }
 
         private void addElement_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Multiselect = true;
+            OpenFileDialog openFileDialog = new OpenFileDialog 
+            { 
+                Multiselect = true 
+            };
+
             if (openFileDialog.ShowDialog() == true)
             {
                 foreach (string fileName in openFileDialog.FileNames)
                 {
                     string path = fileName;
                     string exp = path.Split("\\").LastOrDefault().Split('.').LastOrDefault();
-                    if (ScreensPageView.imageExp.Contains(exp))
-                        elements.Add(new PlaylistElement { Path = openFileDialog.FileName.Replace("\\", "/") });
+                    if (Utils.imageExp.Contains(exp))
+                        elements.Add(new PlaylistElement { Path = fileName.Replace("\\", "/") });
 
-                    if (ScreensPageView.videoExp.Contains(exp))
+                    if (Utils.videoExp.Contains(exp))
                     {
-                        MediaElement video = new MediaElement();
-                        video.Source = new Uri(path, UriKind.Absolute);
-                        video.MediaOpened += new System.Windows.RoutedEventHandler(media_MediaOpened);
-                        video.LoadedBehavior = MediaState.Manual;
-                        video.UnloadedBehavior = MediaState.Manual;
-                        video.Volume = 0;
+                        MediaElement video = new MediaElement
+                        {
+                            Source = new Uri(path, UriKind.Absolute),
+                            LoadedBehavior = MediaState.Manual,
+                            UnloadedBehavior = MediaState.Manual,
+                            Volume = 0
+                        };
+                        video.MediaOpened += new System.Windows.RoutedEventHandler(Media_MediaOpened);
 
                         video.Play();
                         while (!video.NaturalDuration.HasTimeSpan) { }  //без этой строчки NaturalDuration не успевает вычислиться, и равен Automatic
@@ -83,7 +92,6 @@ namespace Six_Screens_Controller
         private void Ok_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = true;
-
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
@@ -91,7 +99,7 @@ namespace Six_Screens_Controller
             this.DialogResult = false;
         }
 
-        void media_MediaOpened(object sender, System.Windows.RoutedEventArgs e)
+        void Media_MediaOpened(object sender, System.Windows.RoutedEventArgs e)
         {
         }
     }

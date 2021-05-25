@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -46,7 +47,7 @@ namespace Six_Screens_Controller
             MainGrid.Children.Insert(2, screensPage);
         }
 
-        private void TemplateButton_Click(object sender, RoutedEventArgs e)
+        async private void TemplateButton_Click(object sender, RoutedEventArgs e)
         {
             if (MainGrid.Children[2].GetType() != Type.GetType("Six_Screens_Controller.view.TemplatesPageView"))
             {
@@ -58,21 +59,35 @@ namespace Six_Screens_Controller
                 ((MainGrid.Children[0] as Grid).Children[1] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
                 ((MainGrid.Children[0] as Grid).Children[3] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
                 ((MainGrid.Children[0] as Grid).Children[2] as Button).Background = new SolidColorBrush(Color.FromRgb(197, 197, 197));
+
+                await Task.Run(() =>
+                {
+                    while (!templatesPageControl.IsDestroy)
+                    {
+                        if (templatesPageControl.IsChangeTemplate)
+                        {
+                            screensPage.IsChangedTemplate = true;
+                            Thread.Sleep(2);
+                            ScreenTemplateNow = templatesPageControl.ScreenTemplate;
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                templatesPageControl.IsChangeTemplate = false;
+                                if (ScreenTemplateNow != null)
+                                    screensPage.SetScreenTemplate(ScreenTemplateNow);
+                            });
+                        }
+                        Thread.Sleep(100);
+                    }
+                });
             }
         }
 
         private void PlaylistButton_Click(object sender, RoutedEventArgs e)
         {
-            if (MainGrid.Children[2].GetType() == Type.GetType("Six_Screens_Controller.view.TemplatesPageView"))
-            {
-                if ((MainGrid.Children[2] as TemplatesPageView).ScreenTemplate != null)
-                {
-                    ScreenTemplateNow = (MainGrid.Children[2] as TemplatesPageView).ScreenTemplate;
-                    screensPage.SetScreenTemplate(ScreenTemplateNow);
-                }
-            }
             if (MainGrid.Children[2].GetType() != Type.GetType("Six_Screens_Controller.view.PlaylistsPageView"))
             {
+                if (MainGrid.Children[2].GetType() == Type.GetType("Six_Screens_Controller.view.TemplatesPageView"))
+                    (MainGrid.Children[2] as TemplatesPageView).IsDestroy = true;
                 PlaylistsPageView playlistsPageControl = new PlaylistsPageView();
                 Grid.SetColumn(playlistsPageControl, 2);
                 MainGrid.Children.RemoveAt(2);
@@ -86,16 +101,10 @@ namespace Six_Screens_Controller
 
         private void ScreenButton_Click(object sender, RoutedEventArgs e)
         {
-            if (MainGrid.Children[2].GetType() == Type.GetType("Six_Screens_Controller.view.TemplatesPageView"))
-            {
-                if ((MainGrid.Children[2] as TemplatesPageView).ScreenTemplate != null)
-                {
-                    ScreenTemplateNow = (MainGrid.Children[2] as TemplatesPageView).ScreenTemplate;
-                    screensPage.SetScreenTemplate(ScreenTemplateNow);
-                }
-            }
             if (MainGrid.Children[2].GetType() != Type.GetType("Six_Screens_Controller.view.ScreensPageView"))
             {
+                if (MainGrid.Children[2].GetType() == Type.GetType("Six_Screens_Controller.view.TemplatesPageView"))
+                    (MainGrid.Children[2] as TemplatesPageView).IsDestroy = true;
                 MainGrid.Children.RemoveAt(2);
                 MainGrid.Children.Insert(2, screensPage);
 
@@ -105,7 +114,6 @@ namespace Six_Screens_Controller
             }
         }
 
- 
         private void Settings_Click(object sender, RoutedEventArgs e)
         {
             Config Config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
@@ -132,9 +140,7 @@ namespace Six_Screens_Controller
                         File.WriteAllText("config.txt", serverConfig);
                     }
 
-                    Config = settingsWindow.config;
-
-                    File.WriteAllText("config.json", JsonConvert.SerializeObject(Config));
+                    File.WriteAllText("config.json", JsonConvert.SerializeObject(settingsWindow.config));
 
                     MessageBox.Show("Для вступления изменений в силу перезапустите приложение");
                 }

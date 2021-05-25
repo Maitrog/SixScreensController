@@ -24,9 +24,9 @@ namespace Six_Screens_Controller
             {
                 if (PlaylistElements[i].Path.Split("/").LastOrDefault().Split(".").LastOrDefault() == "gif")
                     mediaType = "gif";
-                else if (ScreensPageView.imageExp.Contains(PlaylistElements[i].Path.Split("/").LastOrDefault().Split(".").LastOrDefault()))
+                else if (Utils.imageExp.Contains(PlaylistElements[i].Path.Split("/").LastOrDefault().Split(".").LastOrDefault()))
                     mediaType = "img";
-                else if (ScreensPageView.videoExp.Contains(PlaylistElements[i].Path.Split("/").LastOrDefault().Split(".").LastOrDefault()))
+                else if (Utils.videoExp.Contains(PlaylistElements[i].Path.Split("/").LastOrDefault().Split(".").LastOrDefault()))
                     mediaType = "vid";
                 if (i != PlaylistElements.Count - 1)
                     json += $"{{\r\n\"location\": \"{PlaylistElements[i].Path}\",\r\n" +

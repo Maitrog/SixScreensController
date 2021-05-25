@@ -1,11 +1,15 @@
-﻿using Microsoft.Win32;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Win32;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -23,20 +27,13 @@ namespace Six_Screens_Controller.view
     /// </summary>
     public partial class ScreensPageView : UserControl
     {
-        public static readonly string[] imageExp = new string[] { "jpg", "jepg", "bmp", "png", "webp" };
-        public static readonly string[] videoExp = new string[] { "mp4", "avi", "mpeg", "mkv", "3gp", "3g2" };
         public ScreenTemplate ScreenTemplateNow { get; set; }
+        public bool IsChangedTemplate { get; set; } = false;
 
         public ScreensPageView(ScreenTemplate screenTemplate)
         {
-            ScreenTemplateNow = screenTemplate;
             InitializeComponent();
-            Loaded += ScreensPageView_Loaded;
-        }
-
-        private void ScreensPageView_Loaded(object sender, RoutedEventArgs e)
-        {
-            this.SetScreenTemplate(ScreenTemplateNow);
+            SetScreenTemplate(screenTemplate);
         }
 
         private void ChooseElement_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -54,35 +51,38 @@ namespace Six_Screens_Controller.view
             {
                 if (e.Data.GetDataPresent(DataFormats.FileDrop))
                 {
-                    string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                    string exp = files[0].Split("\\").LastOrDefault().Split('.').LastOrDefault().ToLower();
+                    string file = ((string[])e.Data.GetData(DataFormats.FileDrop))[0];
+                    string exp = file.Split("\\").LastOrDefault().Split('.').LastOrDefault().ToLower();
 
-                    if (imageExp.Contains(exp))
+                    if (Utils.imageExp.Contains(exp))
                     {
-                        Image img = CreateImage(files[0]);
+                        Image img = Utils.CreateImage(file);
 
                         (sender as ListViewItem).Content = img;
-                        PutRequest(Convert.ToInt32(((ListViewItem)sender).Uid), files[0], "img");
+                        Utils.PutRequest(Convert.ToInt32(((ListViewItem)sender).Uid), file, "img");
                     }
 
-                    else if (videoExp.Contains(exp))
+                    else if (Utils.videoExp.Contains(exp))
                     {
-                        MediaElement video = CreateVideo(files[0]);
+                        MediaElement video = Utils.CreateVideo(file);
 
                         (sender as ListViewItem).Content = video;
-                        PutRequest(Convert.ToInt32(((ListViewItem)sender).Uid), files[0], "vid");
+                        Utils.PutRequest(Convert.ToInt32(((ListViewItem)sender).Uid), file, "vid");
                     }
 
                     else if (exp == "gif")
                     {
-                        MediaElement video = CreateVideo(files[0]);
+                        MediaElement gif = Utils.CreateVideo(file);
 
-                        (sender as ListViewItem).Content = video;
-                        PutRequest(Convert.ToInt32(((ListViewItem)sender).Uid), files[0], "gif");
+                        (sender as ListViewItem).Content = gif;
+                        Utils.PutRequest(Convert.ToInt32(((ListViewItem)sender).Uid), file, "gif");
                     }
-                }
-                RefreshRequest();
 
+                    ScreenTemplateNow.ScreenTemplateElements.RemoveAt(Convert.ToInt32(((ListViewItem)sender).Uid) - 1);
+                    ScreenTemplateNow.ScreenTemplateElements.Insert(Convert.ToInt32(((ListViewItem)sender).Uid) - 1, 
+                        new ScreenTemplateElement() { ScreenNumber = Convert.ToInt32(((ListViewItem)sender).Uid), Path = file });
+                    Utils.RefreshRequest(Convert.ToInt32(((ListViewItem)sender).Uid));
+                }
             }
             catch (Exception ex)
             {
@@ -90,6 +90,7 @@ namespace Six_Screens_Controller.view
             }
         }
 
+        //TODO:Добавить измение ScreenTemplateNow при выборе видео или гиф
         private void BrowseFile_Click(object sender, RoutedEventArgs e)
         {
             string pickedFile;
@@ -101,32 +102,45 @@ namespace Six_Screens_Controller.view
                     pickedFile = openFileDialog.FileName;
                     string exp = pickedFile.Split("\\").LastOrDefault().Split('.').LastOrDefault().ToLower();
 
-                    if (imageExp.Contains(exp))
+                    if (Utils.imageExp.Contains(exp))
                     {
-
                         foreach (var i in Elements.Children)
                         {
                             if ((i as ListViewItem).IsSelected == true)
                             {
-                                Image img = CreateImage(pickedFile);
+                                int screenNumber = Convert.ToInt32(((ListViewItem)i).Uid);
+
+                                Image img = Utils.CreateImage(pickedFile);
                                 (i as ListViewItem).Content = img;
                                 (i as ListViewItem).IsSelected = false;
-                                PutRequest(Convert.ToInt32(((ListViewItem)i).Uid), pickedFile, "img");
+
+                                Utils.PutRequest(screenNumber, pickedFile, "img");
+                                Utils.RefreshRequest(screenNumber);
+
+                                ScreenTemplateNow.ScreenTemplateElements[screenNumber - 1]
+                                = new ScreenTemplateElement() { ScreenNumber = screenNumber, Path = pickedFile };
                             }
                         }
                     }
 
-                    else if (videoExp.Contains(exp))
+                    else if (Utils.videoExp.Contains(exp))
                     {
                         foreach (var i in Elements.Children)
                         {
 
                             if ((i as ListViewItem).IsSelected == true)
                             {
-                                MediaElement video = CreateVideo(pickedFile);
+                                int screenNumber = Convert.ToInt32(((ListViewItem)i).Uid);
+
+                                MediaElement video = Utils.CreateVideo(pickedFile);
                                 (i as ListViewItem).Content = video;
                                 (i as ListViewItem).IsSelected = false;
-                                PutRequest(Convert.ToInt32(((ListViewItem)i).Uid), pickedFile, "vid");
+
+                                Utils.PutRequest(screenNumber, pickedFile, "vid");
+                                Utils.RefreshRequest(screenNumber);
+
+                                ScreenTemplateNow.ScreenTemplateElements[screenNumber - 1]
+                                = new ScreenTemplateElement() { ScreenNumber = screenNumber, Path = pickedFile };
                             }
                         }
                     }
@@ -138,14 +152,20 @@ namespace Six_Screens_Controller.view
 
                             if ((i as ListViewItem).IsSelected == true)
                             {
-                                MediaElement video = CreateVideo(pickedFile);
+                                int screenNumber = Convert.ToInt32(((ListViewItem)i).Uid);
+
+                                MediaElement video = Utils.CreateVideo(pickedFile);
                                 (i as ListViewItem).Content = video;
                                 (i as ListViewItem).IsSelected = false;
-                                PutRequest(Convert.ToInt32(((ListViewItem)i).Uid), pickedFile, "gif");
+
+                                Utils.PutRequest(screenNumber, pickedFile, "gif");
+                                Utils.RefreshRequest(screenNumber);
+
+                                ScreenTemplateNow.ScreenTemplateElements[screenNumber - 1]
+                                = new ScreenTemplateElement() { ScreenNumber = screenNumber, Path = pickedFile };
                             }
                         }
                     }
-                    RefreshRequest();
                 }
             }
             catch (Exception ex)
@@ -162,108 +182,10 @@ namespace Six_Screens_Controller.view
             }
         }
 
-        private Image CreateImage(string path)
-        {
-            BitmapImage bmp = new BitmapImage();
-            bmp.BeginInit();
-            bmp.UriSource = new Uri(path, UriKind.Absolute);
-            bmp.EndInit();
-
-            Image img = new Image();
-            img.Source = bmp;
-            img.Margin = new Thickness(0, 5, 0, 5);
-            img.Stretch = Stretch.Uniform;
-
-            return img;
-        }
-        private MediaElement CreateVideo(string path)
-        {
-            MediaElement video = new MediaElement();
-            video.Source = new Uri(path, UriKind.Absolute);
-            video.Stretch = Stretch.Uniform;
-            video.Margin = new Thickness(0, 5, 0, 5);
-            video.Volume = 0;
-            video.LoadedBehavior = MediaState.Play;
-
-            return video;
-        }
-
-        public static bool PutRequest(int number, string file, string mediaType, int duration = 1)
-        {
-            Config  config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(@"config.json"));
-            string route = $"screen/{number}";
-            string url = $"{config.Protocol}://{config.Host}:{config.Port}/{route}";
-            file = file.Replace("\\", "/");
-
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-            httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = "PUT";
-
-            string jsonString = $"{{\n \"location\": \"{file}\",\n" +
-            $"\"duration\": {duration},\n" +
-            $"\"media_type\": \"{mediaType}\"}}";
-
-            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-            {
-                streamWriter.Write(jsonString);
-            }
-
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-            {
-                var result = streamReader.ReadToEnd();
-                Console.WriteLine(result);
-            }
-
-            return true;
-        }
-
-        public static bool PutRequestPlaylist(int number, string jsonStr)
-        {
-            Config config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(@"config.json"));
-            string route = $"playlist/{number}";
-            string url = $"{config.Protocol}://{config.Host}:{config.Port}/{route}";
-
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-            httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = "PUT";
-
-            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-            {
-                streamWriter.Write(jsonStr);
-            }
-
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-            {
-                var result = streamReader.ReadToEnd();
-                Console.WriteLine(result);
-            }
-
-            return true;
-        }
-
-        public static void RefreshRequest()
-        {
-            Config config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(@"config.json"));
-            string route = $"refresh";
-            string url = $"{config.Protocol}://{config.Host}:{config.Port}/{route}";
-
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-            httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = "GET";
-
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-            {
-                var result = streamReader.ReadToEnd();
-                Console.WriteLine(result);
-            }
-        }
-
         public void SetScreenTemplate(ScreenTemplate screenTemplate)
         {
             ScreenTemplateNow = screenTemplate;
+            IsChangedTemplate = false;
             try
             {
                 for (int i = 0; i < 6; i++)
@@ -271,38 +193,27 @@ namespace Six_Screens_Controller.view
                     if (ScreenTemplateNow.ScreenTemplateElements[i].IsPlaylist == false)
                     {
                         string exp = ScreenTemplateNow.ScreenTemplateElements[i].Path.Split("\\").LastOrDefault().Split('.').LastOrDefault();
-                        if (imageExp.Contains(exp))
+                        if (Utils.imageExp.Contains(exp))
                         {
-                            Image img = CreateImage(ScreenTemplateNow.ScreenTemplateElements[i].Path);
-
+                            Image img = Utils.CreateImage(ScreenTemplateNow.ScreenTemplateElements[i].Path);
                             (Elements.Children[i] as ListViewItem).Content = img;
-                            PutRequest(i + 1, ScreenTemplateNow.ScreenTemplateElements[i].Path, "img");
                         }
-                        else if (videoExp.Contains(exp))
+                        else if (Utils.videoExp.Contains(exp))
                         {
-                            MediaElement video = CreateVideo(ScreenTemplateNow.ScreenTemplateElements[i].Path);
-
+                            MediaElement video = Utils.CreateVideo(ScreenTemplateNow.ScreenTemplateElements[i].Path);
                             (Elements.Children[i] as ListViewItem).Content = video;
-                            PutRequest(i + 1, ScreenTemplateNow.ScreenTemplateElements[i].Path, "vid");
                         }
                         else if (exp == "gif")
                         {
-                            MediaElement video = CreateVideo(ScreenTemplateNow.ScreenTemplateElements[i].Path);
-
+                            MediaElement video = Utils.CreateVideo(ScreenTemplateNow.ScreenTemplateElements[i].Path);
                             (Elements.Children[i] as ListViewItem).Content = video;
-                            PutRequest(i + 1, ScreenTemplateNow.ScreenTemplateElements[i].Path, "gif");
                         }
                     }
                     else
                     {
-                        string path = Directory.GetCurrentDirectory() + "\\assets\\playlist.jpg";
-                        Image img = CreateImage(path);
-
-                        (Elements.Children[i] as ListViewItem).Content = img;
-                        PutRequestPlaylist(i + 1, ScreenTemplateNow.ScreenTemplateElements[i].Path);
+                        SetPlaylist(ScreenTemplateNow.ScreenTemplateElements[i].Path, Convert.ToInt32((Elements.Children[i] as ListViewItem).Uid));
                     }
                 }
-                RefreshRequest();
             }
             catch (Exception ex)
             {
@@ -310,9 +221,106 @@ namespace Six_Screens_Controller.view
             }
         }
 
+        async void SetPlaylist(string json, int screenNumber)
+        {
+            Playlist playlist;
+            int id = ((dynamic)JsonConvert.DeserializeObject(json)).id;
+            using (PlaylistContext db = new PlaylistContext())
+                playlist = db.Playlists.Where(x => x.Id == id).Include(x => x.PlaylistElements).FirstOrDefault();
+
+            await Task.Run(() =>
+            {
+                for(int i = 0; i < playlist.PlaylistElements.Count; i++)
+                {
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        Image img = Utils.CreateImage(playlist.PlaylistElements[i].Path);
+                        (Elements.Children[screenNumber - 1] as ListViewItem).Content = img;
+                    });
+
+                    Stopwatch stopwatch = new Stopwatch();
+                    stopwatch.Start();
+                    while (stopwatch.Elapsed < TimeSpan.FromSeconds(playlist.PlaylistElements[i].Duration))
+                    {
+                        Thread.Sleep(1);
+                        if (IsChangedTemplate)
+                            goto Finish;
+                    }
+                }
+
+            Finish:;
+            });
+        }
+
         private void Refresh_Click(object sender, RoutedEventArgs e)
         {
-            RefreshRequest();
+            IsChangedTemplate = true;
+            Thread.Sleep(5);
+            SetScreenTemplate(ScreenTemplateNow);
+            Utils.RefreshRequest();
+        }
+
+        private void Screen_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            string pickedFile;
+            try
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    int screenNumber = Convert.ToInt32(((ListViewItem)sender).Uid);
+                    pickedFile = openFileDialog.FileName;
+                    string exp = pickedFile.Split("\\").LastOrDefault().Split('.').LastOrDefault().ToLower();
+
+                    if (Utils.imageExp.Contains(exp))
+                    {
+                        Image img = Utils.CreateImage(pickedFile);
+
+                        (sender as ListViewItem).Content = img;
+                        (sender as ListViewItem).IsSelected = false;
+
+                        Utils.PutRequest(screenNumber, pickedFile, "img");
+                        Utils.RefreshRequest(screenNumber);
+
+                        ScreenTemplateNow.ScreenTemplateElements[screenNumber - 1]
+                            = new ScreenTemplateElement() { ScreenNumber = screenNumber, Path = pickedFile };
+                    }
+
+                    else if (Utils.videoExp.Contains(exp))
+                    {
+
+                        MediaElement video = Utils.CreateVideo(pickedFile);
+                        (sender as ListViewItem).Content = video;
+                        (sender as ListViewItem).IsSelected = false;
+
+                        Utils.PutRequest(screenNumber, pickedFile, "vid");
+                        Utils.RefreshRequest(screenNumber);
+
+                        ScreenTemplateNow.ScreenTemplateElements[screenNumber - 1]
+                            = new ScreenTemplateElement() { ScreenNumber = screenNumber, Path = pickedFile };
+
+                    }
+
+                    else if (exp == "gif")
+                    {
+
+                        MediaElement video = Utils.CreateVideo(pickedFile);
+                        (sender as ListViewItem).Content = video;
+                        (sender as ListViewItem).IsSelected = false;
+
+                        Utils.PutRequest(screenNumber, pickedFile, "gif");
+                        Utils.RefreshRequest(screenNumber);
+
+                        ScreenTemplateNow.ScreenTemplateElements[screenNumber - 1]
+                            = new ScreenTemplateElement() { ScreenNumber = screenNumber, Path = pickedFile };
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

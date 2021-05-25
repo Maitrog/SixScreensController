@@ -21,6 +21,9 @@ namespace Six_Screens_Controller.view
     public partial class TemplatesPageView : UserControl
     {
         public ScreenTemplate ScreenTemplate { get; set; }
+        public bool IsDestroy { get; set; } = false;
+        public bool IsChangeTemplate { get; set; } = false;
+
         public TemplatesPageView()
         {
             InitializeComponent();
@@ -32,7 +35,7 @@ namespace Six_Screens_Controller.view
             try
             {
                 using (TemplateContext db = new TemplateContext())
-                    templateList.ItemsSource = db.ScreenTemplates.Include(x => x.ScreenTemplateElements).ToList();
+                    templateList.ItemsSource = db.ScreenTemplates.ToList();
             }
             catch (Exception ex)
             {
@@ -50,65 +53,63 @@ namespace Six_Screens_Controller.view
                     db.ScreenTemplates.Add(addTemplateWindow.ScreenTemplate);
                     db.SaveChanges();
 
-                    var templates = db.ScreenTemplates.ToList();
-                    templateList.ItemsSource = templates;
+                    templateList.ItemsSource = db.ScreenTemplates.ToList();
                 }
             }
         }
 
         private void removeTemplate_Click(object sender, RoutedEventArgs e)
         {
-            if (templateList.SelectedItems.Count > 0)
-            {
-                var ScreenTemplate = templateList.SelectedItem;
-                using (TemplateContext db = new TemplateContext())
-                {
-                    if (ScreenTemplate != null)
-                    {
-                        ScreenTemplate screenTemplate = db.ScreenTemplates.Where(x => x.Id == (ScreenTemplate as ScreenTemplate).Id).FirstOrDefault();
-                        for (int i = 0; i < screenTemplate.ScreenTemplateElements.Count; i++)
-                            db.ScreenTemplateElements.Remove(screenTemplate.ScreenTemplateElements[i]);
-                        db.ScreenTemplates.Remove(screenTemplate);
-                    }
-                    db.SaveChanges();
 
-                    var templates = db.ScreenTemplates.ToList();
-                    templateList.ItemsSource = templates;
+            var ScreenTemplate = templateList.SelectedItem;
+            using (TemplateContext db = new TemplateContext())
+            {
+                if (ScreenTemplate != null)
+                {
+                    ScreenTemplate screenTemplate = db.ScreenTemplates.Where(x => x.Id == (ScreenTemplate as ScreenTemplate).Id).FirstOrDefault();
+                    for (int i = 0; i < screenTemplate.ScreenTemplateElements.Count; i++)
+                        db.ScreenTemplateElements.Remove(screenTemplate.ScreenTemplateElements[i]);
+                    db.ScreenTemplates.Remove(screenTemplate);
                 }
+                db.SaveChanges();
+
+                templateList.ItemsSource = db.ScreenTemplates.ToList();
+
             }
         }
 
-        //TODO: Вынести функции CreateVideo, CreateImage, PutRequest, PutRequestPlaylist, RefreshRequest и списки imageExp, videoExp в отдельный класс
         private void templateList_MouseDoubleClick(object sender, RoutedEventArgs e)
         {
-            ScreenTemplate = templateList.SelectedItem as ScreenTemplate;
-
+            using (TemplateContext db = new TemplateContext())
+                ScreenTemplate = db.ScreenTemplates.Include(x => x.ScreenTemplateElements).Where(x=> x.Id == (templateList.SelectedItem as ScreenTemplate).Id).FirstOrDefault();
+            
             try
             {
                 for (int i = 0; i < 6; i++)
                 {
-                    if (ScreenTemplate.ScreenTemplateElements[i].IsPlaylist == false)
+                    if (!ScreenTemplate.ScreenTemplateElements[i].IsPlaylist)
                     {
                         string exp = ScreenTemplate.ScreenTemplateElements[i].Path.Split("\\").LastOrDefault().Split('.').LastOrDefault();
-                        if (ScreensPageView.imageExp.Contains(exp))
+                        if (Utils.imageExp.Contains(exp))
                         {
-                            ScreensPageView.PutRequest(i + 1, ScreenTemplate.ScreenTemplateElements[i].Path, "img");
+                            Utils.PutRequest(i + 1, ScreenTemplate.ScreenTemplateElements[i].Path, "img");
                         }
-                        else if (ScreensPageView.videoExp.Contains(exp))
+                        else if (Utils.videoExp.Contains(exp))
                         {
-                            ScreensPageView.PutRequest(i + 1, ScreenTemplate.ScreenTemplateElements[i].Path, "vid");
+                            Utils.PutRequest(i + 1, ScreenTemplate.ScreenTemplateElements[i].Path, "vid");
                         }
                         else if (exp == "gif")
                         {
-                            ScreensPageView.PutRequest(i + 1, ScreenTemplate.ScreenTemplateElements[i].Path, "gif");
+                            Utils.PutRequest(i + 1, ScreenTemplate.ScreenTemplateElements[i].Path, "gif");
                         }
                     }
                     else
                     {
-                        ScreensPageView.PutRequestPlaylist(i + 1, ScreenTemplate.ScreenTemplateElements[i].Path);
+                        Utils.PutRequestPlaylist(i + 1, ScreenTemplate.ScreenTemplateElements[i].Path);
                     }
                 }
-                ScreensPageView.RefreshRequest();
+                Utils.RefreshRequest();
+                IsChangeTemplate = true;
             }
             catch (Exception ex)
             {
@@ -118,7 +119,10 @@ namespace Six_Screens_Controller.view
 
         private void changeTemplate_Click(object sender, RoutedEventArgs e)
         {
-            ChangeTemplateWindow changeTemplateWindow = new ChangeTemplateWindow(templateList.SelectedItem as ScreenTemplate);
+            using (TemplateContext db = new TemplateContext())
+                ScreenTemplate = db.ScreenTemplates.Include(x => x.ScreenTemplateElements).Where(x => x.Id == (templateList.SelectedItem as ScreenTemplate).Id).FirstOrDefault();
+
+            ChangeTemplateWindow changeTemplateWindow = new ChangeTemplateWindow(ScreenTemplate);
             using (TemplateContext db = new TemplateContext())
             {
                 if (changeTemplateWindow.ShowDialog() == true)
@@ -137,8 +141,7 @@ namespace Six_Screens_Controller.view
                     }
                     db.SaveChanges();
 
-                    var templates = db.ScreenTemplates.Include(x => x.ScreenTemplateElements).ToList();
-                    templateList.ItemsSource = templates;
+                    templateList.ItemsSource = db.ScreenTemplates.Include(x => x.ScreenTemplateElements).ToList();
                 }
             }
         }
