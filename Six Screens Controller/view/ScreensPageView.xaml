@@ -55,7 +55,7 @@
                     HorizontalAlignment="Center" BorderThickness="0" Margin="0,0,0,5"
                     Click="PickAll_Click" ToolTip="Выделить всё">
                 <Button.Content>
-                    <Image Source="../assets/PickAllIcon50x50.png" Width="30" Height="30"/>
+                    <Image Source="../assets/PickAllIcon50x50.png"/>
                 </Button.Content>
             </Button>
 
@@ -94,54 +94,98 @@
             <ListViewItem x:Name="s1" Grid.Column="0" Grid.Row="1" x:Uid="1"
                           Style="{StaticResource ListViewItem1}"
                           Drop="File_Drop"
-                          MouseLeftButtonUp="ChooseElement_MouseLeftButtonUp">
+                          MouseLeftButtonUp="ChooseElement_MouseLeftButtonUp"
+                          MouseDoubleClick="Screen_MouseDoubleClick">
                 <Image Source="C:\Users\Mihay\Documents\vk-design\vk\SixScreensController\Six Screens Controller/assets/Default.jpg"/>
             </ListViewItem>
 
-            <ListViewItem x:Name="s2" Grid.Column="1" Grid.Row="1" x:Uid="2"
+            <ListViewItem x:Name="s2" Grid.Column="0" Grid.Row="2" x:Uid="2"
                           Style="{StaticResource ListViewItem1}"
                           Drop="File_Drop"
-                          MouseLeftButtonUp="ChooseElement_MouseLeftButtonUp">
-                <Border BorderThickness="2">
-                    <Image Source="C:\Users\Mihay\Documents\vk-design\vk\SixScreensController\Six Screens Controller/assets/Default.jpg"/>
-                </Border>
+                          MouseLeftButtonUp="ChooseElement_MouseLeftButtonUp"
+                          MouseDoubleClick="Screen_MouseDoubleClick">
+                <Image Source="C:\Users\Mihay\Documents\vk-design\vk\SixScreensController\Six Screens Controller/assets/Default.jpg"/>
             </ListViewItem>
 
-            <ListViewItem x:Name="s3" Grid.Column="0" Grid.Row="2" x:Uid="3"
+            <ListViewItem x:Name="s3" Grid.Column="0" Grid.Row="3" x:Uid="3"
                           Style="{StaticResource ListViewItem1}"
                           Drop="File_Drop"
-                          MouseLeftButtonUp="ChooseElement_MouseLeftButtonUp">
-                <Border BorderThickness="2">
-                    <Image Source="C:\Users\Mihay\Documents\vk-design\vk\SixScreensController\Six Screens Controller/assets/Default.jpg"/>
-                </Border>
+                          MouseLeftButtonUp="ChooseElement_MouseLeftButtonUp"
+                          MouseDoubleClick="Screen_MouseDoubleClick">
+                <Image Source="C:\Users\Mihay\Documents\vk-design\vk\SixScreensController\Six Screens Controller/assets/Default.jpg"/>
             </ListViewItem>
 
-            <ListViewItem x:Name="s4" Grid.Column="1" Grid.Row="2" x:Uid="4"
+            <ListViewItem x:Name="s4" Grid.Column="1" Grid.Row="1" x:Uid="4"
                           Style="{StaticResource ListViewItem1}"
                           Drop="File_Drop"
-                          MouseLeftButtonUp="ChooseElement_MouseLeftButtonUp">
-                <Border BorderThickness="2">
-                    <Image Source="C:\Users\Mihay\Documents\vk-design\vk\SixScreensController\Six Screens Controller/assets/Default.jpg"/>
-                </Border>
+                          MouseLeftButtonUp="ChooseElement_MouseLeftButtonUp"
+                          MouseDoubleClick="Screen_MouseDoubleClick">
+                <Image Source="C:\Users\Mihay\Documents\vk-design\vk\SixScreensController\Six Screens Controller/assets/Default.jpg"/>
             </ListViewItem>
 
-            <ListViewItem x:Name="s5" Grid.Column="0" Grid.Row="3" x:Uid="5"
+            <ListViewItem x:Name="s5" Grid.Column="1" Grid.Row="2" x:Uid="5"
                           Style="{StaticResource ListViewItem1}"
                           Drop="File_Drop"
-                          MouseLeftButtonUp="ChooseElement_MouseLeftButtonUp">
-                <Border BorderThickness="2">
-                    <Image Source="C:\Users\Mihay\Documents\vk-design\vk\SixScreensController\Six Screens Controller/assets/Default.jpg"/>
-                </Border>
+                          MouseLeftButtonUp="ChooseElement_MouseLeftButtonUp"
+                          MouseDoubleClick="Screen_MouseDoubleClick">
+                <Image Source="C:\Users\Mihay\Documents\vk-design\vk\SixScreensController\Six Screens Controller/assets/Default.jpg"/>
             </ListViewItem>
 
             <ListViewItem x:Name="s6" Grid.Column="1" Grid.Row="3" x:Uid="6"
                           Style="{StaticResource ListViewItem1}"
                           Drop="File_Drop"
-                          MouseLeftButtonUp="ChooseElement_MouseLeftButtonUp">
-                <Border BorderThickness="2">
-                    <Image Source="C:\Users\Mihay\Documents\vk-design\vk\SixScreensController\Six Screens Controller/assets/Default.jpg"/>
-                </Border>
+                          MouseLeftButtonUp="ChooseElement_MouseLeftButtonUp"
+                          MouseDoubleClick="Screen_MouseDoubleClick">
+                <Image Source="C:\Users\Mihay\Documents\vk-design\vk\SixScreensController\Six Screens Controller/assets/Default.jpg"/>
             </ListViewItem>
         </Grid>
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="6*"/>
+                <RowDefinition Height="32*"/>
+                <RowDefinition Height="32*"/>
+                <RowDefinition Height="32*"/>
+                <RowDefinition Height="6*"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="1" Width="100" Grid.Row="1" Grid.Column="0"
+                       HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                       FontSize="20" FontFamily="Rounded Mplus" FontWeight="SemiBold"/>
+            <TextBlock Text="2" Width="100" Grid.Row="2" Grid.Column="0"
+                       HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                       FontSize="20" FontFamily="Rounded Mplus" FontWeight="SemiBold"/>
+            <TextBlock Text="3" Width="100" Grid.Row="3" Grid.Column="0"
+                       HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                       FontSize="20" FontFamily="Rounded Mplus" FontWeight="SemiBold"/>
+            <TextBlock Text="4" Width="100" Grid.Row="1" Grid.Column="1"
+                       HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                       FontSize="20" FontFamily="Rounded Mplus" FontWeight="SemiBold"/>
+            <TextBlock Text="5" Width="100" Grid.Row="2" Grid.Column="1"
+                       HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                       FontSize="20" FontFamily="Rounded Mplus" FontWeight="SemiBold"/>
+            <TextBlock Text="6" Width="100" Grid.Row="3" Grid.Column="1"
+                       HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                       FontSize="20" FontFamily="Rounded Mplus" FontWeight="SemiBold"/>
+        </Grid>
+
+        <!--<Grid Grid.Column="0" Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <Rectangle Grid.Row="1" Width="200" Height="50" Fill="Green" RadiusX="25" 
+                           VerticalAlignment="Center" HorizontalAlignment="Center"
+                           RadiusY="25" Margin="50"/>
+            <TextBlock Text="Изображение установлено" Grid.Row="1" VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       Foreground="White"/>
+        </Grid>-->
     </Grid>
 </UserControl>

@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Newtonsoft.Json;
 
+
 namespace Six_Screens_Controller
 {
     /// <summary>
@@ -54,20 +55,24 @@ namespace Six_Screens_Controller
                     string path = (StackPanel.Children[i] as ScreenTemplateElementControl).ElementPath;
                     if (path != null && path != ScreenTemplate.ScreenTemplateElements[(i - 4) / 2].Path)
                     {
-                        ScreenTemplate.ScreenTemplateElements.RemoveAt((i - 4) / 2);
-                        ScreenTemplate.ScreenTemplateElements.Insert((i - 4) / 2, new ScreenTemplateElement() { Path = (StackPanel.Children[i] as ScreenTemplateElementControl).ElementPath });
+                        ScreenTemplate.ScreenTemplateElements[(i - 4) / 2] = new ScreenTemplateElement()
+                        {
+                            Path = (StackPanel.Children[i] as ScreenTemplateElementControl).ElementPath,
+                            ScreenNumber = (i - 4) / 2
+                        };
                     }
                 }
                 else if ((StackPanel.Children[i] as ScreenTemplateElementControl).IsPlaylistScreen.IsChecked == true)
                 {
                     string path = ((StackPanel.Children[i] as ScreenTemplateElementControl).PlaylistScreen.SelectedItem as Playlist).JsonString();
-                    if (path != null && path != ScreenTemplate.ScreenTemplateElements[(i - 4) / 2].Path) ;
+                    if (path != null && path != ScreenTemplate.ScreenTemplateElements[(i - 4) / 2].Path)
                     {
-                        ScreenTemplate.ScreenTemplateElements.RemoveAt((i - 4) / 2);
-                        ScreenTemplate.ScreenTemplateElements.Insert((i - 4) / 2, new ScreenTemplateElement()
+                        ScreenTemplate.ScreenTemplateElements[(i - 4) / 2] = new ScreenTemplateElement()
                         {
-                            Path = path, IsPlaylist = true 
-                        });
+                            Path = path,
+                            IsPlaylist = true,
+                            ScreenNumber = (i - 4) / 2
+                        };
                     }
                 }
             }

@@ -15,19 +15,10 @@ namespace Six_Screens_Controller
     public partial class App : Application
     {
         public Config config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
+        readonly Process process = new Process();
 
-        private System.Threading.Mutex mutex;
-        Process process = new Process();
         private void App_Startup(object sender, StartupEventArgs e)
         {
-            bool createdNew;
-            string mutName = "Application";
-            mutex = new System.Threading.Mutex(true, mutName, out createdNew);
-            if (!createdNew)
-            {
-                this.Shutdown();
-            }
-
             try
             {
                 if (config.Python != "" && config.Server != "")
@@ -54,8 +45,10 @@ namespace Six_Screens_Controller
                             pip.RedirectStandardOutput = true;
                             pip.RedirectStandardError = true;
 
-                            Process p = new Process();
-                            p.StartInfo = pip;
+                            Process p = new Process
+                            {
+                                StartInfo = pip
+                            };
                             p.Start();
 
                             p.WaitForExit();

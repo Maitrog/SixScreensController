@@ -53,7 +53,7 @@
                 <DataTemplate DataType="{x:Type StackPanel}">
                     <StackPanel Orientation="Vertical">
                         <Viewbox HorizontalAlignment="Center" 
-                         MaxHeight="{Binding ElementName=ListTemplates, Path=ActualHeight, 
+                         MaxHeight="{Binding ElementName=templateList, Path=ActualHeight, 
                             Converter={StaticResource TemplateHeightConverter}, ConverterParameter=25}"
                                  Margin="0,15,0,15">
                             <TextBlock Text="{Binding Path=Title}"  Foreground="#595959"
