@@ -79,7 +79,7 @@ namespace Six_Screens_Controller.view
                     }
 
                     ScreenTemplateNow.ScreenTemplateElements.RemoveAt(Convert.ToInt32(((ListViewItem)sender).Uid) - 1);
-                    ScreenTemplateNow.ScreenTemplateElements.Insert(Convert.ToInt32(((ListViewItem)sender).Uid) - 1, 
+                    ScreenTemplateNow.ScreenTemplateElements.Insert(Convert.ToInt32(((ListViewItem)sender).Uid) - 1,
                         new ScreenTemplateElement() { ScreenNumber = Convert.ToInt32(((ListViewItem)sender).Uid), Path = file });
                     Utils.RefreshRequest(Convert.ToInt32(((ListViewItem)sender).Uid));
                 }
@@ -90,7 +90,6 @@ namespace Six_Screens_Controller.view
             }
         }
 
-        //TODO:Добавить измение ScreenTemplateNow при выборе видео или гиф
         private void BrowseFile_Click(object sender, RoutedEventArgs e)
         {
             string pickedFile;
@@ -221,7 +220,7 @@ namespace Six_Screens_Controller.view
             }
         }
 
-        async void SetPlaylist(string json, int screenNumber)
+        async public void SetPlaylist(string json, int screenNumber)
         {
             Playlist playlist;
             int id = ((dynamic)JsonConvert.DeserializeObject(json)).id;

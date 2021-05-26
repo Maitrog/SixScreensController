@@ -20,6 +20,10 @@ namespace Six_Screens_Controller.view
     /// </summary>
     public partial class PlaylistsPageView : UserControl
     {
+        public bool IsChangePlaylist { get; set; } = false;
+        public bool IsDestroy { get; set; } = false;
+        public ScreenTemplateElement Playlist { get; set; } = new ScreenTemplateElement();
+
         public PlaylistsPageView()
         {
             InitializeComponent();
@@ -80,6 +84,20 @@ namespace Six_Screens_Controller.view
 
                 playlistsList.ItemsSource = db.Playlists.ToList();
             }
+        }
+
+        //TODO: Сделать установку плейлиста на один экран
+        private void SetPlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            using PlaylistContext db = new PlaylistContext();
+            Playlist playlist = db.Playlists.First(x => x.Id == (playlistsList.SelectedItem as Playlist).Id);
+
+            Playlist.IsPlaylist = true;
+            Playlist.Id = playlist.Id;
+            Playlist.Path = playlist.JsonString();
+            Playlist.ScreenNumber = Convert.ToInt32((sender as MenuItem).Uid);
+
+            IsChangePlaylist = true;
         }
     }
 }

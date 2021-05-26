@@ -37,6 +37,14 @@
             <ListView.Resources>
                 <ContextMenu x:Key="ItemContextMenu">
                     <MenuItem Header="Удалить" Click="removePlaylist_Click"/>
+                    <MenuItem Header="Установить">
+                        <MenuItem Header="Экран 1" Click="SetPlaylist_Click" x:Uid="1"/>
+                        <MenuItem Header="Экран 2" Click="SetPlaylist_Click" x:Uid="2"/>
+                        <MenuItem Header="Экран 3" Click="SetPlaylist_Click" x:Uid="3"/>
+                        <MenuItem Header="Экран 4" Click="SetPlaylist_Click" x:Uid="4"/>
+                        <MenuItem Header="Экран 5" Click="SetPlaylist_Click" x:Uid="5"/>
+                        <MenuItem Header="Экран 6" Click="SetPlaylist_Click" x:Uid="6"/>
+                    </MenuItem>
                 </ContextMenu>
             </ListView.Resources>
             
@@ -51,7 +59,7 @@
                 <DataTemplate DataType="{x:Type StackPanel}">
                     <StackPanel Orientation="Vertical">
                         <Viewbox HorizontalAlignment="Center" 
-                         MaxHeight="{Binding ElementName=ListTemplates, Path=ActualHeight, 
+                         MaxHeight="{Binding ElementName=playlistsList, Path=ActualHeight, 
                             Converter={StaticResource TemplateHeightConverter}, ConverterParameter=25}"
                                  Margin="0,15,0,15">
                             <TextBlock Text="{Binding Path=Title}"  Foreground="#595959"
