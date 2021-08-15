@@ -18,20 +18,6 @@ namespace SixScreenControllerApi.Controllers
         public ScreenTemplatesController(SixScreenControllerContext context)
         {
             db = context;
-
-            if (db.ScreenTemplates.Count() < 1)
-            {
-                var ScreenTemplate = new ScreenTemplate { Title = "notDefaulte" };
-                ScreenTemplate.ScreenTemplateElements.Insert(0, new ScreenTemplateElement { Id = 0, IsPlaylist = false, ScreenNumber = 1, ScreenTemplateId = 0, Path = "S:\\Documents\\Миша\\Фото\\Райз.png" });
-                ScreenTemplate.ScreenTemplateElements.Insert(1, new ScreenTemplateElement { Id = 0, IsPlaylist = false, ScreenNumber = 2, ScreenTemplateId = 0, Path = "S:\\Documents\\Миша\\Фото\\Райз.png" });
-                ScreenTemplate.ScreenTemplateElements.Insert(2, new ScreenTemplateElement { Id = 0, IsPlaylist = false, ScreenNumber = 3, ScreenTemplateId = 0, Path = "S:\\Documents\\Миша\\Фото\\Райз.png" });
-                ScreenTemplate.ScreenTemplateElements.Insert(3, new ScreenTemplateElement { Id = 0, IsPlaylist = false, ScreenNumber = 4, ScreenTemplateId = 0, Path = "S:\\Documents\\Миша\\Фото\\Райз.png" });
-                ScreenTemplate.ScreenTemplateElements.Insert(4, new ScreenTemplateElement { Id = 0, IsPlaylist = false, ScreenNumber = 5, ScreenTemplateId = 0, Path = "S:\\Documents\\Миша\\Фото\\Райз.png" });
-                ScreenTemplate.ScreenTemplateElements.Insert(5, new ScreenTemplateElement { Id = 0, IsPlaylist = false, ScreenNumber = 6, ScreenTemplateId = 0, Path = "S:\\Documents\\Миша\\Фото\\Райз.png" });
-
-                db.ScreenTemplates.Add(ScreenTemplate);
-                db.SaveChanges();
-            }
         }
 
         [HttpGet]
@@ -63,6 +49,32 @@ namespace SixScreenControllerApi.Controllers
             db.ScreenTemplates.Add(screenTemplate);
             await db.SaveChangesAsync();
             return Ok(screenTemplate);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<ScreenTemplate>> Put(int id, ScreenTemplate _screenTemplate)
+        {
+            ScreenTemplate screenTemplate = await db.ScreenTemplates.Include(x => x.ScreenTemplateElements).FirstOrDefaultAsync(x => x.Id == id);
+            if (_screenTemplate == null)
+            {
+                return BadRequest();
+            }
+            if (screenTemplate == null)
+            {
+                return NotFound();
+            }
+
+            screenTemplate.Title = _screenTemplate.Title;
+            for (int i = 0; i < 6; i++)
+            {
+                if (screenTemplate.ScreenTemplateElements[i] != _screenTemplate.ScreenTemplateElements[i])
+                {
+                    screenTemplate.ScreenTemplateElements[i] = _screenTemplate.ScreenTemplateElements[i];
+                }
+            }
+            await db.SaveChangesAsync();
+
+            return Ok(_screenTemplate);
         }
 
         [HttpDelete("{id}")]
