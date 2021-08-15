@@ -11,6 +11,6 @@ namespace SixScreenControllerApi.Models
         public string Path { get; set; }
         public int Duration { get; set; } = 10;
 
-        public List<int> PlaylistId { get; set; } = new List<int>();
+        public int PlaylistId { get; set; }
     }
 }

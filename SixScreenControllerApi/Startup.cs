@@ -28,6 +28,7 @@ namespace SixScreenControllerApi
         {
             string connection = "Server=(localdb)\\mssqllocaldb;Database=VkScreenTemplate;Trusted_Connection=True;";
             services.AddDbContext<SixScreenControllerContext>(options => options.UseSqlServer(connection));
+            services.AddMemoryCache();
             services.AddControllers();
         }
 

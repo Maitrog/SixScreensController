@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SixScreenControllerApi.Models;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace SixScreenControllerApi.Controllers
 {
@@ -13,15 +15,25 @@ namespace SixScreenControllerApi.Controllers
     public class ScreensController : ControllerBase
     {
         public ScreenTemplate ScreenTemplate { get; set; }
-        public ScreensController()
+        IMemoryCache cache;
+        public ScreensController(IMemoryCache memoryCache)
         {
-            ScreenTemplate = new ScreenTemplate { Id = 0, Title = "Defaulte" };
-            ScreenTemplate.ScreenTemplateElements.Insert(0, new ScreenTemplateElement { Id = 0, IsPlaylist = false, ScreenNumber = 1, ScreenTemplateId = 0, Path = "S:\\Documents\\Миша\\Фото\\Райз.png" });
-            ScreenTemplate.ScreenTemplateElements.Insert(1, new ScreenTemplateElement { Id = 0, IsPlaylist = false, ScreenNumber = 2, ScreenTemplateId = 0, Path = "S:\\Documents\\Миша\\Фото\\Райз.png" });
-            ScreenTemplate.ScreenTemplateElements.Insert(2, new ScreenTemplateElement { Id = 0, IsPlaylist = false, ScreenNumber = 3, ScreenTemplateId = 0, Path = "S:\\Documents\\Миша\\Фото\\Райз.png" });
-            ScreenTemplate.ScreenTemplateElements.Insert(3, new ScreenTemplateElement { Id = 0, IsPlaylist = false, ScreenNumber = 4, ScreenTemplateId = 0, Path = "S:\\Documents\\Миша\\Фото\\Райз.png" });
-            ScreenTemplate.ScreenTemplateElements.Insert(4, new ScreenTemplateElement { Id = 0, IsPlaylist = false, ScreenNumber = 5, ScreenTemplateId = 0, Path = "S:\\Documents\\Миша\\Фото\\Райз.png" });
-            ScreenTemplate.ScreenTemplateElements.Insert(5, new ScreenTemplateElement { Id = 0, IsPlaylist = false, ScreenNumber = 6, ScreenTemplateId = 0, Path = "S:\\Documents\\Миша\\Фото\\Райз.png" });
+            cache = memoryCache;
+            if (cache.TryGetValue("CurrentScreenTemplate", out ScreenTemplate st))
+            {
+                ScreenTemplate = st;
+            }
+            else
+            {
+                ScreenTemplate template = new ScreenTemplate
+                {
+                    Id = 0,
+                    Title = "default",
+                    ScreenTemplateElements = new List<ScreenTemplateElement>(6)
+                };
+                cache.Set("CurrentScreenTemplate", template);
+                ScreenTemplate = template;
+            }
         }
 
         [HttpGet]
@@ -33,7 +45,7 @@ namespace SixScreenControllerApi.Controllers
         [HttpGet("{screeenNumber}")]
         public ActionResult<ScreenTemplateElement> Get(int screeenNumber)
         {
-            if (screeenNumber < 1 || screeenNumber > 6)
+            if (screeenNumber < 1 || screeenNumber > 6 || ScreenTemplate.ScreenTemplateElements.Count == 0)
             {
                 return NotFound();
             }
@@ -44,6 +56,8 @@ namespace SixScreenControllerApi.Controllers
         [HttpGet("{screeenNumber}/content")]
         public IActionResult GetContent(int screeenNumber)
         {
+            string[] imageExp = new string[] { "jpg", "jepg", "bmp", "png", "webp" };
+            string[] videoExp = new string[] { "mp4", "avi", "mpeg", "mkv", "3gp", "3g2" };
             if (screeenNumber < 1 || screeenNumber > 6)
             {
                 return NotFound();
@@ -51,8 +65,21 @@ namespace SixScreenControllerApi.Controllers
 
             if (!ScreenTemplate.ScreenTemplateElements[screeenNumber - 1].IsPlaylist)
             {
-                var image = System.IO.File.OpenRead(ScreenTemplate.ScreenTemplateElements[screeenNumber - 1].Path);
-                return File(image, "image/jpeg");
+                string path = ScreenTemplate.ScreenTemplateElements[screeenNumber - 1].Path;
+                string exp = path.Split("\\").LastOrDefault().Split('.').LastOrDefault().ToLower();
+                var file = System.IO.File.OpenRead(path);
+                if (imageExp.Contains(exp))
+                {
+                    return File(file, "image/jpeg");
+                }
+                if (videoExp.Contains(exp))
+                {
+                    return File(file, "video/mp4");
+                }
+                else
+                {
+                    return File(file, "image/gif");
+                }
             }
 
             return BadRequest();
@@ -65,12 +92,12 @@ namespace SixScreenControllerApi.Controllers
             {
                 return BadRequest();
             }
-
             ScreenTemplate = screenTemplate;
+            cache.Set("CurrentScreenTemplate", ScreenTemplate);
             return Ok(ScreenTemplate);
         }
 
-        [HttpPut("{screeenNumber}")]
+        [HttpPut("{screenNumber}")]
         public ActionResult<ScreenTemplate> Put(int screenNumber, ScreenTemplateElement element)
         {
             if (screenNumber < 1 || screenNumber > 6)
@@ -78,7 +105,8 @@ namespace SixScreenControllerApi.Controllers
                 return BadRequest();
             }
 
-            ScreenTemplate.ScreenTemplateElements.Insert(screenNumber - 1, element);
+            ScreenTemplate.ScreenTemplateElements[screenNumber - 1] = element;
+            cache.Set("CurrentScreenTemplate", ScreenTemplate);
             return Ok(ScreenTemplate);
         }
     }
