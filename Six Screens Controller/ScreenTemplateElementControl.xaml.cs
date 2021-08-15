@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using Microsoft.EntityFrameworkCore;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -51,10 +50,9 @@ namespace Six_Screens_Controller
             Loaded += ScreenTemplateElementControl_Load;
         }
 
-        private void ScreenTemplateElementControl_Load(object sender, RoutedEventArgs e)
+        private async void ScreenTemplateElementControl_Load(object sender, RoutedEventArgs e)
         {
-            using PlaylistContext db = new PlaylistContext();
-            PlaylistScreen.ItemsSource = db.Playlists.Include(x => x.PlaylistElements).ToList();
+            PlaylistScreen.ItemsSource = await Utils.GetRequestPlaylist();
             if (ElementDefaultId != -1)
                 PlaylistScreen.SelectedValue = ElementDefaultId;
         }

@@ -10,6 +10,6 @@ namespace Six_Screens_Controller
         public string Path { get; set; }
         public int Duration { get; set; } = 10;
 
-        public List<Playlist> Playlists { get; set; } = new List<Playlist>();
+        public int PlaylistId { get; set; }
     }
 }

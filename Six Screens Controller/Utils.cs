@@ -3,7 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -11,10 +14,11 @@ using System.Windows.Media.Imaging;
 
 namespace Six_Screens_Controller
 {
-    static class Utils
+    internal static class Utils
     {
         public static readonly string[] imageExp = new string[] { "jpg", "jepg", "bmp", "png", "webp" };
         public static readonly string[] videoExp = new string[] { "mp4", "avi", "mpeg", "mkv", "3gp", "3g2" };
+        private static readonly HttpClient client = new HttpClient();
 
         public static Image CreateImage(string path)
         {
@@ -42,81 +46,128 @@ namespace Six_Screens_Controller
             return video;
         }
 
-        public static bool PutRequest(int number, string file, string mediaType, int duration = 1)
+        /// <summary>
+        /// Screens controller methods
+        /// </summary>
+
+        public static async void PutRequestScreens(int screenNumber, ScreenTemplateElement element)
         {
-            Config config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(@"config.json"));
-            string route = $"screen/{number}";
-            string url = $"{config.Protocol}://{config.Host}:{config.Port}/{route}";
-            file = file.Replace("\\", "/");
-
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-            httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = "PUT";
-
-            string jsonString = $"{{\n \"location\": \"{file}\",\n" +
-            $"\"duration\": {duration},\n" +
-            $"\"media_type\": \"{mediaType}\"}}";
-
-            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-            {
-                streamWriter.Write(jsonString);
-            }
-
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-            {
-                var result = streamReader.ReadToEnd();
-                Console.WriteLine(result);
-            }
-
-            return true;
+            string url = GetUrl($"screens/{screenNumber}");
+            HttpResponseMessage response = await client.PutAsJsonAsync(url, element);
+            response.EnsureSuccessStatusCode();
         }
 
-        public static bool PutRequestPlaylist(int number, string jsonStr)
+        public static async void PostRequestScreens(ScreenTemplate screenTemplate)
         {
-            Config config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(@"config.json"));
-            string route = $"playlist/{number}";
-            string url = $"{config.Protocol}://{config.Host}:{config.Port}/{route}";
-
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-            httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = "PUT";
-
-            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-            {
-                streamWriter.Write(jsonStr);
-            }
-
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-            {
-                var result = streamReader.ReadToEnd();
-                Console.WriteLine(result);
-            }
-
-            return true;
+            string url = GetUrl("screens");
+            HttpResponseMessage response = await client.PostAsJsonAsync(url, screenTemplate);
+            response.EnsureSuccessStatusCode();
         }
 
-        public static void RefreshRequest(int screen = -1)
+        public static async Task<ScreenTemplate> GetRequestScreens()
+        {
+            string url = GetUrl("screens");
+            string response = await client.GetStringAsync(url);
+            ScreenTemplate template = JsonConvert.DeserializeObject<ScreenTemplate>(response);
+            return template;
+        }
+
+        public static async Task<ScreenTemplateElement> GetRequestScreens(int screenNumber)
+        {
+            string url = GetUrl($"screens/{screenNumber}");
+            string response = await client.GetStringAsync(url);
+            ScreenTemplateElement element = JsonConvert.DeserializeObject<ScreenTemplateElement>(response);
+            return element;
+        }
+
+        /// <summary>
+        /// Playlist controller methods
+        /// </summary>
+
+        public static async Task<List<Playlist>> GetRequestPlaylist()
+        {
+            string url = GetUrl("playlist");
+            string response = await client.GetStringAsync(url);
+            List<Playlist> playlists = JsonConvert.DeserializeObject<List<Playlist>>(response);
+            return playlists;
+        }
+
+        public static async Task<Playlist> GetRequestPlaylist(int id)
+        {
+            string url = GetUrl($"playlist/{id}");
+            string response = await client.GetStringAsync(url);
+            Playlist playlist = JsonConvert.DeserializeObject<Playlist>(response);
+            return playlist;
+        }
+
+        public static async void PostRequestPlaylist(Playlist playlist)
+        {
+            string url = GetUrl("playlist");
+            HttpResponseMessage response = await client.PostAsJsonAsync(url, playlist);
+            response.EnsureSuccessStatusCode();
+        }
+
+        public static async void DeleteRequestPlaylist(int id)
+        {
+            string url = GetUrl($"playlist/{id}");
+            HttpResponseMessage response = await client.DeleteAsync(url);
+            response.EnsureSuccessStatusCode();
+        }
+
+        /// <summary>
+        /// ScreenTemplates controller methods
+        /// </summary>
+
+        public static async Task<List<ScreenTemplate>> GetRequestScreenTemplates()
+        {
+            string url = GetUrl("screentemplates");
+            string response = await client.GetStringAsync(url);
+
+            List<ScreenTemplate> screenTemplates = JsonConvert.DeserializeObject<List<ScreenTemplate>>(response);
+            return screenTemplates;
+        }
+
+        public static async Task<ScreenTemplate> GetRequestScreenTemplates(int id)
+        {
+            string url = GetUrl($"screentemplates/{id}");
+            string response = await client.GetStringAsync(url);
+
+            ScreenTemplate screenTemplates = JsonConvert.DeserializeObject<ScreenTemplate>(response);
+            return screenTemplates;
+        }
+
+        public static async void PostRequestScreenTemplates(ScreenTemplate screenTemplate)
+        {
+            string url = GetUrl("screentemplates");
+            HttpResponseMessage response = await client.PostAsJsonAsync(url, screenTemplate);
+            response.EnsureSuccessStatusCode();
+        }
+
+        public static async void DeleteRequestScreenTemplates(int id)
+        {
+            string url = GetUrl($"screentemplates/{id}");
+            HttpResponseMessage response = await client.DeleteAsync(url);
+            response.EnsureSuccessStatusCode();
+        }
+
+        public static async void PutRequestScreenTemplates(int id, ScreenTemplate screenTemplate)
+        {
+            string url = GetUrl($"screentemplates/{id}");
+            HttpResponseMessage response = await client.PutAsJsonAsync(url, screenTemplate);
+            response.EnsureSuccessStatusCode();
+        }
+
+        public static void RefreshRequest(int screenNumber = -1)
+        {
+            //TODO: Create method for refresh request
+        }
+
+        private static string GetUrl(string pathRoute)
         {
             Config config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(@"config.json"));
-            string route = "";
-            if (screen == -1)
-                route = $"refresh";
-            else
-                route = $"refresh/{screen}";
+            string route = $"api/{pathRoute}";
             string url = $"{config.Protocol}://{config.Host}:{config.Port}/{route}";
-
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-            httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = "GET";
-
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-            {
-                var result = streamReader.ReadToEnd();
-                Console.WriteLine(result);
-            }
+            return url;
         }
     }
 }

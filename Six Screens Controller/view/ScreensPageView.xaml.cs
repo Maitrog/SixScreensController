@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -27,7 +26,7 @@ namespace Six_Screens_Controller.view
     /// </summary>
     public partial class ScreensPageView : UserControl
     {
-        public ScreenTemplate ScreenTemplateNow { get; set; }
+        public ScreenTemplate CurrentScreenTemplate { get; set; }
         public bool IsChangedTemplate { get; set; } = false;
 
         public ScreensPageView(ScreenTemplate screenTemplate)
@@ -54,12 +53,14 @@ namespace Six_Screens_Controller.view
                     string file = ((string[])e.Data.GetData(DataFormats.FileDrop))[0];
                     string exp = file.Split("\\").LastOrDefault().Split('.').LastOrDefault().ToLower();
 
+                    ScreenTemplateElement screen = new ScreenTemplateElement { Path = file, IsPlaylist = false, ScreenNumber = Convert.ToInt32(((ListViewItem)sender).Uid) };
+
                     if (Utils.imageExp.Contains(exp))
                     {
                         Image img = Utils.CreateImage(file);
 
                         (sender as ListViewItem).Content = img;
-                        Utils.PutRequest(Convert.ToInt32(((ListViewItem)sender).Uid), file, "img");
+                        Utils.PutRequestScreens(screen.ScreenNumber, screen);
                     }
 
                     else if (Utils.videoExp.Contains(exp))
@@ -67,7 +68,7 @@ namespace Six_Screens_Controller.view
                         MediaElement video = Utils.CreateVideo(file);
 
                         (sender as ListViewItem).Content = video;
-                        Utils.PutRequest(Convert.ToInt32(((ListViewItem)sender).Uid), file, "vid");
+                        Utils.PutRequestScreens(screen.ScreenNumber, screen);
                     }
 
                     else if (exp == "gif")
@@ -75,11 +76,11 @@ namespace Six_Screens_Controller.view
                         MediaElement gif = Utils.CreateVideo(file);
 
                         (sender as ListViewItem).Content = gif;
-                        Utils.PutRequest(Convert.ToInt32(((ListViewItem)sender).Uid), file, "gif");
+                        Utils.PutRequestScreens(screen.ScreenNumber, screen);
                     }
 
-                    ScreenTemplateNow.ScreenTemplateElements.RemoveAt(Convert.ToInt32(((ListViewItem)sender).Uid) - 1);
-                    ScreenTemplateNow.ScreenTemplateElements.Insert(Convert.ToInt32(((ListViewItem)sender).Uid) - 1,
+                    CurrentScreenTemplate.ScreenTemplateElements.RemoveAt(Convert.ToInt32(((ListViewItem)sender).Uid) - 1);
+                    CurrentScreenTemplate.ScreenTemplateElements.Insert(Convert.ToInt32(((ListViewItem)sender).Uid) - 1,
                         new ScreenTemplateElement() { ScreenNumber = Convert.ToInt32(((ListViewItem)sender).Uid), Path = file });
                     Utils.RefreshRequest(Convert.ToInt32(((ListViewItem)sender).Uid));
                 }
@@ -108,15 +109,16 @@ namespace Six_Screens_Controller.view
                             if ((i as ListViewItem).IsSelected == true)
                             {
                                 int screenNumber = Convert.ToInt32(((ListViewItem)i).Uid);
+                                ScreenTemplateElement screen = new ScreenTemplateElement { ScreenNumber = screenNumber, IsPlaylist = false, Path = pickedFile };
 
                                 Image img = Utils.CreateImage(pickedFile);
                                 (i as ListViewItem).Content = img;
                                 (i as ListViewItem).IsSelected = false;
 
-                                Utils.PutRequest(screenNumber, pickedFile, "img");
+                                Utils.PutRequestScreens(screen.ScreenNumber, screen);
                                 Utils.RefreshRequest(screenNumber);
 
-                                ScreenTemplateNow.ScreenTemplateElements[screenNumber - 1]
+                                CurrentScreenTemplate.ScreenTemplateElements[screenNumber - 1]
                                 = new ScreenTemplateElement() { ScreenNumber = screenNumber, Path = pickedFile };
                             }
                         }
@@ -130,15 +132,16 @@ namespace Six_Screens_Controller.view
                             if ((i as ListViewItem).IsSelected == true)
                             {
                                 int screenNumber = Convert.ToInt32(((ListViewItem)i).Uid);
+                                ScreenTemplateElement screen = new ScreenTemplateElement { ScreenNumber = screenNumber, IsPlaylist = false, Path = pickedFile };
 
                                 MediaElement video = Utils.CreateVideo(pickedFile);
                                 (i as ListViewItem).Content = video;
                                 (i as ListViewItem).IsSelected = false;
 
-                                Utils.PutRequest(screenNumber, pickedFile, "vid");
+                                Utils.PutRequestScreens(screen.ScreenNumber, screen);
                                 Utils.RefreshRequest(screenNumber);
 
-                                ScreenTemplateNow.ScreenTemplateElements[screenNumber - 1]
+                                CurrentScreenTemplate.ScreenTemplateElements[screenNumber - 1]
                                 = new ScreenTemplateElement() { ScreenNumber = screenNumber, Path = pickedFile };
                             }
                         }
@@ -152,15 +155,16 @@ namespace Six_Screens_Controller.view
                             if ((i as ListViewItem).IsSelected == true)
                             {
                                 int screenNumber = Convert.ToInt32(((ListViewItem)i).Uid);
+                                ScreenTemplateElement screen = new ScreenTemplateElement { ScreenNumber = screenNumber, IsPlaylist = false, Path = pickedFile };
 
                                 MediaElement video = Utils.CreateVideo(pickedFile);
                                 (i as ListViewItem).Content = video;
                                 (i as ListViewItem).IsSelected = false;
 
-                                Utils.PutRequest(screenNumber, pickedFile, "gif");
+                                Utils.PutRequestScreens(screen.ScreenNumber, screen);
                                 Utils.RefreshRequest(screenNumber);
 
-                                ScreenTemplateNow.ScreenTemplateElements[screenNumber - 1]
+                                CurrentScreenTemplate.ScreenTemplateElements[screenNumber - 1]
                                 = new ScreenTemplateElement() { ScreenNumber = screenNumber, Path = pickedFile };
                             }
                         }
@@ -183,34 +187,34 @@ namespace Six_Screens_Controller.view
 
         public void SetScreenTemplate(ScreenTemplate screenTemplate)
         {
-            ScreenTemplateNow = screenTemplate;
+            CurrentScreenTemplate = screenTemplate;
             IsChangedTemplate = false;
             try
             {
                 for (int i = 0; i < 6; i++)
                 {
-                    if (ScreenTemplateNow.ScreenTemplateElements[i].IsPlaylist == false)
+                    if (CurrentScreenTemplate.ScreenTemplateElements[i].IsPlaylist == false)
                     {
-                        string exp = ScreenTemplateNow.ScreenTemplateElements[i].Path.Split("\\").LastOrDefault().Split('.').LastOrDefault();
+                        string exp = CurrentScreenTemplate.ScreenTemplateElements[i].Path.Split("\\").LastOrDefault().Split('.').LastOrDefault();
                         if (Utils.imageExp.Contains(exp))
                         {
-                            Image img = Utils.CreateImage(ScreenTemplateNow.ScreenTemplateElements[i].Path);
+                            Image img = Utils.CreateImage(CurrentScreenTemplate.ScreenTemplateElements[i].Path);
                             (Elements.Children[i] as ListViewItem).Content = img;
                         }
                         else if (Utils.videoExp.Contains(exp))
                         {
-                            MediaElement video = Utils.CreateVideo(ScreenTemplateNow.ScreenTemplateElements[i].Path);
+                            MediaElement video = Utils.CreateVideo(CurrentScreenTemplate.ScreenTemplateElements[i].Path);
                             (Elements.Children[i] as ListViewItem).Content = video;
                         }
                         else if (exp == "gif")
                         {
-                            MediaElement video = Utils.CreateVideo(ScreenTemplateNow.ScreenTemplateElements[i].Path);
+                            MediaElement video = Utils.CreateVideo(CurrentScreenTemplate.ScreenTemplateElements[i].Path);
                             (Elements.Children[i] as ListViewItem).Content = video;
                         }
                     }
                     else
                     {
-                        SetPlaylist(ScreenTemplateNow.ScreenTemplateElements[i].Path, Convert.ToInt32((Elements.Children[i] as ListViewItem).Uid));
+                        SetPlaylist(CurrentScreenTemplate.ScreenTemplateElements[i].Path, Convert.ToInt32((Elements.Children[i] as ListViewItem).Uid));
                     }
                 }
             }
@@ -224,12 +228,11 @@ namespace Six_Screens_Controller.view
         {
             Playlist playlist;
             int id = ((dynamic)JsonConvert.DeserializeObject(json)).id;
-            using (PlaylistContext db = new PlaylistContext())
-                playlist = db.Playlists.Where(x => x.Id == id).Include(x => x.PlaylistElements).FirstOrDefault();
+            playlist = await Utils.GetRequestPlaylist(id);
 
             await Task.Run(() =>
             {
-                for(int i = 0; i < playlist.PlaylistElements.Count; i++)
+                for (int i = 0; i < playlist.PlaylistElements.Count; i++)
                 {
                     Application.Current.Dispatcher.Invoke(() =>
                     {
@@ -255,7 +258,7 @@ namespace Six_Screens_Controller.view
         {
             IsChangedTemplate = true;
             Thread.Sleep(5);
-            SetScreenTemplate(ScreenTemplateNow);
+            SetScreenTemplate(CurrentScreenTemplate);
             Utils.RefreshRequest();
         }
 
@@ -271,6 +274,8 @@ namespace Six_Screens_Controller.view
                     pickedFile = openFileDialog.FileName;
                     string exp = pickedFile.Split("\\").LastOrDefault().Split('.').LastOrDefault().ToLower();
 
+                    ScreenTemplateElement screen = new ScreenTemplateElement { ScreenNumber = screenNumber, Path = pickedFile, IsPlaylist = false };
+
                     if (Utils.imageExp.Contains(exp))
                     {
                         Image img = Utils.CreateImage(pickedFile);
@@ -278,10 +283,10 @@ namespace Six_Screens_Controller.view
                         (sender as ListViewItem).Content = img;
                         (sender as ListViewItem).IsSelected = false;
 
-                        Utils.PutRequest(screenNumber, pickedFile, "img");
+                        Utils.PutRequestScreens(screenNumber, screen);
                         Utils.RefreshRequest(screenNumber);
 
-                        ScreenTemplateNow.ScreenTemplateElements[screenNumber - 1]
+                        CurrentScreenTemplate.ScreenTemplateElements[screenNumber - 1]
                             = new ScreenTemplateElement() { ScreenNumber = screenNumber, Path = pickedFile };
                     }
 
@@ -292,10 +297,10 @@ namespace Six_Screens_Controller.view
                         (sender as ListViewItem).Content = video;
                         (sender as ListViewItem).IsSelected = false;
 
-                        Utils.PutRequest(screenNumber, pickedFile, "vid");
+                        Utils.PutRequestScreens(screenNumber, screen);
                         Utils.RefreshRequest(screenNumber);
 
-                        ScreenTemplateNow.ScreenTemplateElements[screenNumber - 1]
+                        CurrentScreenTemplate.ScreenTemplateElements[screenNumber - 1]
                             = new ScreenTemplateElement() { ScreenNumber = screenNumber, Path = pickedFile };
 
                     }
@@ -307,10 +312,10 @@ namespace Six_Screens_Controller.view
                         (sender as ListViewItem).Content = video;
                         (sender as ListViewItem).IsSelected = false;
 
-                        Utils.PutRequest(screenNumber, pickedFile, "gif");
+                        Utils.PutRequestScreens(screenNumber, screen);
                         Utils.RefreshRequest(screenNumber);
 
-                        ScreenTemplateNow.ScreenTemplateElements[screenNumber - 1]
+                        CurrentScreenTemplate.ScreenTemplateElements[screenNumber - 1]
                             = new ScreenTemplateElement() { ScreenNumber = screenNumber, Path = pickedFile };
 
                     }

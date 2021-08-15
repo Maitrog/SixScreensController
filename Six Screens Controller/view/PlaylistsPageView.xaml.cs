@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,12 +29,11 @@ namespace Six_Screens_Controller.view
             Loaded += PlaylistsPage_Loaded;
         }
 
-        private void PlaylistsPage_Loaded(object sender, RoutedEventArgs e)
+        private async void PlaylistsPage_Loaded(object sender, RoutedEventArgs e)
         {
             try
             {
-                using (PlaylistContext db = new PlaylistContext())
-                    playlistsList.ItemsSource = db.Playlists.Include(x => x.PlaylistElements).ToList();
+                playlistsList.ItemsSource = await Utils.GetRequestPlaylist();
             }
             catch (Exception ex)
             {
@@ -43,54 +41,36 @@ namespace Six_Screens_Controller.view
             }
         }
 
-        private void addPlaylist_Click(object sender, RoutedEventArgs e)
+        private async void addPlaylist_Click(object sender, RoutedEventArgs e)
         {
             AddPlaylistWindow addPlaylistWindow = new AddPlaylistWindow();
             if (addPlaylistWindow.ShowDialog() == true)
             {
-                using (PlaylistContext db = new PlaylistContext())
+                Playlist pl = new Playlist
                 {
-                    Playlist pl = new Playlist();
-                    pl.Title = addPlaylistWindow.PlaylistTitle;
-                    for (int i = 0; i < addPlaylistWindow.elements.Count; i++)
-                    {
-                        var elem = db.PlaylistElements.Where(x => x.Path == (addPlaylistWindow.elements[i].Path) && x.Duration == (addPlaylistWindow.elements[i].Duration)).ToList();
-                        if (elem.Count == 0)
-                        {
-                            db.PlaylistElements.Add(addPlaylistWindow.elements[i]);
-                            db.SaveChanges();
-                            pl.PlaylistElements.Add(addPlaylistWindow.elements[i]);
-                        }
-                        else
-                        {
-                            pl.PlaylistElements.Add(elem[0]);
-                        }
-                    }
-                    db.Playlists.Add(pl);
-                    db.SaveChanges();
-
-                    playlistsList.ItemsSource = db.Playlists.Include(x => x.PlaylistElements).ToList();
+                    Title = addPlaylistWindow.PlaylistTitle
+                };
+                for (int i = 0; i < addPlaylistWindow.elements.Count; i++)
+                {
+                    pl.PlaylistElements.Add(addPlaylistWindow.elements[i]);
                 }
+                Utils.PostRequestPlaylist(pl);
+
+                playlistsList.ItemsSource = await Utils.GetRequestPlaylist();
             }
         }
 
-        private void removePlaylist_Click(object sender, RoutedEventArgs e)
-        {
-            using (PlaylistContext db = new PlaylistContext())
-            {
-                Playlist removedPlaylist = db.Playlists.First(x => x.Id == (playlistsList.SelectedItem as Playlist).Id);
-                db.Playlists.Remove(removedPlaylist);
-                db.SaveChanges();
 
-                playlistsList.ItemsSource = db.Playlists.ToList();
-            }
+        private async void removePlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            Utils.DeleteRequestPlaylist((playlistsList.SelectedItem as Playlist).Id);
+            playlistsList.ItemsSource = await Utils.GetRequestPlaylist();
         }
 
         //TODO: Сделать установку плейлиста на один экран
-        private void SetPlaylist_Click(object sender, RoutedEventArgs e)
+        private async void SetPlaylist_Click(object sender, RoutedEventArgs e)
         {
-            using PlaylistContext db = new PlaylistContext();
-            Playlist playlist = db.Playlists.First(x => x.Id == (playlistsList.SelectedItem as Playlist).Id);
+            Playlist playlist = await Utils.GetRequestPlaylist((playlistsList.SelectedItem as Playlist).Id);
 
             Playlist.IsPlaylist = true;
             Playlist.Id = playlist.Id;

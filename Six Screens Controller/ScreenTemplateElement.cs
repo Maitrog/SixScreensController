@@ -11,7 +11,6 @@ namespace Six_Screens_Controller
         public bool IsPlaylist { get; set; } = false;
         public int ScreenNumber { get; set; }
 
-        public ScreenTemplate ScreenTemplate { get; set; }
         public int ScreenTemplateId { get; set; }
 
         public override bool Equals(object obj)

@@ -31,15 +31,24 @@ namespace Six_Screens_Controller
 
             for (int i = 4; i < StackPanel.Children.Count; i += 2)
             {
-                if((StackPanel.Children[i] as ScreenTemplateElementControl).IsPlaylistScreen.IsChecked == false)
-                    ScreenTemplate.ScreenTemplateElements.Add(new ScreenTemplateElement() { Path = (StackPanel.Children[i] as ScreenTemplateElementControl).ElementPath, 
-                        ScreenNumber = ScreenTemplate.ScreenTemplateElements.Count });
+                if ((StackPanel.Children[i] as ScreenTemplateElementControl).IsPlaylistScreen.IsChecked == false)
+                {
+                    ScreenTemplate.ScreenTemplateElements.Add(new ScreenTemplateElement()
+                    {
+                        Path = (StackPanel.Children[i] as ScreenTemplateElementControl).ElementPath,
+                        ScreenNumber = ScreenTemplate.ScreenTemplateElements.Count + 1
+                    });
+                }
                 else if ((StackPanel.Children[i] as ScreenTemplateElementControl).IsPlaylistScreen.IsChecked == true)
                 {
-                    ScreenTemplate.ScreenTemplateElements.Add(new ScreenTemplateElement() { Path = ((StackPanel.Children[i] as ScreenTemplateElementControl).PlaylistScreen.SelectedItem as Playlist).JsonString(), 
-                        IsPlaylist = true, ScreenNumber = ScreenTemplate.ScreenTemplateElements.Count });
+                    ScreenTemplate.ScreenTemplateElements.Add(new ScreenTemplateElement()
+                    {
+                        Path = ((StackPanel.Children[i] as ScreenTemplateElementControl).PlaylistScreen.SelectedItem as Playlist).JsonString(),
+                        IsPlaylist = true,
+                        ScreenNumber = ScreenTemplate.ScreenTemplateElements.Count + 1
+                    });
                 }
-            }  
+            }
 
             this.DialogResult = true;
         }
