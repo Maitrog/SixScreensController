@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Win32;
 using Newtonsoft.Json;
 using Six_Screens_Controller.view;
 using System;
@@ -26,6 +27,7 @@ namespace Six_Screens_Controller
     public partial class MainWindow : Window
     {
         private static readonly Config config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(@"config.json"));
+        private static HubConnection HubConnection;
         private static ScreenTemplate ScreenTemplateNow { get; set; } = new ScreenTemplate()
         {
             ScreenTemplateElements = new List<ScreenTemplateElement> {
@@ -37,21 +39,47 @@ namespace Six_Screens_Controller
             new ScreenTemplateElement() { ScreenNumber = 6, Path = config.DefaultImage }
             }
         };
-        private ScreensPageView screensPage = new ScreensPageView(ScreenTemplateNow);
+        private readonly ScreensPageView screensPage = new ScreensPageView(ScreenTemplateNow);
 
         public MainWindow()
         {
             Grid.SetColumn(screensPage, 2);
             InitializeComponent();
+            Loaded += MainWindow_Loaded;
             MainGrid.Children.Insert(2, screensPage);
         }
 
-        async private void TemplateButton_Click(object sender, RoutedEventArgs e)
+        private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            HubConnection = new HubConnectionBuilder().WithUrl($"{config.Protocol}://{config.Host}:{config.Port}/refresh").Build();
+            HubConnection.On<int>("Refresh", screenNumber => Refresh(screenNumber));
+
+            await HubConnection.StartAsync();
+        }
+
+        private async void Refresh(int screenNumber)
+        {
+            if (screenNumber == 0)
+            {
+                ScreenTemplate screenTemplate = await Utils.GetRequestScreens();
+                screensPage.SetScreenTemplate(screenTemplate);
+            }
+            else
+            {
+                ScreenTemplateElement screenTemplateElement = await Utils.GetRequestScreens(screenNumber);
+                screensPage.SetScreenTemplateElement(screenNumber, screenTemplateElement);
+            }
+        }
+
+        private async void TemplateButton_Click(object sender, RoutedEventArgs e)
         {
             if (MainGrid.Children[2].GetType() != Type.GetType("Six_Screens_Controller.view.TemplatesPageView"))
             {
                 if (MainGrid.Children[2].GetType() == Type.GetType("Six_Screens_Controller.view.PlaylistsPageView"))
+                {
                     (MainGrid.Children[2] as PlaylistsPageView).IsDestroy = true;
+                }
+
                 TemplatesPageView templatesPageControl = new TemplatesPageView();
                 Grid.SetColumn(templatesPageControl, 2);
                 MainGrid.Children.RemoveAt(2);

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.SignalR.Client;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,6 +19,7 @@ namespace Six_Screens_Controller
     {
         public static readonly string[] imageExp = new string[] { "jpg", "jepg", "bmp", "png", "webp" };
         public static readonly string[] videoExp = new string[] { "mp4", "avi", "mpeg", "mkv", "3gp", "3g2" };
+        public static Config config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
         private static readonly HttpClient client = new HttpClient();
 
         public static Image CreateImage(string path)
@@ -157,9 +159,15 @@ namespace Six_Screens_Controller
             response.EnsureSuccessStatusCode();
         }
 
-        public static void RefreshRequest(int screenNumber = -1)
+        public static async void RefreshRequest(int screenNumber = 0)
         {
-            //TODO: Create method for refresh request
+            HubConnection HubConnection = new HubConnectionBuilder()
+            .WithUrl($"{config.Protocol}://{config.Host}:{config.Port}/refresh")
+            .Build();
+            HubConnection.On<int>("Refresh", screenNumber => Console.WriteLine(screenNumber));
+            await HubConnection.StartAsync();
+
+            await HubConnection.SendAsync("SendRefresh", screenNumber);
         }
 
         private static string GetUrl(string pathRoute)
