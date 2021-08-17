@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using SixScreenControllerApi.Hubs;
 using SixScreenControllerApi.Models;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,7 @@ namespace SixScreenControllerApi
             string connection = "Server=(localdb)\\mssqllocaldb;Database=VkScreenTemplate;Trusted_Connection=True;";
             services.AddDbContext<SixScreenControllerContext>(options => options.UseSqlServer(connection));
             services.AddMemoryCache();
+            services.AddSignalR();
             services.AddControllers();
         }
 
@@ -48,6 +50,7 @@ namespace SixScreenControllerApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<RefreshHub>("/refresh");
             });
         }
     }
