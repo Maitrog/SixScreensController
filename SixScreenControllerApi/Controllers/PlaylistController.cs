@@ -23,14 +23,14 @@ namespace SixScreenControllerApi.Controllers
         [HttpGet]
         public async Task<List<Playlist>> Get()
         {
-            return await db.Playlists.ToListAsync();
+            return await db.Playlists.Include(p => p.PlaylistElements).ToListAsync();
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult> Get(int id)
         {
             Playlist playlist = await db.Playlists.Include(p => p.PlaylistElements).FirstOrDefaultAsync(p => p.Id == id);
-            if(playlist == null)
+            if (playlist == null)
             {
                 return NotFound();
             }
@@ -41,7 +41,7 @@ namespace SixScreenControllerApi.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(Playlist playlist)
         {
-            if(playlist == null)
+            if (playlist == null)
             {
                 return BadRequest();
             }
@@ -49,13 +49,13 @@ namespace SixScreenControllerApi.Controllers
             db.Playlists.Add(playlist);
             await db.SaveChangesAsync();
 
-            return Ok(playlist); 
+            return Ok(playlist);
         }
 
         [HttpDelete]
         public async Task<ActionResult> Delete(Playlist playlist)
         {
-            if(playlist == null)
+            if (playlist == null)
             {
                 return BadRequest();
             }
@@ -71,7 +71,7 @@ namespace SixScreenControllerApi.Controllers
         {
             var playlist = await db.Playlists.FirstOrDefaultAsync(p => p.Id == id);
 
-            if(playlist == null)
+            if (playlist == null)
             {
                 return BadRequest();
             }
