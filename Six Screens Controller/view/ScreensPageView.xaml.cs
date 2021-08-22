@@ -21,13 +21,9 @@ using System.Windows.Shapes;
 
 namespace Six_Screens_Controller.view
 {
-    /// <summary>
-    /// Логика взаимодействия для ScreensPageView.xaml
-    /// </summary>
     public partial class ScreensPageView : UserControl
     {
         public ScreenTemplate CurrentScreenTemplate { get; set; }
-        public bool IsChangedTemplate { get; set; } = false;
 
         public ScreensPageView(ScreenTemplate screenTemplate)
         {
@@ -56,7 +52,6 @@ namespace Six_Screens_Controller.view
                     ScreenTemplateElement screen = new ScreenTemplateElement { Path = file, IsPlaylist = false, ScreenNumber = Convert.ToInt32(((ListViewItem)sender).Uid) };
 
                     Utils.PutRequestScreens(screen.ScreenNumber, screen);
-                    Utils.RefreshRequest(Convert.ToInt32(((ListViewItem)sender).Uid));
                 }
             }
             catch (Exception ex)
@@ -83,7 +78,6 @@ namespace Six_Screens_Controller.view
                             ScreenTemplateElement screen = new ScreenTemplateElement { ScreenNumber = screenNumber, IsPlaylist = false, Path = pickedFile };
 
                             Utils.PutRequestScreens(screen.ScreenNumber, screen);
-                            Utils.RefreshRequest(screenNumber);
                         }
                     }
                 }
@@ -101,12 +95,10 @@ namespace Six_Screens_Controller.view
                 (i as ListViewItem).IsSelected = true;
             }
         }
-        private void Refresh_Click(object sender, RoutedEventArgs e)
+        private async void Refresh_Click(object sender, RoutedEventArgs e)
         {
-            IsChangedTemplate = true;
-            Thread.Sleep(5);
-            SetScreenTemplate(CurrentScreenTemplate);
-            Utils.RefreshRequest();
+            ScreenTemplate template = await Utils.GetRequestScreens();
+            Utils.PostRequestScreens(template);
         }
         private void Screen_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
@@ -121,7 +113,6 @@ namespace Six_Screens_Controller.view
                     ScreenTemplateElement screen = new ScreenTemplateElement { ScreenNumber = screenNumber, Path = pickedFile, IsPlaylist = false };
 
                     Utils.PutRequestScreens(screenNumber, screen);
-                    Utils.RefreshRequest(screenNumber);
                 }
             }
             catch (Exception ex)
@@ -133,12 +124,11 @@ namespace Six_Screens_Controller.view
         public void SetScreenTemplate(ScreenTemplate screenTemplate)
         {
             CurrentScreenTemplate = screenTemplate;
-            IsChangedTemplate = false;
             try
             {
                 for (int i = 0; i < 6; i++)
                 {
-                    if (CurrentScreenTemplate.ScreenTemplateElements[i].IsPlaylist == false)
+                    if (!string.IsNullOrEmpty(CurrentScreenTemplate.ScreenTemplateElements[i].Path))
                     {
                         string exp = CurrentScreenTemplate.ScreenTemplateElements[i].Path.Split("\\").LastOrDefault().Split('.').LastOrDefault();
                         if (Utils.imageExp.Contains(exp))
@@ -157,10 +147,6 @@ namespace Six_Screens_Controller.view
                             (Elements.Children[i] as ListViewItem).Content = video;
                         }
                     }
-                    else
-                    {
-                        SetPlaylist(CurrentScreenTemplate.ScreenTemplateElements[i].Path, Convert.ToInt32((Elements.Children[i] as ListViewItem).Uid));
-                    }
                 }
             }
             catch (Exception ex)
@@ -169,43 +155,11 @@ namespace Six_Screens_Controller.view
             }
         }
 
-        public async void SetPlaylist(string json, int screenNumber)
-        {
-            Playlist playlist;
-            int id = ((dynamic)JsonConvert.DeserializeObject(json)).id;
-            playlist = await Utils.GetRequestPlaylist(id);
-
-            await Task.Run(() =>
-            {
-                for (int i = 0; i < playlist.PlaylistElements.Count; i++)
-                {
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        Image img = Utils.CreateImage(playlist.PlaylistElements[i].Path);
-                        (Elements.Children[screenNumber - 1] as ListViewItem).Content = img;
-                    });
-
-                    Stopwatch stopwatch = new Stopwatch();
-                    stopwatch.Start();
-                    while (stopwatch.Elapsed < TimeSpan.FromSeconds(playlist.PlaylistElements[i].Duration))
-                    {
-                        Thread.Sleep(1);
-                        if (IsChangedTemplate)
-                            goto Finish;
-                    }
-                }
-
-            Finish:;
-            });
-        }
-
         public void SetScreenTemplateElement(int screenNumber, ScreenTemplateElement element)
         {
-            CurrentScreenTemplate.ScreenTemplateElements[screenNumber - 1] = element;
-            IsChangedTemplate = false;
-
-            if (CurrentScreenTemplate.ScreenTemplateElements[screenNumber - 1].IsPlaylist == false)
+            if (element != null && element.Path != null)
             {
+                CurrentScreenTemplate.ScreenTemplateElements[screenNumber - 1] = element;
                 string exp = CurrentScreenTemplate.ScreenTemplateElements[screenNumber - 1].Path.Split("\\").LastOrDefault().Split('.').LastOrDefault();
                 if (Utils.imageExp.Contains(exp))
                 {
@@ -222,10 +176,6 @@ namespace Six_Screens_Controller.view
                     MediaElement video = Utils.CreateVideo(CurrentScreenTemplate.ScreenTemplateElements[screenNumber - 1].Path);
                     (Elements.Children[screenNumber - 1] as ListViewItem).Content = video;
                 }
-            }
-            else
-            {
-                SetPlaylist(CurrentScreenTemplate.ScreenTemplateElements[screenNumber - 1].Path, screenNumber);
             }
         }
     }

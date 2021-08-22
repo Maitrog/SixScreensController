@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,7 +19,6 @@ namespace Six_Screens_Controller
     public partial class AddTemplateWindow : Window
     {
         public ScreenTemplate ScreenTemplate { get; private set; }
-
 
         public AddTemplateWindow()
         {
@@ -43,19 +43,18 @@ namespace Six_Screens_Controller
                 {
                     ScreenTemplate.ScreenTemplateElements.Add(new ScreenTemplateElement()
                     {
-                        Path = ((StackPanel.Children[i] as ScreenTemplateElementControl).PlaylistScreen.SelectedItem as Playlist).JsonString(),
+                        Path = JsonConvert.SerializeObject((StackPanel.Children[i] as ScreenTemplateElementControl).PlaylistScreen.SelectedItem as Playlist),
                         IsPlaylist = true,
                         ScreenNumber = ScreenTemplate.ScreenTemplateElements.Count + 1
                     });
                 }
             }
-
-            this.DialogResult = true;
+            DialogResult = true;
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = false;
+            DialogResult = false;
         }
     }
 }

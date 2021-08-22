@@ -24,15 +24,7 @@ namespace Six_Screens_Controller
 
         private void App_Exit(object sender, ExitEventArgs e)
         {
-            try
-            {
-                if (config.Python != "" && config.Server != "")
-                    process.Kill();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            
         }
     }
 }

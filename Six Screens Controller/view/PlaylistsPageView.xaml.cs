@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,13 +15,8 @@ using System.Windows.Shapes;
 
 namespace Six_Screens_Controller.view
 {
-    /// <summary>
-    /// Логика взаимодействия для PlaylistsPageView.xaml
-    /// </summary>
     public partial class PlaylistsPageView : UserControl
     {
-        public bool IsChangePlaylist { get; set; } = false;
-        public bool IsDestroy { get; set; } = false;
         public ScreenTemplateElement Playlist { get; set; } = new ScreenTemplateElement();
 
         public PlaylistsPageView()
@@ -74,10 +70,10 @@ namespace Six_Screens_Controller.view
 
             Playlist.IsPlaylist = true;
             Playlist.Id = playlist.Id;
-            Playlist.Path = playlist.JsonString();
+            Playlist.Path = JsonConvert.SerializeObject(playlist);
             Playlist.ScreenNumber = Convert.ToInt32((sender as MenuItem).Uid);
 
-            IsChangePlaylist = true;
+            Utils.PutRequestScreens(Playlist.ScreenNumber, Playlist);
         }
     }
 }

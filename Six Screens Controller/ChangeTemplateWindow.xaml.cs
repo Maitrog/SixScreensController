@@ -17,9 +17,6 @@ using Newtonsoft.Json;
 
 namespace Six_Screens_Controller
 {
-    /// <summary>
-    /// Логика взаимодействия для ChangeTemplateWindow.xaml
-    /// </summary>
     public partial class ChangeTemplateWindow : Window
     {
         public ScreenTemplate ScreenTemplate { get; private set; }
@@ -64,7 +61,7 @@ namespace Six_Screens_Controller
                 }
                 else if ((StackPanel.Children[i] as ScreenTemplateElementControl).IsPlaylistScreen.IsChecked == true)
                 {
-                    string path = ((StackPanel.Children[i] as ScreenTemplateElementControl).PlaylistScreen.SelectedItem as Playlist).JsonString();
+                    string path = JsonConvert.SerializeObject((StackPanel.Children[i] as ScreenTemplateElementControl).PlaylistScreen.SelectedItem as Playlist);
                     if (path != null && path != ScreenTemplate.ScreenTemplateElements[(i - 4) / 2].Path)
                     {
                         ScreenTemplate.ScreenTemplateElements[(i - 4) / 2] = new ScreenTemplateElement()
@@ -76,15 +73,13 @@ namespace Six_Screens_Controller
                     }
                 }
             }
-            
             ScreenTemplate.Title = title.Text;
-
-            this.DialogResult = true;
+            DialogResult = true;
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = false;
+            DialogResult = false;
         }
     }
 }

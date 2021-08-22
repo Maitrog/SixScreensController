@@ -14,14 +14,9 @@ using System.Windows.Shapes;
 
 namespace Six_Screens_Controller.view
 {
-    /// <summary>
-    /// Логика взаимодействия для TemplatesPageView.xaml
-    /// </summary>
     public partial class TemplatesPageView : UserControl
     {
         public ScreenTemplate ScreenTemplate { get; set; }
-        public bool IsDestroy { get; set; } = false;
-        public bool IsChangeTemplate { get; set; } = false;
 
         public TemplatesPageView()
         {
@@ -69,8 +64,6 @@ namespace Six_Screens_Controller.view
             try
             {
                 Utils.PostRequestScreens(ScreenTemplate);
-                Utils.RefreshRequest();
-                IsChangeTemplate = true;
             }
             catch (Exception ex)
             {
