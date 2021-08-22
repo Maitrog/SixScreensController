@@ -18,7 +18,11 @@ namespace SixScreenControllerApi.Controllers
     [ApiController]
     public class ScreensController : ControllerBase
     {
-        public ScreenTemplate ScreenTemplate { get; set; }
+        public ScreenTemplate CurrentScreenTemplate { get; set; }
+        public ScreenTemplate CurrentState { get; set; }
+        private List<bool> IsPlaylisits { get; set; }
+        private readonly List<Thread> playlistThreads;
+
 
         private readonly IMemoryCache cache;
         public ScreensController(IMemoryCache memoryCache)
@@ -26,11 +30,11 @@ namespace SixScreenControllerApi.Controllers
             cache = memoryCache;
             if (cache.TryGetValue("CurrentScreenTemplate", out ScreenTemplate st))
             {
-                ScreenTemplate = st;
+                CurrentScreenTemplate = st;
             }
             else
             {
-                ScreenTemplate template = new ScreenTemplate
+                CurrentScreenTemplate = new ScreenTemplate
                 {
                     Id = 0,
                     Title = "default",
@@ -44,26 +48,74 @@ namespace SixScreenControllerApi.Controllers
                         new ScreenTemplateElement(){ ScreenNumber = 6}
                     }
                 };
-                cache.Set("CurrentScreenTemplate", template);
-                ScreenTemplate = template;
+                cache.Set("CurrentScreenTemplate", CurrentScreenTemplate);
+            }
+            if (cache.TryGetValue("CurrentState", out ScreenTemplate curState))
+            {
+                CurrentState = curState;
+            }
+            else
+            {
+                CurrentState = new ScreenTemplate
+                {
+                    Id = 0,
+                    Title = "default",
+                    ScreenTemplateElements = new List<ScreenTemplateElement>(6)
+                    {
+                        new ScreenTemplateElement(){ ScreenNumber = 1},
+                        new ScreenTemplateElement(){ ScreenNumber = 2},
+                        new ScreenTemplateElement(){ ScreenNumber = 3},
+                        new ScreenTemplateElement(){ ScreenNumber = 4},
+                        new ScreenTemplateElement(){ ScreenNumber = 5},
+                        new ScreenTemplateElement(){ ScreenNumber = 6}
+                    }
+                };
+                cache.Set("CurrentState", CurrentState);
+            }
+            if (cache.TryGetValue("IsPlaylists", out List<bool> isPlaylists))
+            {
+                IsPlaylisits = isPlaylists;
+            }
+            else
+            {
+                IsPlaylisits = new List<bool> { false, false, false, false, false, false };
+                cache.Set("IsPlaylists", IsPlaylisits);
+            }
+
+            if (cache.TryGetValue("PlaylistThreads", out List<Thread> _playlilstTreads))
+            {
+                playlistThreads = _playlilstTreads;
+            }
+            else
+            {
+                playlistThreads = new List<Thread>
+                {
+                    new Thread(SetPlaylist),
+                    new Thread(SetPlaylist),
+                    new Thread(SetPlaylist),
+                    new Thread(SetPlaylist),
+                    new Thread(SetPlaylist),
+                    new Thread(SetPlaylist)
+                };
+                cache.Set("PlaylistThreads", playlistThreads);
             }
         }
 
         [HttpGet]
         public ActionResult<ScreenTemplate> Get()
         {
-            return new ObjectResult(ScreenTemplate);
+            return new ObjectResult(CurrentScreenTemplate);
         }
 
         [HttpGet("{screeenNumber}")]
         public ActionResult<ScreenTemplateElement> Get(int screeenNumber)
         {
-            if (screeenNumber < 1 || screeenNumber > 6 || ScreenTemplate.ScreenTemplateElements.Count == 0)
+            if (screeenNumber < 1 || screeenNumber > 6 || CurrentState.ScreenTemplateElements.Count == 0)
             {
                 return NotFound();
             }
 
-            return new ObjectResult(ScreenTemplate.ScreenTemplateElements[screeenNumber - 1]);
+            return new ObjectResult(CurrentState.ScreenTemplateElements[screeenNumber - 1]);
         }
 
         [HttpGet("{screeenNumber}/content")]
@@ -76,9 +128,9 @@ namespace SixScreenControllerApi.Controllers
                 return NotFound();
             }
 
-            if (!ScreenTemplate.ScreenTemplateElements[screeenNumber - 1].IsPlaylist)
+            if (!CurrentState.ScreenTemplateElements[screeenNumber - 1].IsPlaylist)
             {
-                string path = ScreenTemplate.ScreenTemplateElements[screeenNumber - 1].Path;
+                string path = CurrentState.ScreenTemplateElements[screeenNumber - 1].Path;
                 string exp = path.Split("\\").LastOrDefault().Split('.').LastOrDefault().ToLower();
                 var file = System.IO.File.OpenRead(path);
                 if (imageExp.Contains(exp))
@@ -105,12 +157,19 @@ namespace SixScreenControllerApi.Controllers
             {
                 return BadRequest();
             }
-            cache.Set("CurrentScreenTemplate", ScreenTemplate);
-            foreach(ScreenTemplateElement i in screenTemplate.ScreenTemplateElements)
+            CurrentScreenTemplate.Id = screenTemplate.Id;
+            CurrentScreenTemplate.Title = screenTemplate.Title;
+            cache.Set("CurrentScreenTemplate", CurrentScreenTemplate);
+
+            CurrentState.Id = screenTemplate.Id;
+            CurrentState.Title = screenTemplate.Title;
+            cache.Set("CurrentState", CurrentState);
+
+            foreach (ScreenTemplateElement i in screenTemplate.ScreenTemplateElements)
             {
                 Put(i.ScreenNumber, i);
             }
-            return Ok(ScreenTemplate);
+            return Ok(CurrentState);
         }
 
         [HttpPut("{screenNumber}")]
@@ -121,33 +180,41 @@ namespace SixScreenControllerApi.Controllers
                 return BadRequest();
             }
 
+            if (IsPlaylisits[screenNumber - 1])
+            {
+                playlistThreads[screenNumber - 1].Interrupt();
+                cache.Set("PlaylistThreads", playlistThreads);
+            }
+
+            IsPlaylisits[screenNumber - 1] = false;
+            cache.Set("IsPlaylists", IsPlaylisits);
+
             if (!element.IsPlaylist)
             {
-                ScreenTemplate.ScreenTemplateElements[screenNumber - 1] = element;
-                cache.Set("CurrentScreenTemplate", ScreenTemplate);
+
+                CurrentScreenTemplate.ScreenTemplateElements[screenNumber - 1] = element;
+                cache.Set("CurrentScreenTemplate", CurrentScreenTemplate);
+
+                CurrentState.ScreenTemplateElements[screenNumber - 1] = element;
+                cache.Set("CurrentState", CurrentState);
+
                 Refresh(screenNumber);
-                return Ok(ScreenTemplate);
+                return Ok(CurrentState);
             }
             else
             {
-                Playlist pl = JsonConvert.DeserializeObject<Playlist>(element.Path);
-                SetPlaylist(screenNumber, pl);
-                return Ok(ScreenTemplate);
-            }
-        }
+                CurrentScreenTemplate.ScreenTemplateElements[screenNumber - 1] = element;
+                cache.Set("CurrentScreenTemplate", CurrentScreenTemplate);
 
-        private async void SetPlaylist(int screenNumber, Playlist playlist)
-        {
-            await Task.Run(() =>
-            {
-                foreach (PlaylistElement i in playlist.PlaylistElements)
-                {
-                    ScreenTemplateElement screenTemplateElement = new ScreenTemplateElement { Path = i.Path, IsPlaylist = false, ScreenNumber = screenNumber };
-                    Put(screenNumber, screenTemplateElement);
-                    
-                    Thread.Sleep(i.Duration * 1000);
-                }
-            });
+                Playlist pl = JsonConvert.DeserializeObject<Playlist>(element.Path);
+                IsPlaylisits[screenNumber - 1] = true;
+                cache.Set("IsPlaylists", IsPlaylisits);
+
+                playlistThreads[screenNumber - 1] = new Thread(SetPlaylist);
+                playlistThreads[screenNumber - 1].Start(new Tuple<int, Playlist>(screenNumber, pl));
+                cache.Set("PlaylistThreads", playlistThreads);
+                return Ok(CurrentState);
+            }
         }
 
         private async void Refresh(int screenNumber = 0)
@@ -170,6 +237,47 @@ namespace SixScreenControllerApi.Controllers
             await hub.StartAsync();
 
             await hub.SendAsync("SendRefresh", screenNumber);
+        }
+
+        private ActionResult<ScreenTemplate> PutForPlaylist(int screenNumber, ScreenTemplateElement element)
+        {
+            if (screenNumber < 1 || screenNumber > 6)
+            {
+                return BadRequest();
+            }
+
+            if (!element.IsPlaylist)
+            {
+                CurrentState.ScreenTemplateElements[screenNumber - 1] = element;
+                cache.Set("CurrentState", CurrentState);
+                Refresh(screenNumber);
+                return Ok(CurrentState);
+            }
+            return BadRequest();
+        }
+
+        public void SetPlaylist(object data)
+        {
+            try
+            {
+                int screenNumber = ((Tuple<int, Playlist>)data).Item1;
+                Playlist playlist = ((Tuple<int, Playlist>)data).Item2;
+                foreach (PlaylistElement i in playlist.PlaylistElements)
+                {
+                    ScreenTemplateElement screenTemplateElement = new ScreenTemplateElement { Path = i.Path, IsPlaylist = false, ScreenNumber = screenNumber };
+                    PutForPlaylist(screenNumber, screenTemplateElement);
+
+                    Thread.Sleep(i.Duration * 1000);
+                    if (!IsPlaylisits[screenNumber - 1])
+                    {
+                        break;
+                    }
+                }
+            }
+            catch (ThreadInterruptedException)
+            {
+
+            }
         }
     }
 }
