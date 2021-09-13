@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using System.Threading;
 using SixScreenControllerApi.Hubs;
 using Microsoft.AspNetCore.SignalR.Client;
+using System.IO;
 
 namespace SixScreenControllerApi.Controllers
 {
@@ -27,6 +28,8 @@ namespace SixScreenControllerApi.Controllers
         private readonly IMemoryCache cache;
         public ScreensController(IMemoryCache memoryCache)
         {
+            string defaultPath = Directory.GetCurrentDirectory() + "\\assets\\Default.jpg";
+
             cache = memoryCache;
             if (cache.TryGetValue("CurrentScreenTemplate", out ScreenTemplate st))
             {
@@ -40,12 +43,12 @@ namespace SixScreenControllerApi.Controllers
                     Title = "default",
                     ScreenTemplateElements = new List<ScreenTemplateElement>(6)
                     {
-                        new ScreenTemplateElement(){ ScreenNumber = 1},
-                        new ScreenTemplateElement(){ ScreenNumber = 2},
-                        new ScreenTemplateElement(){ ScreenNumber = 3},
-                        new ScreenTemplateElement(){ ScreenNumber = 4},
-                        new ScreenTemplateElement(){ ScreenNumber = 5},
-                        new ScreenTemplateElement(){ ScreenNumber = 6}
+                        new ScreenTemplateElement(){ ScreenNumber = 1, Path=defaultPath},
+                        new ScreenTemplateElement(){ ScreenNumber = 2, Path=defaultPath},
+                        new ScreenTemplateElement(){ ScreenNumber = 3, Path=defaultPath},
+                        new ScreenTemplateElement(){ ScreenNumber = 4, Path=defaultPath},
+                        new ScreenTemplateElement(){ ScreenNumber = 5, Path=defaultPath},
+                        new ScreenTemplateElement(){ ScreenNumber = 6, Path=defaultPath}
                     }
                 };
                 cache.Set("CurrentScreenTemplate", CurrentScreenTemplate);
@@ -62,12 +65,12 @@ namespace SixScreenControllerApi.Controllers
                     Title = "default",
                     ScreenTemplateElements = new List<ScreenTemplateElement>(6)
                     {
-                        new ScreenTemplateElement(){ ScreenNumber = 1},
-                        new ScreenTemplateElement(){ ScreenNumber = 2},
-                        new ScreenTemplateElement(){ ScreenNumber = 3},
-                        new ScreenTemplateElement(){ ScreenNumber = 4},
-                        new ScreenTemplateElement(){ ScreenNumber = 5},
-                        new ScreenTemplateElement(){ ScreenNumber = 6}
+                        new ScreenTemplateElement(){ ScreenNumber = 1, Path=defaultPath},
+                        new ScreenTemplateElement(){ ScreenNumber = 2, Path=defaultPath},
+                        new ScreenTemplateElement(){ ScreenNumber = 3, Path=defaultPath},
+                        new ScreenTemplateElement(){ ScreenNumber = 4, Path=defaultPath},
+                        new ScreenTemplateElement(){ ScreenNumber = 5, Path=defaultPath},
+                        new ScreenTemplateElement(){ ScreenNumber = 6, Path=defaultPath}
                     }
                 };
                 cache.Set("CurrentState", CurrentState);
@@ -132,18 +135,20 @@ namespace SixScreenControllerApi.Controllers
             {
                 string path = CurrentState.ScreenTemplateElements[screeenNumber - 1].Path;
                 string exp = path.Split("\\").LastOrDefault().Split('.').LastOrDefault().ToLower();
-                var file = System.IO.File.OpenRead(path);
+                //var file = System.IO.File.OpenRead(path);
                 if (imageExp.Contains(exp))
                 {
-                    return File(file, "image/jpeg");
+                    return PhysicalFile(path, "image/jpeg", enableRangeProcessing: true);
+                    //return File(file, "image/jpeg");
                 }
                 else if (videoExp.Contains(exp))
                 {
-                    return File(file, "video/mp4");
+                    return PhysicalFile(path, "video/mp4", enableRangeProcessing: true);
                 }
                 else
                 {
-                    return File(file, "image/gif");
+                    return PhysicalFile(path, "image/gif", enableRangeProcessing: true);
+                    //return File(file, "image/gif");
                 }
             }
 
@@ -215,6 +220,38 @@ namespace SixScreenControllerApi.Controllers
                 cache.Set("PlaylistThreads", playlistThreads);
                 return Ok(CurrentState);
             }
+        }
+
+        [HttpGet("{screeenNumber}/type")]
+        public ActionResult<string> GetType(int screeenNumber)
+        {
+            string[] imageExp = new string[] { "jpg", "jepg", "bmp", "png", "webp" };
+            string[] videoExp = new string[] { "mp4", "avi", "mpeg", "mkv", "3gp", "3g2" };
+            if (screeenNumber < 1 || screeenNumber > 6)
+            {
+                return NotFound();
+            }
+
+            if (!CurrentState.ScreenTemplateElements[screeenNumber - 1].IsPlaylist)
+            {
+                string path = CurrentState.ScreenTemplateElements[screeenNumber - 1].Path;
+                string exp = path.Split("\\").LastOrDefault().Split('.').LastOrDefault().ToLower();
+                if (imageExp.Contains(exp))
+                {
+                    return new ObjectResult("{\"media_type\":\"img\"}");
+                }
+                else if (videoExp.Contains(exp))
+                {
+                    return new ObjectResult("{\"media_type\":\"vid\"}");
+                }
+                else
+                {
+                    return new ObjectResult("{\"media_type\":\"gif\"}");
+                }
+            }
+
+            return BadRequest();
+
         }
 
         private async void Refresh(int screenNumber = 0)

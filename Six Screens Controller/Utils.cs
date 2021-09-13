@@ -17,7 +17,7 @@ namespace Six_Screens_Controller
 {
     internal static class Utils
     {
-        public static readonly string[] imageExp = new string[] { "jpg", "jepg", "bmp", "png", "webp" };
+        public static readonly string[] imageExp = new string[] { "jpg", "jpeg", "bmp", "png", "webp" };
         public static readonly string[] videoExp = new string[] { "mp4", "avi", "mpeg", "mkv", "3gp", "3g2" };
         public static Config config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
         private static readonly HttpClient client = new HttpClient();
