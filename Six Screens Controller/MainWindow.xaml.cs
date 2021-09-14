@@ -1,25 +1,13 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
-using Microsoft.Win32;
 using Newtonsoft.Json;
 using Six_Screens_Controller.view;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 
 namespace Six_Screens_Controller
@@ -61,12 +49,12 @@ namespace Six_Screens_Controller
         {
             if (screenNumber == 0)
             {
-                ScreenTemplate screenTemplate = await Utils.GetRequestScreens();
+                ScreenTemplate screenTemplate = await Utils.GetRequestScreensAsync();
                 screensPage.SetScreenTemplate(screenTemplate);
             }
             else
             {
-                ScreenTemplateElement screenTemplateElement = await Utils.GetRequestScreens(screenNumber);
+                ScreenTemplateElement screenTemplateElement = await Utils.GetRequestScreensAsync(screenNumber);
                 screensPage.SetScreenTemplateElement(screenNumber, screenTemplateElement);
             }
         }

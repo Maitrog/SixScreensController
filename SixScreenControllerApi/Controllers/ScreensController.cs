@@ -1,17 +1,14 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SixScreenControllerApi.Models;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
-using System.Threading;
-using SixScreenControllerApi.Hubs;
-using Microsoft.AspNetCore.SignalR.Client;
+using SixScreenControllerApi.Models;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Threading;
 
 namespace SixScreenControllerApi.Controllers
 {

@@ -1,9 +1,4 @@
-﻿using Newtonsoft.Json;
-using Six_Screens_Controller.view;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Six_Screens_Controller
 {

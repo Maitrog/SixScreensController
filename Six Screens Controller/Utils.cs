@@ -3,10 +3,8 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -52,21 +50,21 @@ namespace Six_Screens_Controller
         /// Screens controller methods
         /// </summary>
 
-        public static async void PutRequestScreens(int screenNumber, ScreenTemplateElement element)
+        public static async void PutRequestScreensAsync(int screenNumber, ScreenTemplateElement element)
         {
             string url = GetUrl($"screens/{screenNumber}");
             HttpResponseMessage response = await client.PutAsJsonAsync(url, element);
             response.EnsureSuccessStatusCode();
         }
 
-        public static async void PostRequestScreens(ScreenTemplate screenTemplate)
+        public static async void PostRequestScreensAsync(ScreenTemplate screenTemplate)
         {
             string url = GetUrl("screens");
             HttpResponseMessage response = await client.PostAsJsonAsync(url, screenTemplate);
             response.EnsureSuccessStatusCode();
         }
 
-        public static async Task<ScreenTemplate> GetRequestScreens()
+        public static async Task<ScreenTemplate> GetRequestScreensAsync()
         {
             string url = GetUrl("screens");
             string response = await client.GetStringAsync(url);
@@ -74,7 +72,7 @@ namespace Six_Screens_Controller
             return template;
         }
 
-        public static async Task<ScreenTemplateElement> GetRequestScreens(int screenNumber)
+        public static async Task<ScreenTemplateElement> GetRequestScreensAsync(int screenNumber)
         {
             string url = GetUrl($"screens/{screenNumber}");
             string response = await client.GetStringAsync(url);
@@ -86,7 +84,7 @@ namespace Six_Screens_Controller
         /// Playlist controller methods
         /// </summary>
 
-        public static async Task<List<Playlist>> GetRequestPlaylist()
+        public static async Task<List<Playlist>> GetRequestPlaylistAsync()
         {
             string url = GetUrl("playlist");
             string response = await client.GetStringAsync(url);
@@ -94,7 +92,7 @@ namespace Six_Screens_Controller
             return playlists;
         }
 
-        public static async Task<Playlist> GetRequestPlaylist(int id)
+        public static async Task<Playlist> GetRequestPlaylistAsync(int id)
         {
             string url = GetUrl($"playlist/{id}");
             string response = await client.GetStringAsync(url);
@@ -102,14 +100,14 @@ namespace Six_Screens_Controller
             return playlist;
         }
 
-        public static async void PostRequestPlaylist(Playlist playlist)
+        public static async void PostRequestPlaylistAsync(Playlist playlist)
         {
             string url = GetUrl("playlist");
             HttpResponseMessage response = await client.PostAsJsonAsync(url, playlist);
             response.EnsureSuccessStatusCode();
         }
 
-        public static async void DeleteRequestPlaylist(int id)
+        public static async void DeleteRequestPlaylistAsync(int id)
         {
             string url = GetUrl($"playlist/{id}");
             HttpResponseMessage response = await client.DeleteAsync(url);
@@ -120,7 +118,7 @@ namespace Six_Screens_Controller
         /// ScreenTemplates controller methods
         /// </summary>
 
-        public static async Task<List<ScreenTemplate>> GetRequestScreenTemplates()
+        public static async Task<List<ScreenTemplate>> GetRequestScreenTemplatesAsync()
         {
             string url = GetUrl("screentemplates");
             string response = await client.GetStringAsync(url);
@@ -129,7 +127,7 @@ namespace Six_Screens_Controller
             return screenTemplates;
         }
 
-        public static async Task<ScreenTemplate> GetRequestScreenTemplates(int id)
+        public static async Task<ScreenTemplate> GetRequestScreenTemplatesAsync(int id)
         {
             string url = GetUrl($"screentemplates/{id}");
             string response = await client.GetStringAsync(url);
@@ -138,28 +136,28 @@ namespace Six_Screens_Controller
             return screenTemplates;
         }
 
-        public static async void PostRequestScreenTemplates(ScreenTemplate screenTemplate)
+        public static async void PostRequestScreenTemplatesAsync(ScreenTemplate screenTemplate)
         {
             string url = GetUrl("screentemplates");
             HttpResponseMessage response = await client.PostAsJsonAsync(url, screenTemplate);
             response.EnsureSuccessStatusCode();
         }
 
-        public static async void DeleteRequestScreenTemplates(int id)
+        public static async void DeleteRequestScreenTemplatesAsync(int id)
         {
             string url = GetUrl($"screentemplates/{id}");
             HttpResponseMessage response = await client.DeleteAsync(url);
             response.EnsureSuccessStatusCode();
         }
 
-        public static async void PutRequestScreenTemplates(int id, ScreenTemplate screenTemplate)
+        public static async void PutRequestScreenTemplatesAsync(int id, ScreenTemplate screenTemplate)
         {
             string url = GetUrl($"screentemplates/{id}");
             HttpResponseMessage response = await client.PutAsJsonAsync(url, screenTemplate);
             response.EnsureSuccessStatusCode();
         }
 
-        public static async void RefreshRequest(int screenNumber = 0)
+        public static async void RefreshRequestAsync(int screenNumber = 0)
         {
             HubConnection HubConnection = new HubConnectionBuilder()
             .WithUrl($"{config.Protocol}://{config.Host}:{config.Port}/refresh")

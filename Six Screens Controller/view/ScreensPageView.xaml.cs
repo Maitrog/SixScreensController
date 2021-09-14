@@ -1,23 +1,9 @@
 ﻿using Microsoft.Win32;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Six_Screens_Controller.view
 {
@@ -51,7 +37,7 @@ namespace Six_Screens_Controller.view
                     string file = ((string[])e.Data.GetData(DataFormats.FileDrop))[0];
                     ScreenTemplateElement screen = new ScreenTemplateElement { Path = file, IsPlaylist = false, ScreenNumber = Convert.ToInt32(((ListViewItem)sender).Uid) };
 
-                    Utils.PutRequestScreens(screen.ScreenNumber, screen);
+                    Utils.PutRequestScreensAsync(screen.ScreenNumber, screen);
                 }
             }
             catch (Exception ex)
@@ -77,7 +63,7 @@ namespace Six_Screens_Controller.view
                             int screenNumber = Convert.ToInt32(((ListViewItem)i).Uid);
                             ScreenTemplateElement screen = new ScreenTemplateElement { ScreenNumber = screenNumber, IsPlaylist = false, Path = pickedFile };
 
-                            Utils.PutRequestScreens(screen.ScreenNumber, screen);
+                            Utils.PutRequestScreensAsync(screen.ScreenNumber, screen);
                         }
                     }
                 }
@@ -97,8 +83,8 @@ namespace Six_Screens_Controller.view
         }
         private async void Refresh_Click(object sender, RoutedEventArgs e)
         {
-            ScreenTemplate template = await Utils.GetRequestScreens();
-            Utils.PostRequestScreens(template);
+            ScreenTemplate template = await Utils.GetRequestScreensAsync();
+            Utils.PostRequestScreensAsync(template);
         }
         private void Screen_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
@@ -112,7 +98,7 @@ namespace Six_Screens_Controller.view
                     pickedFile = openFileDialog.FileName;
                     ScreenTemplateElement screen = new ScreenTemplateElement { ScreenNumber = screenNumber, Path = pickedFile, IsPlaylist = false };
 
-                    Utils.PutRequestScreens(screenNumber, screen);
+                    Utils.PutRequestScreensAsync(screenNumber, screen);
                 }
             }
             catch (Exception ex)
