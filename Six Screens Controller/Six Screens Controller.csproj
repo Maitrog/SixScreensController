@@ -28,6 +28,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SixScreenControllerApi\SixScreenControllerApi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="assets\AddIcon50x50.png" />
     <Resource Include="assets\BrowseIcon50x50.png" />
     <Resource Include="assets\Logo50x50.png">
