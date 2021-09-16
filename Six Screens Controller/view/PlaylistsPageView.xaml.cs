@@ -40,7 +40,7 @@ namespace Six_Screens_Controller.view
                 {
                     pl.PlaylistElements.Add(addPlaylistWindow.elements[i]);
                 }
-                Utils.PostRequestPlaylistAsync(pl);
+                Utils.PostRequestPlaylist(pl);
 
                 playlistsList.ItemsSource = await Utils.GetRequestPlaylistAsync();
             }

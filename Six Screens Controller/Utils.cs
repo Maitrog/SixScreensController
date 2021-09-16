@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -107,6 +108,26 @@ namespace Six_Screens_Controller
             response.EnsureSuccessStatusCode();
         }
 
+        public static void PostRequestPlaylist(Playlist playlist)
+        {
+            string url = GetUrl("playlist");
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                streamWriter.Write(JsonConvert.SerializeObject(playlist));
+            }
+
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                var result = streamReader.ReadToEnd();
+                Console.WriteLine(result);
+            }
+        }
+
         public static async void DeleteRequestPlaylistAsync(int id)
         {
             string url = GetUrl($"playlist/{id}");
@@ -143,6 +164,25 @@ namespace Six_Screens_Controller
             response.EnsureSuccessStatusCode();
         }
 
+        public static void PostRequestScreenTemplates(ScreenTemplate screenTemplate)
+        {
+            string url = GetUrl("screentemplates");
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                streamWriter.Write(JsonConvert.SerializeObject(screenTemplate));
+            }
+
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                var result = streamReader.ReadToEnd();
+                Console.WriteLine(result);
+            }
+        }
         public static async void DeleteRequestScreenTemplatesAsync(int id)
         {
             string url = GetUrl($"screentemplates/{id}");

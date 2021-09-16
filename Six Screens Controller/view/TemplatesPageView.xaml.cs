@@ -32,7 +32,7 @@ namespace Six_Screens_Controller.view
 
             if (addTemplateWindow.ShowDialog() == true)
             {
-                Utils.PostRequestScreenTemplatesAsync(addTemplateWindow.ScreenTemplate);
+                Utils.PostRequestScreenTemplates(addTemplateWindow.ScreenTemplate);
                 templateList.ItemsSource = await Utils.GetRequestScreenTemplatesAsync();
             }
         }
