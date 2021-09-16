@@ -49,11 +49,10 @@ namespace Six_Screens_Controller.view
 
         private async void removePlaylist_Click(object sender, RoutedEventArgs e)
         {
-            Utils.DeleteRequestPlaylistAsync((playlistsList.SelectedItem as Playlist).Id);
+            Utils.DeleteRequestPlaylist((playlistsList.SelectedItem as Playlist).Id);
             playlistsList.ItemsSource = await Utils.GetRequestPlaylistAsync();
         }
 
-        //TODO: Сделать установку плейлиста на один экран
         private async void SetPlaylist_Click(object sender, RoutedEventArgs e)
         {
             Playlist playlist = await Utils.GetRequestPlaylistAsync((playlistsList.SelectedItem as Playlist).Id);

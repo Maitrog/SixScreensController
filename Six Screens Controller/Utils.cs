@@ -135,6 +135,26 @@ namespace Six_Screens_Controller
             response.EnsureSuccessStatusCode();
         }
 
+        public static void DeleteRequestPlaylist(int id)
+        {
+            string url = GetUrl($"playlist/{id}");
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "DELETE";
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                streamWriter.Write(id);
+            }
+
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                var result = streamReader.ReadToEnd();
+                Console.WriteLine(result);
+            }
+        }
+
         /// <summary>
         /// ScreenTemplates controller methods
         /// </summary>
@@ -190,6 +210,26 @@ namespace Six_Screens_Controller
             response.EnsureSuccessStatusCode();
         }
 
+        public static void DeleteRequestScreenTemplates(int id)
+        {
+            string url = GetUrl($"screentemplates/{id}");
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "DELETE";
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                streamWriter.Write(id);
+            }
+
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                var result = streamReader.ReadToEnd();
+                Console.WriteLine(result);
+            }
+        }
+
         public static async void PutRequestScreenTemplatesAsync(int id, ScreenTemplate screenTemplate)
         {
             string url = GetUrl($"screentemplates/{id}");
@@ -197,6 +237,10 @@ namespace Six_Screens_Controller
             response.EnsureSuccessStatusCode();
         }
 
+        /// <summary>
+        /// Other request
+        /// </summary>
+        
         public static async void RefreshRequestAsync(int screenNumber = 0)
         {
             HubConnection HubConnection = new HubConnectionBuilder()

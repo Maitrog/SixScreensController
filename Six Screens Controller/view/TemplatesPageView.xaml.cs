@@ -42,7 +42,7 @@ namespace Six_Screens_Controller.view
             object ScreenTemplate = templateList.SelectedItem;
             if (ScreenTemplate != null)
             {
-                Utils.DeleteRequestScreenTemplatesAsync((ScreenTemplate as ScreenTemplate).Id);
+                Utils.DeleteRequestScreenTemplates((ScreenTemplate as ScreenTemplate).Id);
             }
             templateList.ItemsSource = await Utils.GetRequestScreenTemplatesAsync();
         }
