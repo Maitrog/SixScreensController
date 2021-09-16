@@ -6,73 +6,31 @@
         xmlns:local="clr-namespace:Six_Screens_Controller"
         mc:Ignorable="d"
         Title="Настройки" x:Name="Settings"
-        Height="390" Width="508"
-        MinHeight="390" MinWidth="508"
+        Height="230" Width="400"
+        MinHeight="230" MinWidth="400"
         MaxHeight="390" MaxWidth="508">
     
     <Window.DataContext>
         <local:Config/>
     </Window.DataContext>
 
-    <Window.Resources>
-        <local:ArrayToStringConverter x:Key="arrayToString"/>
-    </Window.Resources>
-    
     <StackPanel TextBlock.FontSize="13">
-        
-        <TextBlock Text="Расположение Python" Margin="10,3,10,3"/>
-        <StackPanel Orientation="Horizontal" Margin="10,3,10,3" Width="auto">
-            <TextBox x:Name="interpreterPython" Margin="0,0,3,0"
-                     Width="400"
-                     Text="{Binding Path=Python, Mode=TwoWay}"/>
-
-            <Button x:Name="interpreterBrowse" Click="interpreterBrowse_Click" 
-                    Margin="3,0,0,0">
-
-                <Button.Content>
-                    <TextBlock Text="Обзор..." Margin="5,0,5,0"/>
-                </Button.Content>
-            </Button>
-        </StackPanel>
-        
-        <TextBlock Text="Сервер" Margin="10,3,10,3"/>
-        <StackPanel Orientation="Horizontal" Margin="10,3,10,3" Width="auto">
-            <TextBox x:Name="server" Margin="0,0,3,0"
-                     Width="400"
-                     Text="{Binding Path=Server, Mode=TwoWay}"/>
-
-            <Button x:Name="serverBrowse" Click="serverBrowse_Click" 
-                    Margin="3,0,0,0">
-
-
-                <Button.Content>
-                    <TextBlock Text="Обзор..." Margin="5,0,5,0"/>
-                </Button.Content>
-            </Button>
-        </StackPanel>
-
-        <TextBlock Text="Аргументы сервера" Margin="10,3,10,3"/>
-        <TextBox x:Name="serverArgs" HorizontalAlignment="Left"
-                 Margin="10,3,10,3"
-                 Width="471"
-                 Text="{Binding Path=ServerArgs, Converter={StaticResource arrayToString}, Mode=TwoWay}"/>
-
         <TextBlock Text="Протокол подключения" Margin="10,3,10,3"/>
         <TextBox x:Name="protocol" HorizontalAlignment="Left"
                  Margin="10,3,10,3"
-                 Width="471"
+                 Width="363"
                  Text="{Binding Path=Protocol, Mode=TwoWay}"/>
 
         <TextBlock Text="Хост подключения" Margin="10,3,10,3"/>
         <TextBox x:Name="host" Margin="10,3,10,3"
                  HorizontalAlignment="Left"
-                 Width="471"
+                 Width="363"
                  Text="{Binding Path=Host, Mode=TwoWay}"/>
 
         <TextBlock Text="Порт подключения" Margin="10,3,10,3"/>
         <TextBox x:Name="port" Margin="10,3,10,3"
                  HorizontalAlignment="Left"
-                 Width="471"
+                 Width="363"
                  Text="{Binding Path=Port, Mode=TwoWay}"/>
 
         <Grid Margin="10,13,10,3">
