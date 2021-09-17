@@ -1,24 +1,12 @@
-﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using Newtonsoft.Json;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Six_Screens_Controller
 {
     public partial class AddTemplateWindow : Window
     {
         public ScreenTemplate ScreenTemplate { get; private set; }
-
 
         public AddTemplateWindow()
         {
@@ -31,22 +19,30 @@ namespace Six_Screens_Controller
 
             for (int i = 4; i < StackPanel.Children.Count; i += 2)
             {
-                if((StackPanel.Children[i] as ScreenTemplateElementControl).IsPlaylistScreen.IsChecked == false)
-                    ScreenTemplate.ScreenTemplateElements.Add(new ScreenTemplateElement() { Path = (StackPanel.Children[i] as ScreenTemplateElementControl).ElementPath, 
-                        ScreenNumber = ScreenTemplate.ScreenTemplateElements.Count });
+                if ((StackPanel.Children[i] as ScreenTemplateElementControl).IsPlaylistScreen.IsChecked == false)
+                {
+                    ScreenTemplate.ScreenTemplateElements.Add(new ScreenTemplateElement()
+                    {
+                        Path = (StackPanel.Children[i] as ScreenTemplateElementControl).ElementPath,
+                        ScreenNumber = ScreenTemplate.ScreenTemplateElements.Count + 1
+                    });
+                }
                 else if ((StackPanel.Children[i] as ScreenTemplateElementControl).IsPlaylistScreen.IsChecked == true)
                 {
-                    ScreenTemplate.ScreenTemplateElements.Add(new ScreenTemplateElement() { Path = ((StackPanel.Children[i] as ScreenTemplateElementControl).PlaylistScreen.SelectedItem as Playlist).JsonString(), 
-                        IsPlaylist = true, ScreenNumber = ScreenTemplate.ScreenTemplateElements.Count });
+                    ScreenTemplate.ScreenTemplateElements.Add(new ScreenTemplateElement()
+                    {
+                        Path = JsonConvert.SerializeObject((StackPanel.Children[i] as ScreenTemplateElementControl).PlaylistScreen.SelectedItem as Playlist),
+                        IsPlaylist = true,
+                        ScreenNumber = ScreenTemplate.ScreenTemplateElements.Count + 1
+                    });
                 }
-            }  
-
-            this.DialogResult = true;
+            }
+            DialogResult = true;
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            this.DialogResult = false;
+            DialogResult = false;
         }
     }
 }

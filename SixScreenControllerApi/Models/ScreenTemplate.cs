@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Six_Screens_Controller
+namespace SixScreenControllerApi.Models
 {
     public class ScreenTemplate
     {

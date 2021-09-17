@@ -1,4 +1,4 @@
-﻿namespace Six_Screens_Controller
+﻿namespace SixScreenControllerApi.Models
 {
     public class PlaylistElement
     {

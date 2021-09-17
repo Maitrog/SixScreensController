@@ -1,4 +1,4 @@
-﻿namespace Six_Screens_Controller
+﻿namespace SixScreenControllerApi.Models
 {
     public class ScreenTemplateElement
     {
@@ -11,7 +11,7 @@
 
         public override bool Equals(object obj)
         {
-            if((obj as ScreenTemplateElement) != null)
+            if ((obj as ScreenTemplateElement) != null)
                 return (obj as ScreenTemplateElement).Id == Id && (obj as ScreenTemplateElement).Path == Path && (obj as ScreenTemplateElement).IsPlaylist == IsPlaylist;
 
             return false;

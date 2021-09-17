@@ -1,12 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -19,93 +14,15 @@ namespace Six_Screens_Controller
 
         private void App_Startup(object sender, StartupEventArgs e)
         {
-            try
+            string[] args = {"--urls", $"{config.Protocol}://{config.Host}:{config.Port}" };
+            Task.Run(() =>
             {
-                if (config.Python != "" && config.Server != "")
-                {
-                    if (config.FirstStart)
-                    {
-                        var pip = new ProcessStartInfo();
-                        var pipFiles = Directory.GetFiles($"{config.Python}\\Scripts");
-                        string pipTrue = "";
-                        foreach (var i in pipFiles)
-                        {
-                            if (Regex.IsMatch(i, "pip3.{5,}"))
-                                pipTrue = i;
-                        }
-
-                        if (pipTrue == "")
-                            pipTrue = $"{config.Python}\\Scripts\\pip3.exe";
-                        for (int i = 1; i < 3; i++)
-                        {
-                            pip.FileName = $"\"{pipTrue}\"";
-                            pip.Arguments = $"install -r requirements{i}.txt";
-                            pip.UseShellExecute = false;
-                            pip.CreateNoWindow = false;
-                            pip.RedirectStandardOutput = true;
-                            pip.RedirectStandardError = true;
-
-                            Process p = new Process
-                            {
-                                StartInfo = pip
-                            };
-                            p.Start();
-
-                            p.WaitForExit();
-                        }
-                        config.FirstStart = false;
-                        config.DefaultImage = Directory.GetCurrentDirectory() + "\\assets\\Emblem_of_the_Russian_Ground_Forces.jpg";
-                        File.WriteAllText("config.json", JsonConvert.SerializeObject(config));
-
-                    }
-
-                    Task.Run(() =>
-               {
-                   var psi = new ProcessStartInfo();
-                   psi.FileName = config.Python + "\\python.exe";
-
-                   string argument = $"\"{config.Server}\"";
-                   foreach (string arg in config.ServerArgs)
-                   {
-                       argument += $" \"{arg}\"";
-                   }
-
-                   psi.Arguments = argument;
-                   psi.UseShellExecute = false;
-                   psi.CreateNoWindow = true;
-                   psi.RedirectStandardOutput = true;
-                   psi.RedirectStandardError = true;
-
-                   process.StartInfo = psi;
-                   process.Start();
-                   var errors = process.StandardError.ReadToEnd();
-                   var result = process.StandardOutput.ReadToEnd();
-
-                   Console.WriteLine("ERRORS:");
-                   Console.WriteLine(errors);
-                   Console.WriteLine();
-                   Console.WriteLine("RESULT:");
-                   Console.WriteLine(result);
-               });
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+                SixScreenControllerApi.Program.Main(args);
+            });
         }
 
         private void App_Exit(object sender, ExitEventArgs e)
         {
-            try
-            {
-                if (config.Python != "" && config.Server != "")
-                    process.Kill();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
         }
     }
 }

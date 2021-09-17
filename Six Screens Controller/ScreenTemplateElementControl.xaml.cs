@@ -1,19 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Microsoft.Win32;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using Microsoft.EntityFrameworkCore;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Microsoft.Win32;
-using System.ComponentModel;
 
 namespace Six_Screens_Controller
 {
@@ -51,10 +39,9 @@ namespace Six_Screens_Controller
             Loaded += ScreenTemplateElementControl_Load;
         }
 
-        private void ScreenTemplateElementControl_Load(object sender, RoutedEventArgs e)
+        private async void ScreenTemplateElementControl_Load(object sender, RoutedEventArgs e)
         {
-            using PlaylistContext db = new PlaylistContext();
-            PlaylistScreen.ItemsSource = db.Playlists.Include(x => x.PlaylistElements).ToList();
+            PlaylistScreen.ItemsSource = await Utils.GetRequestPlaylistAsync();
             if (ElementDefaultId != -1)
                 PlaylistScreen.SelectedValue = ElementDefaultId;
         }

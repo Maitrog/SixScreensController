@@ -1,25 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Win32;
+﻿using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json;
 using Six_Screens_Controller.view;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 
 namespace Six_Screens_Controller
@@ -27,6 +15,7 @@ namespace Six_Screens_Controller
     public partial class MainWindow : Window
     {
         private static readonly Config config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(@"config.json"));
+        private static HubConnection HubConnection;
         private static ScreenTemplate ScreenTemplateNow { get; set; } = new ScreenTemplate()
         {
             ScreenTemplateElements = new List<ScreenTemplateElement> {
@@ -38,21 +27,43 @@ namespace Six_Screens_Controller
             new ScreenTemplateElement() { ScreenNumber = 6, Path = config.DefaultImage }
             }
         };
-        private ScreensPageView screensPage = new ScreensPageView(ScreenTemplateNow);
+        private readonly ScreensPageView screensPage = new ScreensPageView(ScreenTemplateNow);
 
         public MainWindow()
         {
             Grid.SetColumn(screensPage, 2);
             InitializeComponent();
+            Loaded += MainWindow_Loaded;
             MainGrid.Children.Insert(2, screensPage);
         }
 
-        async private void TemplateButton_Click(object sender, RoutedEventArgs e)
+        private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            HubConnection = new HubConnectionBuilder().WithUrl($"{config.Protocol}://{config.Host}:{config.Port}/refresh").Build();
+            HubConnection.On<int>("Refresh", screenNumber => Refresh(screenNumber));
+
+            await HubConnection.StartAsync();
+        }
+
+        private async void Refresh(int screenNumber)
+        {
+            if (screenNumber == 0)
+            {
+                ScreenTemplate screenTemplate = await Utils.GetRequestScreensAsync();
+                screensPage.SetScreenTemplate(screenTemplate);
+            }
+            else
+            {
+                ScreenTemplateElement screenTemplateElement = await Utils.GetRequestScreensAsync(screenNumber);
+                screensPage.SetScreenTemplateElement(screenNumber, screenTemplateElement);
+            }
+        }
+
+        private void TemplateButton_Click(object sender, RoutedEventArgs e)
         {
             if (MainGrid.Children[2].GetType() != Type.GetType("Six_Screens_Controller.view.TemplatesPageView"))
             {
-                if (MainGrid.Children[2].GetType() == Type.GetType("Six_Screens_Controller.view.PlaylistsPageView"))
-                    (MainGrid.Children[2] as PlaylistsPageView).IsDestroy = true;
+
                 TemplatesPageView templatesPageControl = new TemplatesPageView();
                 Grid.SetColumn(templatesPageControl, 2);
                 MainGrid.Children.RemoveAt(2);
@@ -61,35 +72,13 @@ namespace Six_Screens_Controller
                 ((MainGrid.Children[0] as Grid).Children[1] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
                 ((MainGrid.Children[0] as Grid).Children[3] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
                 ((MainGrid.Children[0] as Grid).Children[2] as Button).Background = new SolidColorBrush(Color.FromRgb(197, 197, 197));
-
-                await Task.Run(() =>
-                {
-                    while (!templatesPageControl.IsDestroy)
-                    {
-                        if (templatesPageControl.IsChangeTemplate)
-                        {
-                            screensPage.IsChangedTemplate = true;
-                            Thread.Sleep(2);
-                            ScreenTemplateNow = templatesPageControl.ScreenTemplate;
-                            Application.Current.Dispatcher.Invoke(() =>
-                            {
-                                templatesPageControl.IsChangeTemplate = false;
-                                if (ScreenTemplateNow != null)
-                                    screensPage.SetScreenTemplate(ScreenTemplateNow);
-                            });
-                        }
-                        Thread.Sleep(100);
-                    }
-                });
             }
         }
 
-        async private void PlaylistButton_Click(object sender, RoutedEventArgs e)
+        private void PlaylistButton_Click(object sender, RoutedEventArgs e)
         {
             if (MainGrid.Children[2].GetType() != Type.GetType("Six_Screens_Controller.view.PlaylistsPageView"))
             {
-                if (MainGrid.Children[2].GetType() == Type.GetType("Six_Screens_Controller.view.TemplatesPageView"))
-                    (MainGrid.Children[2] as TemplatesPageView).IsDestroy = true;
                 PlaylistsPageView playlistsPageControl = new PlaylistsPageView();
                 Grid.SetColumn(playlistsPageControl, 2);
                 MainGrid.Children.RemoveAt(2);
@@ -98,22 +87,6 @@ namespace Six_Screens_Controller
                 ((MainGrid.Children[0] as Grid).Children[1] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
                 ((MainGrid.Children[0] as Grid).Children[2] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
                 ((MainGrid.Children[0] as Grid).Children[3] as Button).Background = new SolidColorBrush(Color.FromRgb(197, 197, 197));
-
-                await Task.Run(() =>
-                {
-                    while (!playlistsPageControl.IsDestroy)
-                    {
-                        if (playlistsPageControl.IsChangePlaylist)
-                        {
-                            ScreenTemplateNow.ScreenTemplateElements[playlistsPageControl.Playlist.ScreenNumber - 1] = playlistsPageControl.Playlist;
-                            playlistsPageControl.IsChangePlaylist = false;
-                            Application.Current.Dispatcher.Invoke(() =>
-                                {
-                                    screensPage.SetPlaylist(playlistsPageControl.Playlist.Path, playlistsPageControl.Playlist.ScreenNumber);
-                                });
-                        }
-                    }
-                });
             }
         }
 
@@ -121,11 +94,6 @@ namespace Six_Screens_Controller
         {
             if (MainGrid.Children[2].GetType() != Type.GetType("Six_Screens_Controller.view.ScreensPageView"))
             {
-                if (MainGrid.Children[2].GetType() == Type.GetType("Six_Screens_Controller.view.TemplatesPageView"))
-                    (MainGrid.Children[2] as TemplatesPageView).IsDestroy = true;
-                if (MainGrid.Children[2].GetType() == Type.GetType("Six_Screens_Controller.view.PlaylistsPageView"))
-                    (MainGrid.Children[2] as PlaylistsPageView).IsDestroy = true;
-
                 MainGrid.Children.RemoveAt(2);
                 MainGrid.Children.Insert(2, screensPage);
 
