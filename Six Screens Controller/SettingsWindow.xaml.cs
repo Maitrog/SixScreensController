@@ -32,5 +32,12 @@ namespace Six_Screens_Controller
         {
             this.DialogResult = false;
         }
+
+        private void browseImage_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if (openFileDialog.ShowDialog() == true)
+                defaultImage.Text = openFileDialog.FileName;
+        }
     }
 }

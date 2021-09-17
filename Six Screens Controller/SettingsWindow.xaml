@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:Six_Screens_Controller"
         mc:Ignorable="d"
         Title="Настройки" x:Name="Settings"
-        Height="230" Width="400"
-        MinHeight="230" MinWidth="400"
+        Height="300" Width="508"
+        MinHeight="300" MinWidth="508"
         MaxHeight="390" MaxWidth="508">
     
     <Window.DataContext>
@@ -15,22 +15,38 @@
     </Window.DataContext>
 
     <StackPanel TextBlock.FontSize="13">
+        <TextBlock Text="Изображение по умолчанию" Margin="10,3,10,3"/>
+        <StackPanel Orientation="Horizontal">
+            <TextBox x:Name="defaultImage" HorizontalAlignment="Left"
+                 Margin="10,3,3,3"
+                 Width="397"
+                 Text="{Binding Path=DefaultImage, Mode=TwoWay, 
+                UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Button x:Name="browseImage" Click="browseImage_Click" 
+                    Width="68" Margin="3,3,10,3">
+                <Button.Content>
+                    <TextBlock Text="Обзор" Margin="5,0,5,0"/>
+                </Button.Content>
+            </Button>
+        </StackPanel>
+        
         <TextBlock Text="Протокол подключения" Margin="10,3,10,3"/>
         <TextBox x:Name="protocol" HorizontalAlignment="Left"
                  Margin="10,3,10,3"
-                 Width="363"
+                 Width="471"
                  Text="{Binding Path=Protocol, Mode=TwoWay}"/>
 
         <TextBlock Text="Хост подключения" Margin="10,3,10,3"/>
         <TextBox x:Name="host" Margin="10,3,10,3"
                  HorizontalAlignment="Left"
-                 Width="363"
+                 Width="471"
                  Text="{Binding Path=Host, Mode=TwoWay}"/>
 
         <TextBlock Text="Порт подключения" Margin="10,3,10,3"/>
         <TextBox x:Name="port" Margin="10,3,10,3"
                  HorizontalAlignment="Left"
-                 Width="363"
+                 Width="471"
                  Text="{Binding Path=Port, Mode=TwoWay}"/>
 
         <Grid Margin="10,13,10,3">
