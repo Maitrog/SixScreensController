@@ -10,9 +10,6 @@ namespace Six_Screens_Controller
         private string host;
         private string port;
         private string defaultImage;
-        private string python;
-        private string server;
-        private string[] serverArgs;
         private bool firstStart;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -70,43 +67,6 @@ namespace Six_Screens_Controller
                 }
             }
         }
-        public string Python
-        {
-            get { return python; }
-            set
-            {
-                if (value != null)
-                {
-                    python = value;
-                    RaisePropertyChanged("Python");
-                }
-            }
-        }
-        public string Server
-        {
-            get { return server; }
-            set
-            {
-                if (value != null)
-                {
-                    server = value;
-                    RaisePropertyChanged("Server");
-                }
-            }
-        }
-        public string[] ServerArgs
-        {
-            get { return serverArgs; }
-            set
-            {
-                if (value != null)
-                {
-                    Array.Resize(ref serverArgs, value.Length);
-                    value.CopyTo(serverArgs, 0);
-                    RaisePropertyChanged("ServerArgs");
-                }
-            }
-        }
         public bool FirstStart
         {
             get { return firstStart; }
@@ -119,9 +79,8 @@ namespace Six_Screens_Controller
 
         public override bool Equals(object obj)
         {
-            if((obj as Config) != null)
-                return ((obj as Config).protocol==this.protocol) && ((obj as Config).host == this.host) && ((obj as Config).port == this.port) && ((obj as Config).defaultImage== this.defaultImage) &&
-                    ((obj as Config).python== this.python) && ((obj as Config).server== this.server) && ((obj as Config).serverArgs.Intersect(serverArgs).Any());
+            if ((obj as Config) != null)
+                return ((obj as Config).protocol == protocol) && ((obj as Config).host == host) && ((obj as Config).port == port) && ((obj as Config).defaultImage == defaultImage);
             return false;
         }
     }

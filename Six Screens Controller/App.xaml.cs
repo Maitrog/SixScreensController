@@ -20,9 +20,5 @@ namespace Six_Screens_Controller
                 SixScreenControllerApi.Program.Main(args);
             });
         }
-
-        private void App_Exit(object sender, ExitEventArgs e)
-        {
-        }
     }
 }
