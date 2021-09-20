@@ -14,5 +14,10 @@ namespace SixScreenControllerApi.Models
         {
             Database.EnsureCreated();
         }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlite("Filename=VkScreenController.db");
+        }
     }
 }
