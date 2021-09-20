@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -18,17 +19,14 @@ namespace Six_Screens_Controller
 
         public string ElementPath
         {
-            get
-            {
-                return elementPath;
-            }
+            get => elementPath;
             set
             {
-                if(value != null)
+                if (value != null)
                 {
                     elementPath = value;
                     RaisePropertyChanged("ElementPath");
-                }    
+                }
             }
         }
         public int ElementDefaultId { get; set; } = -1;
@@ -39,13 +37,15 @@ namespace Six_Screens_Controller
             Loaded += ScreenTemplateElementControl_Load;
         }
 
-        private async void ScreenTemplateElementControl_Load(object sender, RoutedEventArgs e)
+        private void ScreenTemplateElementControl_Load(object sender, RoutedEventArgs e)
         {
-            PlaylistScreen.ItemsSource = await Utils.GetRequestPlaylistAsync();
+            PlaylistScreen.ItemsSource = Utils.GetRequestPlaylist();
+            Playlist playlist = Utils.GetRequestPlaylist().FirstOrDefault(x => x.Id == ElementDefaultId);
             if (ElementDefaultId != -1)
+            {
                 PlaylistScreen.SelectedValue = ElementDefaultId;
+            }
         }
-
 
         private void ElementBrowse_Click(object sender, RoutedEventArgs e)
         {

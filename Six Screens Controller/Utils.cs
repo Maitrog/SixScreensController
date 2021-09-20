@@ -47,9 +47,7 @@ namespace Six_Screens_Controller
             return video;
         }
 
-        /// <summary>
         /// Screens controller methods
-        /// </summary>
 
         public static async void PutRequestScreensAsync(int screenNumber, ScreenTemplateElement element)
         {
@@ -81,9 +79,7 @@ namespace Six_Screens_Controller
             return element;
         }
 
-        /// <summary>
         /// Playlist controller methods
-        /// </summary>
 
         public static async Task<List<Playlist>> GetRequestPlaylistAsync()
         {
@@ -99,6 +95,23 @@ namespace Six_Screens_Controller
             string response = await client.GetStringAsync(url);
             Playlist playlist = JsonConvert.DeserializeObject<Playlist>(response);
             return playlist;
+        }
+
+        public static List<Playlist> GetRequestPlaylist()
+        {
+            string url = GetUrl($"playlist");
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "GET";
+
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                var response = streamReader.ReadToEnd();
+                List<Playlist> playlists = JsonConvert.DeserializeObject<List<Playlist>>(response);
+                //Console.WriteLine(result);
+                return playlists;
+            }
         }
 
         public static async void PostRequestPlaylistAsync(Playlist playlist)
@@ -155,9 +168,7 @@ namespace Six_Screens_Controller
             }
         }
 
-        /// <summary>
         /// ScreenTemplates controller methods
-        /// </summary>
 
         public static async Task<List<ScreenTemplate>> GetRequestScreenTemplatesAsync()
         {
@@ -237,10 +248,8 @@ namespace Six_Screens_Controller
             response.EnsureSuccessStatusCode();
         }
 
-        /// <summary>
         /// Other request
-        /// </summary>
-        
+     
         public static async void RefreshRequestAsync(int screenNumber = 0)
         {
             HubConnection HubConnection = new HubConnectionBuilder()
