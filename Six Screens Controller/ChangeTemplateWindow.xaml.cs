@@ -22,7 +22,8 @@ namespace Six_Screens_Controller
                 {
                     (StackPanel.Children[i] as ScreenTemplateElementControl).IsPlaylistScreen.IsChecked = true;
                     dynamic tmp =  JsonConvert.DeserializeObject(screenTemplate.ScreenTemplateElements[(i - 4) / 2].Path);
-                    (StackPanel.Children[i] as ScreenTemplateElementControl).ElementDefaultId = tmp.id;
+                    (StackPanel.Children[i] as ScreenTemplateElementControl).ElementDefaultId = tmp.Id;
+                    //(StackPanel.Children[i] as ScreenTemplateElementControl)
                 }
                 else
                 {

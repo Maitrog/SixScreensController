@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Измение шаблона" Height="490" Width="508"
         MinHeight="490" MinWidth="508"
-        MaxHeight="490" MaxWidth="508" Style="{DynamicResource Window_Dark}"
+        MaxHeight="490" MaxWidth="508"
         Name="ChangeTemplate">
 
 
@@ -18,7 +18,7 @@
         </Grid.RowDefinitions>
 
         <ScrollViewer>
-            <StackPanel x:Name="StackPanel" TextBlock.FontSize="13" Background="#616161" TextBlock.Foreground="#FFE0E0E0">
+            <StackPanel x:Name="StackPanel" TextBlock.FontSize="13">
 
                 <TextBlock Text="Измение шаблона" FontSize="20" Margin="10,3,10,3"/>
 

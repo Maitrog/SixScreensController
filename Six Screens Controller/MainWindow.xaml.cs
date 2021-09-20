@@ -111,24 +111,6 @@ namespace Six_Screens_Controller
             {
                 if (!Config.Equals(settingsWindow.config))
                 {
-
-                    if (Config.Host != settingsWindow.config.Host)
-                    {
-                        string serverConfig = File.ReadAllText("config.txt");
-                        string serverConfigHost = serverConfig.Split("\r\n").Where(x => x.Contains("HOST")).FirstOrDefault();
-                        string newServerConfigHost = $"HOST = {settingsWindow.config.Host}";
-                        serverConfig = serverConfig.Replace(serverConfigHost, newServerConfigHost);
-                        File.WriteAllText("config.txt", serverConfig);
-                    }
-                    if (Config.Port != settingsWindow.config.Port)
-                    {
-                        string serverConfig = File.ReadAllText("config.txt");
-                        string serverConfigPort = serverConfig.Split("\r\n").Where(x => x.Contains("PORT")).FirstOrDefault();
-                        string newServerConfigPort = $"PORT = {settingsWindow.config.Port}";
-                        serverConfig = serverConfig.Replace(serverConfigPort, newServerConfigPort);
-                        File.WriteAllText("config.txt", serverConfig);
-                    }
-
                     File.WriteAllText("config.json", JsonConvert.SerializeObject(settingsWindow.config));
 
                     MessageBox.Show("Для вступления изменений в силу перезапустите приложение");

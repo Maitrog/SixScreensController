@@ -19,7 +19,7 @@ namespace SixScreenControllerApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<ScreenTemplate>>> Get()
+        public async Task<List<ScreenTemplate>> Get()
         {
             return await db.ScreenTemplates.Include(x => x.ScreenTemplateElements).ToListAsync();
         }

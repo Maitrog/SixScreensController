@@ -9,7 +9,7 @@
              x:Name="ScreenTemplateElement">
     
     <UserControl.Resources>
-        <local:BoolNotConverter x:Key="boolNotConverter"/>
+        <local:InvertBoolConverter x:Key="invertBoolConverter"/>
     </UserControl.Resources>
     
     <Grid>
@@ -19,7 +19,7 @@
         </Grid.RowDefinitions>
 
         <Grid Margin="10,3,10,3" Width="auto" Grid.Row="0" 
-              IsEnabled="{Binding ElementName=IsPlaylistScreen, Path=IsChecked, Converter={StaticResource boolNotConverter}}">
+              IsEnabled="{Binding ElementName=IsPlaylistScreen, Path=IsChecked, Converter={StaticResource invertBoolConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition Width="auto"/>
@@ -27,12 +27,10 @@
             
             <TextBox x:Name="ElementPathBox"  Grid.Column="0"
                      Margin="0,0,3,0" 
-                     Style="{DynamicResource TextBox_Dark}"
                      Text="{Binding ElementName=ScreenTemplateElement, Path=ElementPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
             <Button x:Name="ElementBrowse" Click="ElementBrowse_Click" Grid.Column="1" 
-                    Margin="3,0,0,0" 
-                    Style="{DynamicResource Button_Dark}">
+                    Margin="3,0,0,0">
 
                 <Button.Content>
                     <TextBlock Text="Обзор..." Margin="5,0,5,0"/>
@@ -42,14 +40,9 @@
 
         <StackPanel Orientation="Horizontal" Margin="10,3,10,3" Grid.Row="1">
             <CheckBox x:Name="IsPlaylistScreen" Content="Плейлист" Margin="0,0,3,0"/>
-            <ComboBox x:Name="PlaylistScreen" Width="auto" MinWidth="100" Margin="3,0,0,0" MaxDropDownHeight="50"
-                      IsEnabled="{Binding ElementName=IsPlaylistScreen, Path=IsChecked}" SelectedValuePath="Id">
-
-                <ComboBox.ItemTemplate>
-                    <DataTemplate DataType="{x:Type local:Playlist}">
-                        <TextBlock Text="{Binding Path=Title}"/>
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
+            <ComboBox x:Name="PlaylistScreen" Width="auto" MinWidth="100" Margin="3,0,0,0" MaxDropDownHeight="100" 
+                      IsEnabled="{Binding ElementName=IsPlaylistScreen, Path=IsChecked}" SelectedValuePath="Id" 
+                      DisplayMemberPath="Title">
             </ComboBox>
         </StackPanel>
 

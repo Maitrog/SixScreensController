@@ -132,11 +132,10 @@ namespace SixScreenControllerApi.Controllers
             {
                 string path = CurrentState.ScreenTemplateElements[screeenNumber - 1].Path;
                 string exp = path.Split("\\").LastOrDefault().Split('.').LastOrDefault().ToLower();
-                //var file = System.IO.File.OpenRead(path);
+                var file = System.IO.File.OpenRead(path);
                 if (imageExp.Contains(exp))
                 {
                     return PhysicalFile(path, "image/jpeg", enableRangeProcessing: true);
-                    //return File(file, "image/jpeg");
                 }
                 else if (videoExp.Contains(exp))
                 {
@@ -145,7 +144,6 @@ namespace SixScreenControllerApi.Controllers
                 else
                 {
                     return PhysicalFile(path, "image/gif", enableRangeProcessing: true);
-                    //return File(file, "image/gif");
                 }
             }
 

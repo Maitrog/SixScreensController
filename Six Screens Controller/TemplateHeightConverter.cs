@@ -4,7 +4,7 @@ using System.Windows.Data;
 
 namespace Six_Screens_Controller
 {
-    class TemplateHeightConverter : IValueConverter
+    public class TemplateHeightConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

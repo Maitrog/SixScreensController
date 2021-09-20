@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Six_Screens_Controller
 {
-    class ScreenTemplateElementCopm : IComparer<ScreenTemplateElement>
+    public class ScreenTemplateElementCopm : IComparer<ScreenTemplateElement>
     {
         public int Compare([AllowNull] ScreenTemplateElement x, [AllowNull] ScreenTemplateElement y)
         {
