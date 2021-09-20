@@ -4,10 +4,19 @@ using System.Windows.Controls;
 
 namespace Six_Screens_Controller.view
 {
+    /// <summary>
+    /// Page with templates
+    /// </summary>
     public partial class TemplatesPageView : UserControl
     {
+        /// <summary>
+        /// Selected template
+        /// </summary>
         public ScreenTemplate ScreenTemplate { get; set; }
 
+        /// <summary>
+        /// Initialize a new instance of the <see cref = "TemplatesPageView"/> class
+        /// </summary>
         public TemplatesPageView()
         {
             InitializeComponent();
@@ -65,8 +74,12 @@ namespace Six_Screens_Controller.view
         {
             ScreenTemplate = await Utils.GetRequestScreenTemplatesAsync((templateList.SelectedItem as ScreenTemplate).Id);
             ChangeTemplateWindow changeTemplateWindow = new ChangeTemplateWindow(ScreenTemplate);
-            Utils.PutRequestScreenTemplatesAsync(ScreenTemplate.Id, changeTemplateWindow.ScreenTemplate);
+            if (changeTemplateWindow.ShowDialog() == true)
+            {
+                Utils.PutRequestScreenTemplatesAsync(ScreenTemplate.Id, changeTemplateWindow.ScreenTemplate);
+            }
             templateList.ItemsSource = await Utils.GetRequestScreenTemplatesAsync();
+
         }
     }
 }

@@ -4,10 +4,19 @@ using System.Windows.Controls;
 
 namespace Six_Screens_Controller
 {
+    /// <summary>
+    /// Window for adding templates
+    /// </summary>
     public partial class AddTemplateWindow : Window
     {
+        /// <summary>
+        /// Created template
+        /// </summary>
         public ScreenTemplate ScreenTemplate { get; private set; }
 
+        /// <summary>
+        /// Initialize a new instance of the <see cref = "AddTemplateWindow"/> class
+        /// </summary>
         public AddTemplateWindow()
         {
             InitializeComponent();

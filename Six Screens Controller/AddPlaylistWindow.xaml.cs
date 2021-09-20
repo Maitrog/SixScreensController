@@ -10,11 +10,23 @@ using System.Windows.Data;
 //TODO: исправить добавление одинаковых элементов
 namespace Six_Screens_Controller
 {
+    /// <summary>
+    /// Window for adding playlists
+    /// </summary>
     public partial class AddPlaylistWindow : Window
     {
+        /// <summary>
+        /// <see cref="PlaylistElement"/>s for adding to <see cref="Playlist"/>
+        /// </summary>
         public ObservableCollection<PlaylistElement> elements = new ObservableCollection<PlaylistElement>();
+        /// <summary>
+        /// Playlist title
+        /// </summary>
         public string PlaylistTitle { get; set; }
 
+        /// <summary>
+        /// Initialize a new instance of the <see cref = "AddPlaylistWindow"/> class
+        /// </summary>
         public AddPlaylistWindow()
         {
             InitializeComponent();
@@ -22,7 +34,7 @@ namespace Six_Screens_Controller
             elemetsList.DataContext = elements;
         }
 
-        public void AddPlaylist_Loaded(object sender, RoutedEventArgs e)
+        private void AddPlaylist_Loaded(object sender, RoutedEventArgs e)
         {
             Binding OkIsEnabledBinding = new Binding
             {
@@ -62,7 +74,7 @@ namespace Six_Screens_Controller
                         video.MediaOpened += new System.Windows.RoutedEventHandler(Media_MediaOpened);
 
                         video.Play();
-                        while (!video.NaturalDuration.HasTimeSpan) { }  //без этой строчки NaturalDuration не успевает вычислиться, и равен Automatic
+                        while (!video.NaturalDuration.HasTimeSpan) { }  //NaturalDuration is equal to Automatic without this line
                         double dur = video.NaturalDuration.TimeSpan.TotalSeconds;
                         video.Close();
 
@@ -91,7 +103,7 @@ namespace Six_Screens_Controller
             this.DialogResult = false;
         }
 
-        void Media_MediaOpened(object sender, System.Windows.RoutedEventArgs e)
+        private void Media_MediaOpened(object sender, System.Windows.RoutedEventArgs e)
         {
         }
     }

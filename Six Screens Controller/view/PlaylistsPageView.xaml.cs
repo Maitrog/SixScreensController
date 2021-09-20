@@ -5,10 +5,19 @@ using System.Windows.Controls;
 
 namespace Six_Screens_Controller.view
 {
+    /// <summary>
+    /// Page with playlists
+    /// </summary>
     public partial class PlaylistsPageView : UserControl
     {
+        /// <summary>
+        /// Selected playlist
+        /// </summary>
         public ScreenTemplateElement Playlist { get; set; } = new ScreenTemplateElement();
 
+        /// <summary>
+        /// Initialize a new instance of the <see cref = "PlaylistsPageView"/> class
+        /// </summary>
         public PlaylistsPageView()
         {
             InitializeComponent();

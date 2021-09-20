@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -7,14 +8,31 @@ using System.Windows.Input;
 
 namespace Six_Screens_Controller.view
 {
+    /// <summary>
+    /// Page with current screens
+    /// </summary>
     public partial class ScreensPageView : UserControl
     {
-        public ScreenTemplate CurrentScreenTemplate { get; set; }
+        public ScreenTemplate CurrentScreenTemplate { get; set; } = new ScreenTemplate();
 
+        /// <summary>
+        /// Initialize a new instance of the <see cref = "ScreensPageView"/> class with the specified <see cref="ScreenTemplate"/>
+        /// </summary>
+        /// <param name="screenTemplate"></param>
         public ScreensPageView(ScreenTemplate screenTemplate)
         {
+            if (string.IsNullOrEmpty(screenTemplate.ScreenTemplateElements[0].Path) || !File.Exists(screenTemplate.ScreenTemplateElements[0].Path))
+            {
+                string defDir = Directory.GetCurrentDirectory();
+                string defFile = $"{defDir}/assets/Default.jpg";
+                for(int i = 0; i < 6; i++)
+                {
+                    screenTemplate.ScreenTemplateElements[i].Path = defFile;
+                }
+            }
             InitializeComponent();
             SetScreenTemplate(screenTemplate);
+            Utils.PostRequestScreensAsync(screenTemplate);
         }
 
         private void ChooseElement_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -106,7 +124,10 @@ namespace Six_Screens_Controller.view
                 MessageBox.Show(ex.Message);
             }
         }
-
+        /// <summary>
+        /// Sets the value of the <see cref="ScreenTemplate"/>
+        /// </summary>
+        /// <param name="screenTemplate">The element to set</param>
         public void SetScreenTemplate(ScreenTemplate screenTemplate)
         {
             CurrentScreenTemplate = screenTemplate;
@@ -140,7 +161,11 @@ namespace Six_Screens_Controller.view
                 MessageBox.Show(ex.Message);
             }
         }
-
+        /// <summary>
+        /// Sets the value of the <see cref="ScreenTemplateElement"/> to a given screen number
+        /// </summary>
+        /// <param name="screenNumber">Screen number</param>
+        /// <param name="element">The element to set</param>
         public void SetScreenTemplateElement(int screenNumber, ScreenTemplateElement element)
         {
             if (element != null && element.Path != null)

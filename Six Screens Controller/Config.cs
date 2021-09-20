@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace Six_Screens_Controller
 {
+    /// <summary>
+    /// Application configuration
+    /// </summary>
     public class Config : INotifyPropertyChanged
     {
         private string protocol;
@@ -14,14 +17,17 @@ namespace Six_Screens_Controller
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public void RaisePropertyChanged(string propertyName)
+        private void RaisePropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        /// <summary>
+        /// Server protocol
+        /// </summary>
         public string Protocol
         {
-            get { return protocol; }
+            get => protocol;
             set
             {
                 if (value != null)
@@ -31,9 +37,13 @@ namespace Six_Screens_Controller
                 }
             }
         }
+
+        /// <summary>
+        /// Server host
+        /// </summary>
         public string Host
         {
-            get { return host; }
+            get => host;
             set
             {
                 if (value != null)
@@ -43,9 +53,12 @@ namespace Six_Screens_Controller
                 }
             }
         }
+        /// <summary>
+        /// Server port
+        /// </summary>
         public string Port
         {
-            get { return port; }
+            get => port;
             set
             {
                 if (value != null)
@@ -55,9 +68,12 @@ namespace Six_Screens_Controller
                 }
             }
         }
+        /// <summary>
+        /// Application default image
+        /// </summary>
         public string DefaultImage
         {
-            get { return defaultImage; }
+            get => defaultImage;
             set
             {
                 if (value != null)
@@ -67,9 +83,13 @@ namespace Six_Screens_Controller
                 }
             }
         }
+
+        /// <summary>
+        /// Is first start or not
+        /// </summary>
         public bool FirstStart
         {
-            get { return firstStart; }
+            get => firstStart;
             set
             {
                 firstStart = value;
