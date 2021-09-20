@@ -14,11 +14,14 @@ namespace Six_Screens_Controller
 
         private void App_Startup(object sender, StartupEventArgs e)
         {
-            string[] args = {"--urls", $"{config.Protocol}://{config.Host}:{config.Port}" };
-            Task.Run(() =>
+            if (!string.IsNullOrEmpty(config.Protocol) && !string.IsNullOrEmpty(config.Host) && !string.IsNullOrEmpty(config.Port))
             {
-                SixScreenControllerApi.Program.Main(args);
-            });
+                string[] args = { "--urls", $"{config.Protocol}://{config.Host}:{config.Port}" };
+                Task.Run(() =>
+                {
+                    SixScreenControllerApi.Program.Main(args);
+                });
+            }
         }
     }
 }
