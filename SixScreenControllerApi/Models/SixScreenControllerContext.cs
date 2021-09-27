@@ -2,6 +2,9 @@
 
 namespace SixScreenControllerApi.Models
 {
+    /// <summary>
+    /// Database with paylists, playlist elements, screen templates, screen template elments
+    /// </summary>
     public class SixScreenControllerContext: DbContext
     {
         public DbSet<ScreenTemplate> ScreenTemplates { get; set; }

@@ -14,6 +14,9 @@ using System.Windows.Media.Imaging;
 
 namespace Six_Screens_Controller
 {
+    /// <summary>
+    /// Exposes static methods for create image and video; put, post, get, delete request on api; refresh request
+    /// </summary>
     internal static class Utils
     {
         public static readonly string[] imageExp = new string[] { "jpg", "jpeg", "bmp", "png", "webp" };
@@ -21,6 +24,11 @@ namespace Six_Screens_Controller
         public static Config config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
         private static readonly HttpClient client = new HttpClient();
 
+        /// <summary>
+        /// Create a new instance of the <see cref="Image"/>
+        /// </summary>
+        /// <param name="path">Path to image</param>
+        /// <returns><see cref="Image"/></returns>
         public static Image CreateImage(string path)
         {
             BitmapImage bmp = new BitmapImage();
@@ -35,6 +43,11 @@ namespace Six_Screens_Controller
 
             return img;
         }
+        /// <summary>
+        /// Create a instance of the <see cref="MediaElement"/>
+        /// </summary>
+        /// <param name="path">Path to video or gif</param>
+        /// <returns><see cref="MediaElement"/></returns>
         public static MediaElement CreateVideo(string path)
         {
             MediaElement video = new MediaElement();
@@ -47,8 +60,13 @@ namespace Six_Screens_Controller
             return video;
         }
 
-        /// Screens controller methods
+        // Screens controller methods
 
+        /// <summary>
+        /// Put request to /api/screens/{screenNumber} – change current content on screen with number {screenNumber}
+        /// </summary>
+        /// <param name="screenNumber">Screen number</param>
+        /// <param name="element">Element of the screen template which should be installeted</param>
         public static async void PutRequestScreensAsync(int screenNumber, ScreenTemplateElement element)
         {
             string url = GetUrl($"screens/{screenNumber}");
@@ -56,6 +74,10 @@ namespace Six_Screens_Controller
             response.EnsureSuccessStatusCode();
         }
 
+        /// <summary>
+        /// Post request to /api/screens – change current template
+        /// </summary>
+        /// <param name="screenTemplate">Screen template which should be installeted</param>
         public static async void PostRequestScreensAsync(ScreenTemplate screenTemplate)
         {
             string url = GetUrl("screens");
@@ -63,6 +85,10 @@ namespace Six_Screens_Controller
             response.EnsureSuccessStatusCode();
         }
 
+        /// <summary>
+        /// Get request to /api/screens – get current content
+        /// </summary>
+        /// <returns>Current <see cref="ScreenTemplate"/></returns>
         public static async Task<ScreenTemplate> GetRequestScreensAsync()
         {
             string url = GetUrl("screens");
@@ -71,6 +97,11 @@ namespace Six_Screens_Controller
             return template;
         }
 
+        /// <summary>
+        /// Get request to /api/screens/{screenNumber} – get current content on screen with number {screenNumber}
+        /// </summary>
+        /// <param name="screenNumber">Screen number</param>
+        /// <returns>Current <see cref="ScreenTemplateElement"/> on screen</returns>
         public static async Task<ScreenTemplateElement> GetRequestScreensAsync(int screenNumber)
         {
             string url = GetUrl($"screens/{screenNumber}");
@@ -79,8 +110,12 @@ namespace Six_Screens_Controller
             return element;
         }
 
-        /// Playlist controller methods
+        // Playlist controller methods
 
+        /// <summary>
+        /// Get async request to /api/playlist – get all playlists from database
+        /// </summary>
+        /// <returns><see cref="List{T}"/></returns>
         public static async Task<List<Playlist>> GetRequestPlaylistAsync()
         {
             string url = GetUrl("playlist");
@@ -89,6 +124,11 @@ namespace Six_Screens_Controller
             return playlists;
         }
 
+        /// <summary>
+        /// Get async request to /api/playlist/{id} – get playlist with {id}
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns><see cref="Playlist"/></returns>
         public static async Task<Playlist> GetRequestPlaylistAsync(int id)
         {
             string url = GetUrl($"playlist/{id}");
@@ -97,6 +137,10 @@ namespace Six_Screens_Controller
             return playlist;
         }
 
+        /// <summary>
+        /// Get request to /api/playlist – get all playlists from database
+        /// </summary>
+        /// <returns><see cref="List{T}"/></returns>
         public static List<Playlist> GetRequestPlaylist()
         {
             string url = GetUrl($"playlist");
@@ -109,11 +153,14 @@ namespace Six_Screens_Controller
             {
                 var response = streamReader.ReadToEnd();
                 List<Playlist> playlists = JsonConvert.DeserializeObject<List<Playlist>>(response);
-                //Console.WriteLine(result);
                 return playlists;
             }
         }
 
+        /// <summary>
+        /// Post async request to /api/playlist – add playlist in database
+        /// </summary>
+        /// <param name="playlist"></param>
         public static async void PostRequestPlaylistAsync(Playlist playlist)
         {
             string url = GetUrl("playlist");
@@ -121,6 +168,10 @@ namespace Six_Screens_Controller
             response.EnsureSuccessStatusCode();
         }
 
+        /// <summary>
+        /// Post request to /api/playlist – add playlist in database
+        /// </summary>
+        /// <param name="playlist"></param>
         public static void PostRequestPlaylist(Playlist playlist)
         {
             string url = GetUrl("playlist");
@@ -141,6 +192,10 @@ namespace Six_Screens_Controller
             }
         }
 
+        /// <summary>
+        /// Delete async request to /api/playlist/{id} – delete playlist with {id}
+        /// </summary>
+        /// <param name="id"></param>
         public static async void DeleteRequestPlaylistAsync(int id)
         {
             string url = GetUrl($"playlist/{id}");
@@ -148,6 +203,10 @@ namespace Six_Screens_Controller
             response.EnsureSuccessStatusCode();
         }
 
+        /// <summary>
+        /// Delete request to /api/playlist/{id} – delete playlist with {id}
+        /// </summary>
+        /// <param name="id"></param>
         public static void DeleteRequestPlaylist(int id)
         {
             string url = GetUrl($"playlist/{id}");
@@ -168,8 +227,12 @@ namespace Six_Screens_Controller
             }
         }
 
-        /// ScreenTemplates controller methods
+        // ScreenTemplates controller methods
 
+        /// <summary>
+        /// Get request to /api/screentemplates – get all <see cref="ScreenTemplate"/> from database
+        /// </summary>
+        /// <returns><see cref="List{T}"/></returns>
         public static async Task<List<ScreenTemplate>> GetRequestScreenTemplatesAsync()
         {
             string url = GetUrl("screentemplates");
@@ -179,6 +242,11 @@ namespace Six_Screens_Controller
             return screenTemplates;
         }
 
+        /// <summary>
+        /// Get request to /api/screentemplates/{id} – get <see cref="ScreenTemplate"/> with {id}
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns><see cref="ScreenTemplate"/></returns>
         public static async Task<ScreenTemplate> GetRequestScreenTemplatesAsync(int id)
         {
             string url = GetUrl($"screentemplates/{id}");
@@ -188,6 +256,10 @@ namespace Six_Screens_Controller
             return screenTemplates;
         }
 
+        /// <summary>
+        /// Post async request to /api/screentemplates – add screen template in database
+        /// </summary>
+        /// <param name="screenTemplate"></param>
         public static async void PostRequestScreenTemplatesAsync(ScreenTemplate screenTemplate)
         {
             string url = GetUrl("screentemplates");
@@ -195,6 +267,10 @@ namespace Six_Screens_Controller
             response.EnsureSuccessStatusCode();
         }
 
+        /// <summary>
+        /// Post request to /api/screentemplates – add screen template in database
+        /// </summary>
+        /// <param name="screenTemplate"></param>
         public static void PostRequestScreenTemplates(ScreenTemplate screenTemplate)
         {
             string url = GetUrl("screentemplates");
@@ -214,6 +290,11 @@ namespace Six_Screens_Controller
                 Console.WriteLine(result);
             }
         }
+
+        /// <summary>
+        /// Delete async request to /api/screentemplates/{id} – delete screen template with {id} from database
+        /// </summary>
+        /// <param name="id"></param>
         public static async void DeleteRequestScreenTemplatesAsync(int id)
         {
             string url = GetUrl($"screentemplates/{id}");
@@ -221,6 +302,10 @@ namespace Six_Screens_Controller
             response.EnsureSuccessStatusCode();
         }
 
+        /// <summary>
+        /// Delete request to /api/screentemplates/{id} – delete screen template with {id} from database
+        /// </summary>
+        /// <param name="id"></param>
         public static void DeleteRequestScreenTemplates(int id)
         {
             string url = GetUrl($"screentemplates/{id}");
@@ -241,6 +326,11 @@ namespace Six_Screens_Controller
             }
         }
 
+        /// <summary>
+        /// Put request to /api/screentemplates/{id} – add screen template in database
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="screenTemplate"></param>
         public static async void PutRequestScreenTemplatesAsync(int id, ScreenTemplate screenTemplate)
         {
             string url = GetUrl($"screentemplates/{id}");
@@ -248,8 +338,12 @@ namespace Six_Screens_Controller
             response.EnsureSuccessStatusCode();
         }
 
-        /// Other request
+        // Other request
      
+        /// <summary>
+        /// Request to /refresh – refresh screen
+        /// </summary>
+        /// <param name="screenNumber">Screen number which should be update</param>
         public static async void RefreshRequestAsync(int screenNumber = 0)
         {
             HubConnection HubConnection = new HubConnectionBuilder()
