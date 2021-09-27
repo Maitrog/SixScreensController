@@ -6,10 +6,8 @@
         xmlns:local="clr-namespace:Six_Screens_Controller"
         mc:Ignorable="d"
         Title="Настройки" x:Name="Settings"
-        Height="300" Width="508"
-        MinHeight="300" MinWidth="508"
-        MaxHeight="390" MaxWidth="508">
-    
+        Height="280" Width="508"
+        ResizeMode="NoResize">
     <Window.DataContext>
         <local:Config/>
     </Window.DataContext>
@@ -30,7 +28,7 @@
                 </Button.Content>
             </Button>
         </StackPanel>
-        
+
         <TextBlock Text="Протокол подключения" Margin="10,3,10,3"/>
         <TextBox x:Name="protocol" HorizontalAlignment="Left"
                  Margin="10,3,10,3"

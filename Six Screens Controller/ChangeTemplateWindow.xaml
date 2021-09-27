@@ -6,8 +6,7 @@
         xmlns:local="clr-namespace:Six_Screens_Controller"
         mc:Ignorable="d"
         Title="Измение шаблона" Height="490" Width="508"
-        MinHeight="490" MinWidth="508"
-        MaxHeight="490" MaxWidth="508"
+        ResizeMode="NoResize"
         Name="ChangeTemplate">
 
 

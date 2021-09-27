@@ -7,9 +7,7 @@
         mc:Ignorable="d"
         x:Name="AddPlaylist"
         Title="AddPlaylistWindow" Height="490" Width="508"
-        MinHeight="490" MinWidth="508"
-        MaxHeight="490" MaxWidth="508">
-
+        ResizeMode="NoResize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
