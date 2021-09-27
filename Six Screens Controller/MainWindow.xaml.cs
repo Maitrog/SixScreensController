@@ -122,5 +122,11 @@ namespace Six_Screens_Controller
         {
             this.Close();
         }
+
+        private void AboutUs_Click(object sender, RoutedEventArgs e)
+        {
+            AboutUsWindow aboutUs = new AboutUsWindow();
+            aboutUs.ShowDialog();
+        }
     }
 }

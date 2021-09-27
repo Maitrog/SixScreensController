@@ -25,7 +25,7 @@
                 <MenuItem Header="Выход" Click="Exit_Click"/>
             </MenuItem>
             <MenuItem Header="Справка">
-                <MenuItem Header="О приложениее"/>
+                <MenuItem Header="О приложениее" Click="AboutUs_Click"/>
             </MenuItem>
         </Menu>
 
