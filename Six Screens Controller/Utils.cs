@@ -80,9 +80,15 @@ namespace Six_Screens_Controller
         /// <param name="screenTemplate">Screen template which should be installeted</param>
         public static async void PostRequestScreensAsync(ScreenTemplate screenTemplate)
         {
-            string url = GetUrl("screens");
-            HttpResponseMessage response = await client.PostAsJsonAsync(url, screenTemplate);
-            response.EnsureSuccessStatusCode();
+            try
+            {
+                string url = GetUrl("screens");
+                HttpResponseMessage response = await client.PostAsJsonAsync(url, screenTemplate);
+                response.EnsureSuccessStatusCode();
+            }
+            catch (HttpRequestException e)
+            {
+            }
         }
 
         /// <summary>
@@ -339,7 +345,7 @@ namespace Six_Screens_Controller
         }
 
         // Other request
-     
+
         /// <summary>
         /// Request to /refresh – refresh screen
         /// </summary>

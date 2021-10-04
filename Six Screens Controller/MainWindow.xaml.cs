@@ -31,18 +31,31 @@ namespace Six_Screens_Controller
 
         public MainWindow()
         {
-            Grid.SetColumn(screensPage, 2);
-            InitializeComponent();
-            Loaded += MainWindow_Loaded;
-            MainGrid.Children.Insert(2, screensPage);
+            try
+            {
+                Grid.SetColumn(screensPage, 2);
+                InitializeComponent();
+                Loaded += MainWindow_Loaded;
+                MainGrid.Children.Insert(2, screensPage);
+            }
+            catch (Exception e)
+            {
+
+            }
         }
 
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             HubConnection = new HubConnectionBuilder().WithUrl($"{config.Protocol}://{config.Host}:{config.Port}/refresh").Build();
             HubConnection.On<int>("Refresh", screenNumber => Refresh(screenNumber));
-
-            await HubConnection.StartAsync();
+            try
+            {
+                await HubConnection.StartAsync();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Не удалось подключиться к серверу. Проверьте параметры подключения.");
+            }
         }
 
         private async void Refresh(int screenNumber)

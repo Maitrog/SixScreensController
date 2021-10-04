@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -31,8 +32,15 @@ namespace Six_Screens_Controller.view
                 }
             }
             InitializeComponent();
+            try
+            {
+                Utils.PostRequestScreensAsync(screenTemplate);
+            }
+            catch (HttpRequestException e)
+            {
+                MessageBox.Show(e.Message);
+            }
             SetScreenTemplate(screenTemplate);
-            Utils.PostRequestScreensAsync(screenTemplate);
         }
 
         private void ChooseElement_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
