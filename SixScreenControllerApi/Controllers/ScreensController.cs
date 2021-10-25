@@ -254,7 +254,7 @@ namespace SixScreenControllerApi.Controllers
             HubConnection hub;
             if (cache.TryGetValue("RefreshUrl", out string url))
             {
-                hub = new HubConnectionBuilder().WithUrl(url).Build();
+                hub = new HubConnectionBuilder().WithUrl(url).WithAutomaticReconnect().Build();
             }
             else
             {
@@ -262,7 +262,7 @@ namespace SixScreenControllerApi.Controllers
                 string host = HttpContext.Request.Host.ToString();
                 url = $"{protocol}://{host}/refresh";
                 cache.Set("RefreshUrl", url);
-                hub = new HubConnectionBuilder().WithUrl(url).Build();
+                hub = new HubConnectionBuilder().WithUrl(url).WithAutomaticReconnect().Build();
             }
             hub.On<int>("Refresh", screenNumber => Console.WriteLine(screenNumber));
 
@@ -294,15 +294,19 @@ namespace SixScreenControllerApi.Controllers
             {
                 int screenNumber = ((Tuple<int, Playlist>)data).Item1;
                 Playlist playlist = ((Tuple<int, Playlist>)data).Item2;
-                foreach (PlaylistElement i in playlist.PlaylistElements)
+                for (int i = 0; i < playlist.PlaylistElements.Count; i++)
                 {
-                    ScreenTemplateElement screenTemplateElement = new ScreenTemplateElement { Path = i.Path, IsPlaylist = false, ScreenNumber = screenNumber };
+                    ScreenTemplateElement screenTemplateElement = new ScreenTemplateElement { Path = playlist.PlaylistElements[i].Path, IsPlaylist = false, ScreenNumber = screenNumber };
                     PutForPlaylist(screenNumber, screenTemplateElement);
 
-                    Thread.Sleep(i.Duration * 1000);
+                    Thread.Sleep(playlist.PlaylistElements[i].Duration * 1000);
                     if (!IsPlaylisits[screenNumber - 1])
                     {
                         break;
+                    }
+                    if(i + 1 == playlist.PlaylistElements.Count)
+                    {
+                        i = 0;
                     }
                 }
             }

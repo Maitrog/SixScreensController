@@ -86,7 +86,7 @@ namespace Six_Screens_Controller
                 HttpResponseMessage response = await client.PostAsJsonAsync(url, screenTemplate);
                 response.EnsureSuccessStatusCode();
             }
-            catch (HttpRequestException e)
+            catch (HttpRequestException)
             {
             }
         }

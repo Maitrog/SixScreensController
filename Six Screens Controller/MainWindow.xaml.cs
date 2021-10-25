@@ -38,7 +38,7 @@ namespace Six_Screens_Controller
                 Loaded += MainWindow_Loaded;
                 MainGrid.Children.Insert(2, screensPage);
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
             }
@@ -46,13 +46,13 @@ namespace Six_Screens_Controller
 
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            HubConnection = new HubConnectionBuilder().WithUrl($"{config.Protocol}://{config.Host}:{config.Port}/refresh").Build();
+            HubConnection = new HubConnectionBuilder().WithUrl($"{config.Protocol}://{config.Host}:{config.Port}/refresh").WithAutomaticReconnect().Build();
             HubConnection.On<int>("Refresh", screenNumber => Refresh(screenNumber));
             try
             {
                 await HubConnection.StartAsync();
             }
-            catch(Exception ex)
+            catch (Exception)
             {
                 MessageBox.Show("Не удалось подключиться к серверу. Проверьте параметры подключения.");
             }
