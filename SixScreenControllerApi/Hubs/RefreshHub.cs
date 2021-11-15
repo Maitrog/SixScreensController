@@ -10,6 +10,7 @@ namespace SixScreenControllerApi.Hubs
             return Clients.All.SendAsync("Refresh", screenNumber);
         }
 
+        [HubMethodName("ChangeBackground")]
         public Task SendChangeBackground(int screenNumber)
         {
             return Clients.All.SendAsync("ChangeBackground", screenNumber);

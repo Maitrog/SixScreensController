@@ -96,7 +96,6 @@ namespace SixScreenControllerApi.Controllers
                 cache.Set("RefreshUrl", url);
                 hub = new HubConnectionBuilder().WithUrl(url).WithAutomaticReconnect().Build();
             }
-            hub.On<int>("ChangeBackground", screenNumber => Console.WriteLine(screenNumber));
 
             await hub.StartAsync();
 
