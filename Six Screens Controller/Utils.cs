@@ -361,6 +361,14 @@ namespace Six_Screens_Controller
             await HubConnection.SendAsync("SendRefresh", screenNumber);
         }
 
+        public static async void PostRequestBackgroundAsync(int screenNumber, string backgroundPath)
+        {
+            Background background = new Background { Path = backgroundPath };
+            string url = GetUrl($"background/{screenNumber}");
+            HttpResponseMessage response = await client.PostAsJsonAsync(url, background);
+            response.EnsureSuccessStatusCode();
+        }
+
         private static string GetUrl(string pathRoute)
         {
             Config config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(@"config.json"));

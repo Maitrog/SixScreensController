@@ -6,48 +6,151 @@
         xmlns:local="clr-namespace:Six_Screens_Controller"
         mc:Ignorable="d"
         Title="Настройки" x:Name="Settings"
-        Height="280" Width="508"
+        Height="500" Width="518"
         ResizeMode="NoResize">
     <Window.DataContext>
         <local:Config/>
     </Window.DataContext>
-
-    <StackPanel TextBlock.FontSize="13">
-        <TextBlock Text="Изображение по умолчанию" Margin="10,3,10,3"/>
-        <StackPanel Orientation="Horizontal">
-            <TextBox x:Name="defaultImage" HorizontalAlignment="Left"
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        
+        <ScrollViewer Grid.Row="0">
+            <StackPanel TextBlock.FontSize="13">
+                <TextBlock Text="Изображение по умолчанию" Margin="10,3,10,3"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBox x:Name="defaultImage" HorizontalAlignment="Left"
                  Margin="10,3,3,3"
-                 Width="397"
+                 Width="391"
                  Text="{Binding Path=DefaultImage, Mode=TwoWay, 
                 UpdateSourceTrigger=PropertyChanged}"/>
 
-            <Button x:Name="browseImage" Click="browseImage_Click" 
+                    <Button x:Name="browseImage" Click="browseImage_Click" 
                     Width="68" Margin="3,3,10,3">
-                <Button.Content>
-                    <TextBlock Text="Обзор" Margin="5,0,5,0"/>
-                </Button.Content>
-            </Button>
-        </StackPanel>
+                        <Button.Content>
+                            <TextBlock Text="Обзор" Margin="5,0,5,0"/>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
 
-        <TextBlock Text="Протокол подключения" Margin="10,3,10,3"/>
-        <TextBox x:Name="protocol" HorizontalAlignment="Left"
+                <TextBlock Text="Протокол подключения" Margin="10,3,10,3"/>
+                <TextBox x:Name="protocol" HorizontalAlignment="Left"
                  Margin="10,3,10,3"
-                 Width="471"
+                 Width="463"
                  Text="{Binding Path=Protocol, Mode=TwoWay}"/>
 
-        <TextBlock Text="Хост подключения" Margin="10,3,10,3"/>
-        <TextBox x:Name="host" Margin="10,3,10,3"
+                <TextBlock Text="Хост подключения" Margin="10,3,10,3"/>
+                <TextBox x:Name="host" Margin="10,3,10,3"
                  HorizontalAlignment="Left"
-                 Width="471"
+                 Width="463"
                  Text="{Binding Path=Host, Mode=TwoWay}"/>
 
-        <TextBlock Text="Порт подключения" Margin="10,3,10,3"/>
-        <TextBox x:Name="port" Margin="10,3,10,3"
+                <TextBlock Text="Порт подключения" Margin="10,3,10,3"/>
+                <TextBox x:Name="port" Margin="10,3,10,3"
                  HorizontalAlignment="Left"
-                 Width="471"
+                 Width="463"
                  Text="{Binding Path=Port, Mode=TwoWay}"/>
 
-        <Grid Margin="10,13,10,3">
+                <TextBlock Text="Оффлайн изображение по умолчанию на экране №1" Margin="10,3,10,3"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBox x:Name="background_1" HorizontalAlignment="Left"
+                 Margin="10,3,3,3"
+                 Width="391"
+                 Text="{Binding Path=Background_1, Mode=TwoWay, 
+                UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <Button x:Name="browseBackground_1" Click="browseBackground_1_Click" 
+                    Width="68" Margin="3,3,10,3">
+                        <Button.Content>
+                            <TextBlock Text="Обзор" Margin="5,0,5,0"/>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
+
+                <TextBlock Text="Оффлайн изображение по умолчанию на экране №2" Margin="10,3,10,3"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBox x:Name="background_2" HorizontalAlignment="Left"
+                 Margin="10,3,3,3"
+                 Width="391"
+                 Text="{Binding Path=Background_2, Mode=TwoWay, 
+                UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <Button x:Name="browseBackground_2" Click="browseBackground_2_Click" 
+                    Width="68" Margin="3,3,10,3">
+                        <Button.Content>
+                            <TextBlock Text="Обзор" Margin="5,0,5,0"/>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
+
+                <TextBlock Text="Оффлайн изображение по умолчанию на экране №3" Margin="10,3,10,3"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBox x:Name="background_3" HorizontalAlignment="Left"
+                 Margin="10,3,3,3"
+                 Width="391"
+                 Text="{Binding Path=Background_3, Mode=TwoWay, 
+                UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <Button x:Name="browseBackground_3" Click="browseBackground_3_Click" 
+                    Width="68" Margin="3,3,10,3">
+                        <Button.Content>
+                            <TextBlock Text="Обзор" Margin="5,0,5,0"/>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
+
+                <TextBlock Text="Оффлайн изображение по умолчанию на экране №4" Margin="10,3,10,3"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBox x:Name="background_4" HorizontalAlignment="Left"
+                 Margin="10,3,3,3"
+                 Width="391"
+                 Text="{Binding Path=Background_4, Mode=TwoWay, 
+                UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <Button x:Name="browseBackground_4" Click="browseBackground_4_Click" 
+                    Width="68" Margin="3,3,10,3">
+                        <Button.Content>
+                            <TextBlock Text="Обзор" Margin="5,0,5,0"/>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
+
+                <TextBlock Text="Оффлайн изображение по умолчанию на экране №5" Margin="10,3,10,3"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBox x:Name="background_5" HorizontalAlignment="Left"
+                 Margin="10,3,3,3"
+                 Width="391"
+                 Text="{Binding Path=Background_5, Mode=TwoWay, 
+                UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <Button x:Name="browseBackground_5" Click="browseBackground_5_Click" 
+                    Width="68" Margin="3,3,10,3">
+                        <Button.Content>
+                            <TextBlock Text="Обзор" Margin="5,0,5,0"/>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
+
+                <TextBlock Text="Оффлайн изображение по умолчанию на экране №6" Margin="10,3,10,3"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBox x:Name="background_6" HorizontalAlignment="Left"
+                 Margin="10,3,3,3"
+                 Width="391"
+                 Text="{Binding Path=Background_6, Mode=TwoWay, 
+                UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <Button x:Name="browseBackground_6" Click="browseBackground_6_Click" 
+                    Width="68" Margin="3,3,10,3">
+                        <Button.Content>
+                            <TextBlock Text="Обзор" Margin="5,0,5,0"/>
+                        </Button.Content>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+        <Grid Grid.Row="1" Margin="10,13,10,3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition Width="auto"/>
@@ -69,6 +172,5 @@
                 </Button.Content>
             </Button>
         </Grid>
-
-    </StackPanel>
+    </Grid>
 </Window>

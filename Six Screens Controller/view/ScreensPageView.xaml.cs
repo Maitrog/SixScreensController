@@ -197,5 +197,25 @@ namespace Six_Screens_Controller.view
                 }
             }
         }
+
+        private void ChangeBackground_Click(object sender, RoutedEventArgs e)
+        {
+            string pickedFile;
+            try
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    pickedFile = openFileDialog.FileName;
+                    //int screenNumber = Convert.ToInt32(((ListViewItem)sender).Uid);
+
+                    //Utils.PostRequestBackgroundAsync(screenNumber, pickedFile);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
     }
 }

@@ -44,5 +44,53 @@ namespace Six_Screens_Controller
             if (openFileDialog.ShowDialog() == true)
                 defaultImage.Text = openFileDialog.FileName;
         }
+
+        private void browseBackground_1_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image (*.bmp;*.jpg;*.jpeg;*.png;*.webp)|*.bmp;*.jpg;*.jpeg;*.png;*.webp";
+            if (openFileDialog.ShowDialog() == true)
+                background_1.Text = openFileDialog.FileName;
+        }
+
+        private void browseBackground_2_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image (*.bmp;*.jpg;*.jpeg;*.png;*.webp)|*.bmp;*.jpg;*.jpeg;*.png;*.webp";
+            if (openFileDialog.ShowDialog() == true)
+                background_2.Text = openFileDialog.FileName;
+        }
+
+        private void browseBackground_3_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image (*.bmp;*.jpg;*.jpeg;*.png;*.webp)|*.bmp;*.jpg;*.jpeg;*.png;*.webp";
+            if (openFileDialog.ShowDialog() == true)
+                background_3.Text = openFileDialog.FileName;
+        }
+
+        private void browseBackground_4_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image (*.bmp;*.jpg;*.jpeg;*.png;*.webp)|*.bmp;*.jpg;*.jpeg;*.png;*.webp";
+            if (openFileDialog.ShowDialog() == true)
+                background_4.Text = openFileDialog.FileName;
+        }
+
+        private void browseBackground_5_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image (*.bmp;*.jpg;*.jpeg;*.png;*.webp)|*.bmp;*.jpg;*.jpeg;*.png;*.webp";
+            if (openFileDialog.ShowDialog() == true)
+                background_5.Text = openFileDialog.FileName;
+        }
+
+        private void browseBackground_6_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image (*.bmp;*.jpg;*.jpeg;*.png;*.webp)|*.bmp;*.jpg;*.jpeg;*.png;*.webp";
+            if (openFileDialog.ShowDialog() == true)
+                background_6.Text = openFileDialog.FileName;
+        }
     }
 }
