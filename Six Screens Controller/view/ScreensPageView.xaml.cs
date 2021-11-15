@@ -15,6 +15,7 @@ namespace Six_Screens_Controller.view
     public partial class ScreensPageView : UserControl
     {
         public ScreenTemplate CurrentScreenTemplate { get; set; } = new ScreenTemplate();
+        private int clickedScreenNumber;
 
         /// <summary>
         /// Initialize a new instance of the <see cref = "ScreensPageView"/> class with the specified <see cref="ScreenTemplate"/>
@@ -32,6 +33,7 @@ namespace Six_Screens_Controller.view
                 }
             }
             InitializeComponent();
+            Loaded += ScreensPageView_Loaded;
             try
             {
                 Utils.PostRequestScreensAsync(screenTemplate);
@@ -41,6 +43,14 @@ namespace Six_Screens_Controller.view
                 MessageBox.Show(e.Message);
             }
             SetScreenTemplate(screenTemplate);
+        }
+
+        private void ScreensPageView_Loaded(object sender, RoutedEventArgs e)
+        {
+            foreach (ListViewItem element in Elements.Children)
+            {
+                element.ContextMenu.Uid = element.Uid;
+            }
         }
 
         private void ChooseElement_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -198,6 +208,11 @@ namespace Six_Screens_Controller.view
             }
         }
 
+        private void DetermineScreenNumber_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            clickedScreenNumber = Convert.ToInt32((sender as ListViewItem).Uid);
+        }
+
         private void ChangeBackground_Click(object sender, RoutedEventArgs e)
         {
             string pickedFile;
@@ -207,9 +222,9 @@ namespace Six_Screens_Controller.view
                 if (openFileDialog.ShowDialog() == true)
                 {
                     pickedFile = openFileDialog.FileName;
-                    //int screenNumber = Convert.ToInt32(((ListViewItem)sender).Uid);
+                    int screenNumber = clickedScreenNumber;
 
-                    //Utils.PostRequestBackgroundAsync(screenNumber, pickedFile);
+                    Utils.PostRequestBackgroundAsync(screenNumber, pickedFile);
                 }
             }
             catch (Exception ex)
