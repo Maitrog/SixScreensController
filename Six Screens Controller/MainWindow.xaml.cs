@@ -122,36 +122,33 @@ namespace Six_Screens_Controller
             SettingsWindow settingsWindow = new SettingsWindow();
             if (settingsWindow.ShowDialog() == true)
             {
+                if (Config.Background_1 != settingsWindow.config.Background_1)
+                {
+                    Utils.PostRequestBackgroundAsync(1, settingsWindow.config.Background_1);
+                }
+                if (Config.Background_2 != settingsWindow.config.Background_2)
+                {
+                    Utils.PostRequestBackgroundAsync(2, settingsWindow.config.Background_2);
+                }
+                if (Config.Background_3 != settingsWindow.config.Background_3)
+                {
+                    Utils.PostRequestBackgroundAsync(3, settingsWindow.config.Background_3);
+                }
+                if (Config.Background_4 != settingsWindow.config.Background_4)
+                {
+                    Utils.PostRequestBackgroundAsync(4, settingsWindow.config.Background_4);
+                }
+                if (Config.Background_5 != settingsWindow.config.Background_5)
+                {
+                    Utils.PostRequestBackgroundAsync(5, settingsWindow.config.Background_5);
+                }
+                if (Config.Background_6 != settingsWindow.config.Background_6)
+                {
+                    Utils.PostRequestBackgroundAsync(6, settingsWindow.config.Background_6);
+                }
+                File.WriteAllText("config.json", JsonConvert.SerializeObject(settingsWindow.config));
                 if (!Config.Equals(settingsWindow.config))
                 {
-                    if (Config.Background_1 != settingsWindow.config.Background_1)
-                    {
-                        Utils.PostRequestBackgroundAsync(1, settingsWindow.config.Background_1);
-                    }
-                    if (Config.Background_2 != settingsWindow.config.Background_2)
-                    {
-                        Utils.PostRequestBackgroundAsync(2, settingsWindow.config.Background_2);
-                    }
-                    if (Config.Background_3 != settingsWindow.config.Background_3)
-                    {
-                        Utils.PostRequestBackgroundAsync(3, settingsWindow.config.Background_3);
-                    }
-                    if (Config.Background_4 != settingsWindow.config.Background_4)
-                    {
-                        Utils.PostRequestBackgroundAsync(4, settingsWindow.config.Background_4);
-                    }
-                    if (Config.Background_5 != settingsWindow.config.Background_5)
-                    {
-                        Utils.PostRequestBackgroundAsync(5, settingsWindow.config.Background_5);
-                    }
-                    if (Config.Background_6 != settingsWindow.config.Background_6)
-                    {
-                        Utils.PostRequestBackgroundAsync(6, settingsWindow.config.Background_6);
-                    }
-                    //Utils.PostRequestBackgeroundAsync(new List<string> { settingsWindow.config.Background_1, settingsWindow.config.Background_2, settingsWindow.config.Background_3,
-                    //settingsWindow.config.Background_4,settingsWindow.config.Background_5,settingsWindow.config.Background_6});
-                    File.WriteAllText("config.json", JsonConvert.SerializeObject(settingsWindow.config));
-
                     MessageBox.Show("Для вступления изменений в силу перезапустите приложение");
                 }
             }

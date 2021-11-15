@@ -181,9 +181,8 @@ namespace Six_Screens_Controller
         public override bool Equals(object obj)
         {
             if ((obj as Config) != null)
-                return ((obj as Config).protocol == protocol) && ((obj as Config).host == host) && ((obj as Config).port == port) && ((obj as Config).defaultImage == defaultImage)
-                    && ((obj as Config).background_1 == Background_1) && ((obj as Config).Background_2 == Background_2) && ((obj as Config).Background_3 == Background_3)
-                    && ((obj as Config).Background_4 == Background_4) && ((obj as Config).Background_5 == Background_5) && ((obj as Config).Background_6 == Background_6);
+                return ((obj as Config).protocol == protocol) && ((obj as Config).host == host) 
+                    && ((obj as Config).port == port) && ((obj as Config).defaultImage == defaultImage);
             return false;
         }
     }
