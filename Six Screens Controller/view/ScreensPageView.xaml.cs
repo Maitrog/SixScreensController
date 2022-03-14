@@ -1,11 +1,14 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Six_Screens_Controller.view
 {
@@ -163,7 +166,7 @@ namespace Six_Screens_Controller.view
                         }
                         else if (Utils.videoExp.Contains(exp))
                         {
-                            MediaElement video = Utils.CreateVideo(CurrentScreenTemplate.ScreenTemplateElements[i].Path);
+                            Canvas video = CreateVideoCanvas(i);
                             (Elements.Children[i] as ListViewItem).Content = video;
                         }
                         else if (exp == "gif")
@@ -197,7 +200,7 @@ namespace Six_Screens_Controller.view
                 }
                 else if (Utils.videoExp.Contains(exp))
                 {
-                    MediaElement video = Utils.CreateVideo(CurrentScreenTemplate.ScreenTemplateElements[screenNumber - 1].Path);
+                    Canvas video = CreateVideoCanvas(screenNumber - 1);
                     (Elements.Children[screenNumber - 1] as ListViewItem).Content = video;
                 }
                 else if (exp == "gif")
@@ -206,6 +209,38 @@ namespace Six_Screens_Controller.view
                     (Elements.Children[screenNumber - 1] as ListViewItem).Content = video;
                 }
             }
+        }
+
+        private Canvas CreateVideoCanvas(int screenNumber)
+        {
+            VideoDrawing videoDrawing = Utils.CreateVideoDrawing(CurrentScreenTemplate.ScreenTemplateElements[screenNumber - 1].Path);
+            DrawingBrush brush = new DrawingBrush(videoDrawing);
+
+            Binding bindingHeight = new Binding("ActualHeight");
+            bindingHeight.Source = (Elements.Children[screenNumber - 1] as ListViewItem);
+            Binding bindingWidth = new Binding("ActualWidth");
+            bindingWidth.Source = (Elements.Children[screenNumber - 1] as ListViewItem);
+
+            Size videoSize = Utils.GetVideoSize(CurrentScreenTemplate.ScreenTemplateElements[screenNumber].Path);
+
+            MultiBinding multiBindingWidth = new MultiBinding();
+            multiBindingWidth.Bindings.Add(bindingWidth);
+            multiBindingWidth.Bindings.Add(bindingHeight);
+            multiBindingWidth.Converter = new VideoWidthConverter();
+            multiBindingWidth.ConverterParameter = $"{videoSize.Width}, {videoSize.Height}";
+
+            MultiBinding multiBindingHeight = new MultiBinding();
+            multiBindingHeight.Bindings.Add(bindingWidth);
+            multiBindingHeight.Bindings.Add(bindingHeight);
+            multiBindingHeight.Converter = new VideoHeigthConverter();
+            multiBindingHeight.ConverterParameter = $"{videoSize.Width}, {videoSize.Height}";
+
+
+            Canvas canvas = new Canvas { Background = brush };
+
+            canvas.SetBinding(Canvas.HeightProperty, multiBindingHeight);
+            canvas.SetBinding(Canvas.WidthProperty, multiBindingWidth);
+            return canvas;
         }
 
         private void DetermineScreenNumber_MouseRightButtonUp(object sender, MouseButtonEventArgs e)

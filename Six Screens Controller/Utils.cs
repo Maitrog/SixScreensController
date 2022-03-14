@@ -56,8 +56,42 @@ namespace Six_Screens_Controller
             video.Margin = new Thickness(0, 5, 0, 5);
             video.Volume = 0;
             video.LoadedBehavior = MediaState.Play;
-
             return video;
+        }
+
+        public static VideoDrawing CreateVideoDrawing(string path)
+        {
+            MediaPlayer player = new MediaPlayer
+            {
+                Volume = 0
+            };
+            player.Open(new Uri(path, UriKind.Absolute));
+
+            VideoDrawing videoDrawing = new VideoDrawing
+            {
+                Rect = new Rect(new Size(100, 200)),
+                Player = player
+            };
+            player.Play();
+            return videoDrawing;
+        }
+
+        public static Size GetVideoSize(string path)
+        {
+            Size videoSize = new Size();
+            MediaElement video = new MediaElement
+            {
+                Volume = 0,
+                Source = new Uri(path, UriKind.Absolute),
+                LoadedBehavior = MediaState.Manual,
+                UnloadedBehavior = MediaState.Manual
+            };
+            video.Play();
+            while (!video.NaturalDuration.HasTimeSpan) { }
+            videoSize.Height = video.NaturalVideoHeight;
+            videoSize.Width = video.NaturalVideoWidth;
+            video.Close();
+            return videoSize;
         }
 
         // Screens controller methods
