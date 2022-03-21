@@ -8,7 +8,8 @@ namespace Six_Screens_Controller.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (double)value / System.Convert.ToDouble((string)parameter);
+            string tmp = ((string)parameter).Replace(".", ",");
+            return (double)value / System.Convert.ToDouble(tmp);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
