@@ -95,8 +95,7 @@ namespace Six_Screens_Controller
             return videoSize;
         }
 
-        // Screens controller methods
-
+        #region Screens controller methods
         /// <summary>
         /// Put request to /api/screens/{screenNumber} – change current content on screen with number {screenNumber}
         /// </summary>
@@ -150,9 +149,9 @@ namespace Six_Screens_Controller
             ScreenTemplateElement element = JsonConvert.DeserializeObject<ScreenTemplateElement>(response);
             return element;
         }
+        #endregion
 
-        // Playlist controller methods
-
+        #region Playlist controller methods
         /// <summary>
         /// Get async request to /api/playlist – get all playlists from database
         /// </summary>
@@ -267,9 +266,9 @@ namespace Six_Screens_Controller
                 Console.WriteLine(result);
             }
         }
+        #endregion
 
-        // ScreenTemplates controller methods
-
+        #region ScreenTemplates controller methods
         /// <summary>
         /// Get request to /api/screentemplates – get all <see cref="ScreenTemplate"/> from database
         /// </summary>
@@ -378,9 +377,9 @@ namespace Six_Screens_Controller
             HttpResponseMessage response = await client.PutAsJsonAsync(url, screenTemplate);
             response.EnsureSuccessStatusCode();
         }
+        #endregion
 
-        // Other request
-
+        #region Other request
         /// <summary>
         /// Request to /refresh – refresh screen
         /// </summary>
@@ -411,5 +410,6 @@ namespace Six_Screens_Controller
             string url = $"{config.Protocol}://{config.Host}:{config.Port}/{route}";
             return url;
         }
+        #endregion
     }
 }
