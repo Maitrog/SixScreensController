@@ -43,6 +43,7 @@
                     <RowDefinition Height="12.5*" MaxHeight="80"/>
                     <RowDefinition Height="12.5*" MaxHeight="80"/>
                     <RowDefinition Height="12.5*" MaxHeight="80"/>
+                    <RowDefinition Height="12.5*" MaxHeight="80"/>
                     <RowDefinition Height="31.5*"/>
                 </Grid.RowDefinitions>
 
@@ -69,7 +70,26 @@
                     </Grid>
                 </Button>
 
-                <Button x:Name="TemplateButton" Grid.Row="3" HorizontalAlignment="Stretch" 
+                <Button x:Name="PresentationButton" Grid.Row="3"  HorizontalAlignment="Stretch"
+                        Click="PresentationButton_Click"
+                        Height="{Binding ElementName=LeftMenu, Path=Width}"
+                        BorderThickness="0" Background="White">
+                    <Grid Width="{Binding ElementName=TemplateButton, Path=ActualWidth}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Image Source="assets/TemplateIcon50x50.png" HorizontalAlignment="Left" 
+                           Grid.Column="0" Margin="15,0,0,0" Width="30"/>
+                        <TextBlock Text="презентации" Grid.Column="1" VerticalAlignment="Center" 
+                               Margin="5,0,0,0" Foreground="#595959" FontSize="16"
+                               FontFamily="Rounded Mplus" FontWeight="SemiBold"/>
+                    </Grid>
+
+                </Button>
+
+                <Button x:Name="TemplateButton" Grid.Row="4" HorizontalAlignment="Stretch" 
                     Click="TemplateButton_Click"
                     Height="{Binding ElementName=LeftMenu, Path=Width}"
                     BorderThickness="0" Background="White">
@@ -88,7 +108,7 @@
                     </Grid>
                 </Button>
 
-                <Button Grid.Row="4" x:Name="PlaylistButton" HorizontalAlignment="Stretch" 
+                <Button Grid.Row="5" x:Name="PlaylistButton" HorizontalAlignment="Stretch" 
                     Click="PlaylistButton_Click"
                     Height="{Binding ElementName=LeftMenu, Path=Width}"
                     BorderThickness="0" Background="White">
@@ -109,7 +129,7 @@
                 </Button>
 
 
-                <StackPanel Grid.Row="5" VerticalAlignment="Bottom" HorizontalAlignment="Center"
+                <StackPanel Grid.Row="6" VerticalAlignment="Bottom" HorizontalAlignment="Center"
                         Margin="0,0,0,10">
                     <TextBlock Text="МИЭТ" HorizontalAlignment="Center" Foreground="#B9B9B9" FontSize="17"
                                FontFamily="Rounded Mplus" FontWeight="SemiBold"/>

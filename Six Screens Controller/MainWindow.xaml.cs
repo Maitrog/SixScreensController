@@ -75,7 +75,7 @@ namespace Six_Screens_Controller
 
         private void TemplateButton_Click(object sender, RoutedEventArgs e)
         {
-            if (MainGrid.Children[2].GetType() != Type.GetType("Six_Screens_Controller.view.TemplatesPageView"))
+            if (MainGrid.Children[2].GetType() != Type.GetType("Six_Screens_Controller.Views.TemplatesPageView"))
             {
 
                 TemplatesPageView templatesPageControl = new TemplatesPageView();
@@ -84,14 +84,15 @@ namespace Six_Screens_Controller
                 MainGrid.Children.Insert(2, templatesPageControl);
 
                 ((MainGrid.Children[0] as Grid).Children[1] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-                ((MainGrid.Children[0] as Grid).Children[3] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-                ((MainGrid.Children[0] as Grid).Children[2] as Button).Background = new SolidColorBrush(Color.FromRgb(197, 197, 197));
+                ((MainGrid.Children[0] as Grid).Children[2] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+                ((MainGrid.Children[0] as Grid).Children[4] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+                ((MainGrid.Children[0] as Grid).Children[3] as Button).Background = new SolidColorBrush(Color.FromRgb(197, 197, 197));
             }
         }
 
         private void PlaylistButton_Click(object sender, RoutedEventArgs e)
         {
-            if (MainGrid.Children[2].GetType() != Type.GetType("Six_Screens_Controller.view.PlaylistsPageView"))
+            if (MainGrid.Children[2].GetType() != Type.GetType("Six_Screens_Controller.Views.PlaylistsPageView"))
             {
                 PlaylistsPageView playlistsPageControl = new PlaylistsPageView();
                 Grid.SetColumn(playlistsPageControl, 2);
@@ -100,19 +101,21 @@ namespace Six_Screens_Controller
 
                 ((MainGrid.Children[0] as Grid).Children[1] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
                 ((MainGrid.Children[0] as Grid).Children[2] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-                ((MainGrid.Children[0] as Grid).Children[3] as Button).Background = new SolidColorBrush(Color.FromRgb(197, 197, 197));
+                ((MainGrid.Children[0] as Grid).Children[3] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+                ((MainGrid.Children[0] as Grid).Children[4] as Button).Background = new SolidColorBrush(Color.FromRgb(197, 197, 197));
             }
         }
 
         private void ScreenButton_Click(object sender, RoutedEventArgs e)
         {
-            if (MainGrid.Children[2].GetType() != Type.GetType("Six_Screens_Controller.view.ScreensPageView"))
+            if (MainGrid.Children[2].GetType() != Type.GetType("Six_Screens_Controller.Views.ScreensPageView"))
             {
                 MainGrid.Children.RemoveAt(2);
                 MainGrid.Children.Insert(2, screensPage);
 
                 ((MainGrid.Children[0] as Grid).Children[2] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
                 ((MainGrid.Children[0] as Grid).Children[3] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+                ((MainGrid.Children[0] as Grid).Children[4] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
                 ((MainGrid.Children[0] as Grid).Children[1] as Button).Background = new SolidColorBrush(Color.FromRgb(197, 197, 197));
             }
         }
@@ -164,6 +167,29 @@ namespace Six_Screens_Controller
         {
             AboutUsWindow aboutUs = new AboutUsWindow();
             aboutUs.ShowDialog();
+        }
+
+        private void PresentationButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (MainGrid.Children[2].GetType() != Type.GetType("Six_Screens_Controller.Views.PresentationPageView"))
+                {
+                    PresentationPageView presentationPageControl = new PresentationPageView();
+                    Grid.SetColumn(presentationPageControl, 2);
+                    MainGrid.Children.RemoveAt(2);
+                    MainGrid.Children.Insert(2, presentationPageControl);
+
+                    ((MainGrid.Children[0] as Grid).Children[1] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+                    ((MainGrid.Children[0] as Grid).Children[3] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+                    ((MainGrid.Children[0] as Grid).Children[4] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+                    ((MainGrid.Children[0] as Grid).Children[2] as Button).Background = new SolidColorBrush(Color.FromRgb(197, 197, 197));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.StackTrace);
+            }
         }
     }
 }
