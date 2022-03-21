@@ -4,9 +4,9 @@ using System.Globalization;
 using System.Text;
 using System.Windows.Data;
 
-namespace Six_Screens_Controller
+namespace Six_Screens_Controller.Converters
 {
-    internal class VideoHeigthConverter : IMultiValueConverter
+    internal class VideoWidthConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
@@ -19,11 +19,11 @@ namespace Six_Screens_Controller
             double actualProportion = actualWidth / actualHeight;
             if (videoProportion >= 0.5)
             {
-                return actualHeight;
+                return actualHeight * videoWidth / videoHeight;
             }
             else
             {
-                return actualHeight * videoWidth / videoHeight;
+                return actualWidth;
             }
         }
 

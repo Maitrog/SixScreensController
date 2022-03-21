@@ -1,4 +1,4 @@
-﻿namespace Six_Screens_Controller
+﻿namespace Six_Screens_Controller.Models
 {
     /// <summary>
     /// Represent element for playlist

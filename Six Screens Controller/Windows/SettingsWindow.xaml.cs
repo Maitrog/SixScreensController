@@ -3,6 +3,7 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using Newtonsoft.Json;
 using System.IO;
 using System.Windows;
+using Six_Screens_Controller.Models;
 
 namespace Six_Screens_Controller
 {

@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Six_Screens_Controller"
-        xmlns:view="clr-namespace:Six_Screens_Controller.view"
+        xmlns:view="clr-namespace:Six_Screens_Controller.Views"
         mc:Ignorable="d"
         
         Title="Screen Controler" Height="450" Width="800"

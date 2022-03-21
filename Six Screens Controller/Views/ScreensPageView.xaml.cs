@@ -1,6 +1,5 @@
 ﻿using Microsoft.Win32;
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -9,8 +8,10 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using Six_Screens_Controller.Models;
+using Six_Screens_Controller.Converters;
 
-namespace Six_Screens_Controller.view
+namespace Six_Screens_Controller.Views
 {
     /// <summary>
     /// Page with current screens

@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Linq;
 
-namespace Six_Screens_Controller
+namespace Six_Screens_Controller.Models
 {
     /// <summary>
     /// Application configuration

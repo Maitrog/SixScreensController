@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace Six_Screens_Controller
+namespace Six_Screens_Controller.Converters
 {
     public class TemplateHeightConverter : IValueConverter
     {

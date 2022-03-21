@@ -2,9 +2,10 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Six_Screens_Controller"
+             xmlns:convert="clr-namespace:Six_Screens_Controller.Converters"
              StartupUri="MainWindow.xaml" Startup="App_Startup">
 
     <Application.Resources>
-        <local:TemplateHeightConverter x:Key="TemplateHeightConverter"/>
+        <convert:TemplateHeightConverter x:Key="TemplateHeightConverter"/>
     </Application.Resources>
 </Application>

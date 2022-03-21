@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Six_Screens_Controller.Models;
 
-namespace Six_Screens_Controller
+namespace Six_Screens_Controller.Comparators
 {
     public class ScreenTemplateElementCopm : IComparer<ScreenTemplateElement>
     {

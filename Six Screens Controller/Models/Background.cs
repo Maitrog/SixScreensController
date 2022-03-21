@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Six_Screens_Controller
+namespace Six_Screens_Controller.Models
 {
     public class Background
     {

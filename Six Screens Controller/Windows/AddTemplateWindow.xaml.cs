@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Windows;
 using System.Windows.Controls;
+using Six_Screens_Controller.Models;
 
 namespace Six_Screens_Controller
 {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json;
-using Six_Screens_Controller.view;
+using Six_Screens_Controller.Views;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,6 +8,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Six_Screens_Controller.Models;
 
 
 namespace Six_Screens_Controller

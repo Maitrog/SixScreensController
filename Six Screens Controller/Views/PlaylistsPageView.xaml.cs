@@ -2,8 +2,9 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using Six_Screens_Controller.Models;
 
-namespace Six_Screens_Controller.view
+namespace Six_Screens_Controller.Views
 {
     /// <summary>
     /// Page with playlists

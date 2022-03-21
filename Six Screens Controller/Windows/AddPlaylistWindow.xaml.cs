@@ -5,6 +5,8 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using Six_Screens_Controller.Models;
+using Six_Screens_Controller.Converters;
 
 
 //TODO: исправить добавление одинаковых элементов
