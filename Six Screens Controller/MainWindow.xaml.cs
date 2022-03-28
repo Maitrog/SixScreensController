@@ -15,29 +15,29 @@ namespace Six_Screens_Controller
 {
     public partial class MainWindow : Window
     {
-        private static readonly Config config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(@"config.json"));
-        private static HubConnection HubConnection;
-        private static ScreenTemplate ScreenTemplateNow { get; set; } = new ScreenTemplate()
+        private static readonly Config _config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(@"config.json"));
+        private static HubConnection _hubConnection;
+        private static ScreenTemplate _screenTemplateNow = new ScreenTemplate()
         {
             ScreenTemplateElements = new List<ScreenTemplateElement> {
-            new ScreenTemplateElement() { ScreenNumber = 1, Path = config.DefaultImage },
-            new ScreenTemplateElement() { ScreenNumber = 2, Path = config.DefaultImage },
-            new ScreenTemplateElement() { ScreenNumber = 3, Path = config.DefaultImage },
-            new ScreenTemplateElement() { ScreenNumber = 4, Path = config.DefaultImage },
-            new ScreenTemplateElement() { ScreenNumber = 5, Path = config.DefaultImage },
-            new ScreenTemplateElement() { ScreenNumber = 6, Path = config.DefaultImage }
+            new ScreenTemplateElement() { ScreenNumber = 1, Path = _config.DefaultImage },
+            new ScreenTemplateElement() { ScreenNumber = 2, Path = _config.DefaultImage },
+            new ScreenTemplateElement() { ScreenNumber = 3, Path = _config.DefaultImage },
+            new ScreenTemplateElement() { ScreenNumber = 4, Path = _config.DefaultImage },
+            new ScreenTemplateElement() { ScreenNumber = 5, Path = _config.DefaultImage },
+            new ScreenTemplateElement() { ScreenNumber = 6, Path = _config.DefaultImage }
             }
         };
-        private readonly ScreensPageView screensPage = new ScreensPageView(ScreenTemplateNow);
+        private readonly ScreensPageView _screensPage = new ScreensPageView(_screenTemplateNow);
 
         public MainWindow()
         {
             try
             {
-                Grid.SetColumn(screensPage, 2);
+                Grid.SetColumn(_screensPage, 2);
                 InitializeComponent();
                 Loaded += MainWindow_Loaded;
-                MainGrid.Children.Insert(2, screensPage);
+                MainGrid.Children.Insert(2, _screensPage);
             }
             catch (Exception)
             {
@@ -47,11 +47,11 @@ namespace Six_Screens_Controller
 
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            HubConnection = new HubConnectionBuilder().WithUrl($"{config.Protocol}://{config.Host}:{config.Port}/refresh").WithAutomaticReconnect().Build();
-            HubConnection.On<int>("Refresh", screenNumber => Refresh(screenNumber));
+            _hubConnection = new HubConnectionBuilder().WithUrl($"{_config.Protocol}://{_config.Host}:{_config.Port}/refresh").WithAutomaticReconnect().Build();
+            _hubConnection.On<int>("Refresh", screenNumber => Refresh(screenNumber));
             try
             {
-                await HubConnection.StartAsync();
+                await _hubConnection.StartAsync();
             }
             catch (Exception)
             {
@@ -64,18 +64,18 @@ namespace Six_Screens_Controller
             if (screenNumber == 0)
             {
                 ScreenTemplate screenTemplate = await Utils.GetRequestScreensAsync();
-                screensPage.SetScreenTemplate(screenTemplate);
+                _screensPage.SetScreenTemplate(screenTemplate);
             }
             else
             {
                 ScreenTemplateElement screenTemplateElement = await Utils.GetRequestScreensAsync(screenNumber);
-                screensPage.SetScreenTemplateElement(screenNumber, screenTemplateElement);
+                _screensPage.SetScreenTemplateElement(screenNumber, screenTemplateElement);
             }
         }
 
         private void TemplateButton_Click(object sender, RoutedEventArgs e)
         {
-            if (MainGrid.Children[2].GetType() != Type.GetType("Six_Screens_Controller.Views.TemplatesPageView"))
+            if (!(MainGrid.Children[2] is TemplatesPageView))
             {
 
                 TemplatesPageView templatesPageControl = new TemplatesPageView();
@@ -92,7 +92,7 @@ namespace Six_Screens_Controller
 
         private void PlaylistButton_Click(object sender, RoutedEventArgs e)
         {
-            if (MainGrid.Children[2].GetType() != Type.GetType("Six_Screens_Controller.Views.PlaylistsPageView"))
+            if (!(MainGrid.Children[2] is PlaylistsPageView))
             {
                 PlaylistsPageView playlistsPageControl = new PlaylistsPageView();
                 Grid.SetColumn(playlistsPageControl, 2);
@@ -108,15 +108,38 @@ namespace Six_Screens_Controller
 
         private void ScreenButton_Click(object sender, RoutedEventArgs e)
         {
-            if (MainGrid.Children[2].GetType() != Type.GetType("Six_Screens_Controller.Views.ScreensPageView"))
+            if (!(MainGrid.Children[2] is ScreensPageView))
             {
                 MainGrid.Children.RemoveAt(2);
-                MainGrid.Children.Insert(2, screensPage);
+                MainGrid.Children.Insert(2, _screensPage);
 
                 ((MainGrid.Children[0] as Grid).Children[2] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
                 ((MainGrid.Children[0] as Grid).Children[3] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
                 ((MainGrid.Children[0] as Grid).Children[4] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
                 ((MainGrid.Children[0] as Grid).Children[1] as Button).Background = new SolidColorBrush(Color.FromRgb(197, 197, 197));
+            }
+        }
+
+        private void PresentationButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (!(MainGrid.Children[2] is PresentationPageView))
+                {
+                    PresentationPageView presentationPageControl = new PresentationPageView();
+                    Grid.SetColumn(presentationPageControl, 2);
+                    MainGrid.Children.RemoveAt(2);
+                    MainGrid.Children.Insert(2, presentationPageControl);
+
+                    ((MainGrid.Children[0] as Grid).Children[1] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+                    ((MainGrid.Children[0] as Grid).Children[3] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+                    ((MainGrid.Children[0] as Grid).Children[4] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+                    ((MainGrid.Children[0] as Grid).Children[2] as Button).Background = new SolidColorBrush(Color.FromRgb(197, 197, 197));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.StackTrace);
             }
         }
 
@@ -167,29 +190,6 @@ namespace Six_Screens_Controller
         {
             AboutUsWindow aboutUs = new AboutUsWindow();
             aboutUs.ShowDialog();
-        }
-
-        private void PresentationButton_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if (MainGrid.Children[2].GetType() != Type.GetType("Six_Screens_Controller.Views.PresentationPageView"))
-                {
-                    PresentationPageView presentationPageControl = new PresentationPageView();
-                    Grid.SetColumn(presentationPageControl, 2);
-                    MainGrid.Children.RemoveAt(2);
-                    MainGrid.Children.Insert(2, presentationPageControl);
-
-                    ((MainGrid.Children[0] as Grid).Children[1] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-                    ((MainGrid.Children[0] as Grid).Children[3] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-                    ((MainGrid.Children[0] as Grid).Children[4] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-                    ((MainGrid.Children[0] as Grid).Children[2] as Button).Background = new SolidColorBrush(Color.FromRgb(197, 197, 197));
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.StackTrace);
-            }
         }
     }
 }
