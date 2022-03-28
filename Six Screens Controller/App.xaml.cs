@@ -42,7 +42,7 @@ namespace Six_Screens_Controller
         private static void CreateConfigFile()
         {
             string localIP = GetLocalIPAddress();
-            Config config = new Config() { Protocol = "http", Host = localIP, Port = "5000", FirstStart = true };
+            Config config = new Config() { Protocol = "http", Host = localIP, Port = "8800", FirstStart = true };
             Encoding utf8 = Encoding.UTF8;
 
             using (FileStream fs = File.Create("config.json"))
