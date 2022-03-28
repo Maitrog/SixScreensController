@@ -214,13 +214,13 @@ namespace Six_Screens_Controller.Views
 
         private Canvas CreateVideoCanvas(int screenNumber)
         {
-            VideoDrawing videoDrawing = Utils.CreateVideoDrawing(CurrentScreenTemplate.ScreenTemplateElements[screenNumber - 1].Path);
+            VideoDrawing videoDrawing = Utils.CreateVideoDrawing(CurrentScreenTemplate.ScreenTemplateElements[screenNumber].Path);
             DrawingBrush brush = new DrawingBrush(videoDrawing);
 
             Binding bindingHeight = new Binding("ActualHeight");
-            bindingHeight.Source = (Elements.Children[screenNumber - 1] as ListViewItem);
+            bindingHeight.Source = (Elements.Children[screenNumber] as ListViewItem);
             Binding bindingWidth = new Binding("ActualWidth");
-            bindingWidth.Source = (Elements.Children[screenNumber - 1] as ListViewItem);
+            bindingWidth.Source = (Elements.Children[screenNumber] as ListViewItem);
 
             Size videoSize = Utils.GetVideoSize(CurrentScreenTemplate.ScreenTemplateElements[screenNumber].Path);
 
