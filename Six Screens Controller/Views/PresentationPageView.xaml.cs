@@ -30,8 +30,11 @@ namespace Six_Screens_Controller.Views
         }
         private void PresentationPageView_Loaded(object sender, RoutedEventArgs e)
         {
-            Image defaultImg = Utils.CreateImage($"{Directory.GetCurrentDirectory()}/assets/Default.jpg");
-            CurrentSlide.Source = defaultImg.Source;
+            if (CurrentSlide.Source == null)
+            {
+                Image defaultImg = Utils.CreateImage($"{Directory.GetCurrentDirectory()}/assets/Default.jpg");
+                CurrentSlide.Source = defaultImg.Source;
+            }
         }
 
         private void PreviosSlide_Click(object sender, RoutedEventArgs e)
@@ -50,25 +53,13 @@ namespace Six_Screens_Controller.Views
             {
                 if (e.Data.GetDataPresent(DataFormats.FileDrop))
                 {
-                    string currentFolder = Directory.GetCurrentDirectory();
-                    if (!Directory.GetDirectories($"{currentFolder}").Contains($"{currentFolder}\\Presentation"))
+                    if (Directory.Exists(_currentPresentation))
                     {
-                        Directory.CreateDirectory($"{currentFolder}\\Presentation");
+                        Directory.Delete(_currentPresentation);
                     }
-                    
                     string presentationsPath = ((string[])e.Data.GetData(DataFormats.FileDrop))[0];
-                    _currentPresentation = $"{currentFolder}\\Presentation\\{presentationsPath.Split('\\').Last().Split('.')[0]}";
 
-                    NetOffice.PowerPointApi.Application pptApplication = new NetOffice.PowerPointApi.Application();
-                    Presentation pptPresentation = pptApplication.Presentations.Open(presentationsPath, false, false, false);
-                    if (!Directory.GetDirectories($"{currentFolder}\\Presentation").Contains(_currentPresentation))
-                    {
-                        Directory.CreateDirectory($"{_currentPresentation}");
-                        for (int i = 1; i < pptPresentation.Slides.Count; i++)
-                            pptPresentation.Slides[i].Export($"{_currentPresentation}\\{i}.png", "png", 1920, 1080);
-                    }
-                    pptPresentation.Close();
-
+                    SetPresentation(presentationsPath);
                     ChangeSlide(1);
                 }
             }
@@ -76,6 +67,31 @@ namespace Six_Screens_Controller.Views
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void SetPresentation(string presentationsPath)
+        {
+            string currentFolder = Directory.GetCurrentDirectory();
+            if (!Directory.GetDirectories($"{currentFolder}").Contains($"{currentFolder}\\Presentation"))
+            {
+                Directory.CreateDirectory($"{currentFolder}\\Presentation");
+            }
+
+            _currentPresentation = $"{currentFolder}\\Presentation\\{presentationsPath.Split('\\').Last().Split('.')[0]}";
+            ConvertPresentationToImage(presentationsPath, currentFolder);
+        }
+
+        private void ConvertPresentationToImage(string presentationsPath, string currentFolder)
+        {
+            NetOffice.PowerPointApi.Application pptApplication = new NetOffice.PowerPointApi.Application();
+            Presentation pptPresentation = pptApplication.Presentations.Open(presentationsPath, false, false, false);
+            if (!Directory.GetDirectories($"{currentFolder}\\Presentation").Contains(_currentPresentation))
+            {
+                Directory.CreateDirectory($"{_currentPresentation}");
+                for (int i = 1; i <= pptPresentation.Slides.Count; i++)
+                    pptPresentation.Slides[i].Export($"{_currentPresentation}\\{i}.png", "png", 1920, 1080);
+            }
+            pptPresentation.Close();
         }
 
         private void ChangeSlide(int number)

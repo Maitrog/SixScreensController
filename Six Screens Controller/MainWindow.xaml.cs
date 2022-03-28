@@ -17,7 +17,7 @@ namespace Six_Screens_Controller
     {
         private static readonly Config _config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(@"config.json"));
         private static HubConnection _hubConnection;
-        private static ScreenTemplate _screenTemplateNow = new ScreenTemplate()
+        private static readonly ScreenTemplate _screenTemplateNow = new ScreenTemplate()
         {
             ScreenTemplateElements = new List<ScreenTemplateElement> {
             new ScreenTemplateElement() { ScreenNumber = 1, Path = _config.DefaultImage },
@@ -29,6 +29,7 @@ namespace Six_Screens_Controller
             }
         };
         private readonly ScreensPageView _screensPage = new ScreensPageView(_screenTemplateNow);
+        private readonly PresentationPageView _presentationPageControl = new PresentationPageView();
 
         public MainWindow()
         {
@@ -126,10 +127,9 @@ namespace Six_Screens_Controller
             {
                 if (!(MainGrid.Children[2] is PresentationPageView))
                 {
-                    PresentationPageView presentationPageControl = new PresentationPageView();
-                    Grid.SetColumn(presentationPageControl, 2);
+                    Grid.SetColumn(_presentationPageControl, 2);
                     MainGrid.Children.RemoveAt(2);
-                    MainGrid.Children.Insert(2, presentationPageControl);
+                    MainGrid.Children.Insert(2, _presentationPageControl);
 
                     ((MainGrid.Children[0] as Grid).Children[1] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
                     ((MainGrid.Children[0] as Grid).Children[3] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
