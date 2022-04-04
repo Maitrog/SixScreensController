@@ -17,17 +17,7 @@ namespace Six_Screens_Controller
     {
         private static readonly Config _config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(@"config.json"));
         private static HubConnection _hubConnection;
-        private static readonly ScreenTemplate _screenTemplateNow = new ScreenTemplate()
-        {
-            ScreenTemplateElements = new List<ScreenTemplateElement> {
-            new ScreenTemplateElement() { ScreenNumber = 1, Path = _config.DefaultImage },
-            new ScreenTemplateElement() { ScreenNumber = 2, Path = _config.DefaultImage },
-            new ScreenTemplateElement() { ScreenNumber = 3, Path = _config.DefaultImage },
-            new ScreenTemplateElement() { ScreenNumber = 4, Path = _config.DefaultImage },
-            new ScreenTemplateElement() { ScreenNumber = 5, Path = _config.DefaultImage },
-            new ScreenTemplateElement() { ScreenNumber = 6, Path = _config.DefaultImage }
-            }
-        };
+        private static readonly ScreenTemplate _screenTemplateNow = new ScreenTemplate(_config.DefaultImage);
         private readonly ScreensPageView _screensPage = new ScreensPageView(_screenTemplateNow);
         private readonly PresentationPageView _presentationPageControl = new PresentationPageView();
 
@@ -83,11 +73,7 @@ namespace Six_Screens_Controller
                 Grid.SetColumn(templatesPageControl, 2);
                 MainGrid.Children.RemoveAt(2);
                 MainGrid.Children.Insert(2, templatesPageControl);
-
-                ((MainGrid.Children[0] as Grid).Children[1] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-                ((MainGrid.Children[0] as Grid).Children[2] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-                ((MainGrid.Children[0] as Grid).Children[4] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-                ((MainGrid.Children[0] as Grid).Children[3] as Button).Background = new SolidColorBrush(Color.FromRgb(197, 197, 197));
+                ChangeButtonColor(3);
             }
         }
 
@@ -99,11 +85,7 @@ namespace Six_Screens_Controller
                 Grid.SetColumn(playlistsPageControl, 2);
                 MainGrid.Children.RemoveAt(2);
                 MainGrid.Children.Insert(2, playlistsPageControl);
-
-                ((MainGrid.Children[0] as Grid).Children[1] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-                ((MainGrid.Children[0] as Grid).Children[2] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-                ((MainGrid.Children[0] as Grid).Children[3] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-                ((MainGrid.Children[0] as Grid).Children[4] as Button).Background = new SolidColorBrush(Color.FromRgb(197, 197, 197));
+                ChangeButtonColor(4);
             }
         }
 
@@ -113,11 +95,7 @@ namespace Six_Screens_Controller
             {
                 MainGrid.Children.RemoveAt(2);
                 MainGrid.Children.Insert(2, _screensPage);
-
-                ((MainGrid.Children[0] as Grid).Children[2] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-                ((MainGrid.Children[0] as Grid).Children[3] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-                ((MainGrid.Children[0] as Grid).Children[4] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-                ((MainGrid.Children[0] as Grid).Children[1] as Button).Background = new SolidColorBrush(Color.FromRgb(197, 197, 197));
+                ChangeButtonColor(1);
             }
         }
 
@@ -130,11 +108,8 @@ namespace Six_Screens_Controller
                     Grid.SetColumn(_presentationPageControl, 2);
                     MainGrid.Children.RemoveAt(2);
                     MainGrid.Children.Insert(2, _presentationPageControl);
-
-                    ((MainGrid.Children[0] as Grid).Children[1] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-                    ((MainGrid.Children[0] as Grid).Children[3] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-                    ((MainGrid.Children[0] as Grid).Children[4] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-                    ((MainGrid.Children[0] as Grid).Children[2] as Button).Background = new SolidColorBrush(Color.FromRgb(197, 197, 197));
+                    
+                    ChangeButtonColor(2);
                 }
             }
             catch (Exception ex)
@@ -190,6 +165,20 @@ namespace Six_Screens_Controller
         {
             AboutUsWindow aboutUs = new AboutUsWindow();
             aboutUs.ShowDialog();
+        }
+
+        private void ChangeButtonColor(int currentButton)
+        {
+            ((MainGrid.Children[0] as Grid).Children[currentButton] as Button).Background = new SolidColorBrush(Color.FromRgb(197, 197, 197));
+
+            for (int i = 1; i < 5; i++)
+            {
+                if (i != currentButton)
+                {
+                    ((MainGrid.Children[0] as Grid).Children[i] as Button).Background = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+
+                }
+            }
         }
     }
 }

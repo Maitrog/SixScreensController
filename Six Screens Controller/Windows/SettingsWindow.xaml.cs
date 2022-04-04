@@ -17,6 +17,7 @@ namespace Six_Screens_Controller
         /// </summary>
         public Config config;
 
+        private const string _filter = "Image (*.bmp;*.jpg;*.jpeg;*.png;*.webp)|*.bmp;*.jpg;*.jpeg;*.png;*.webp";
         /// <summary>
         /// Initialize a new instance of the <see cref = "SettingsWindow"/> class
         /// </summary>
@@ -41,7 +42,7 @@ namespace Six_Screens_Controller
         private void browseImage_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Image (*.bmp;*.jpg;*.jpeg;*.png;*.webp)|*.bmp;*.jpg;*.jpeg;*.png;*.webp";
+            openFileDialog.Filter = _filter;
             if (openFileDialog.ShowDialog() == true)
                 defaultImage.Text = openFileDialog.FileName;
         }
@@ -49,7 +50,7 @@ namespace Six_Screens_Controller
         private void browseBackground_1_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Image (*.bmp;*.jpg;*.jpeg;*.png;*.webp)|*.bmp;*.jpg;*.jpeg;*.png;*.webp";
+            openFileDialog.Filter = _filter;
             if (openFileDialog.ShowDialog() == true)
                 background_1.Text = openFileDialog.FileName;
         }
@@ -57,7 +58,7 @@ namespace Six_Screens_Controller
         private void browseBackground_2_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Image (*.bmp;*.jpg;*.jpeg;*.png;*.webp)|*.bmp;*.jpg;*.jpeg;*.png;*.webp";
+            openFileDialog.Filter = _filter;
             if (openFileDialog.ShowDialog() == true)
                 background_2.Text = openFileDialog.FileName;
         }
@@ -65,7 +66,7 @@ namespace Six_Screens_Controller
         private void browseBackground_3_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Image (*.bmp;*.jpg;*.jpeg;*.png;*.webp)|*.bmp;*.jpg;*.jpeg;*.png;*.webp";
+            openFileDialog.Filter = _filter;
             if (openFileDialog.ShowDialog() == true)
                 background_3.Text = openFileDialog.FileName;
         }
@@ -73,7 +74,7 @@ namespace Six_Screens_Controller
         private void browseBackground_4_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Image (*.bmp;*.jpg;*.jpeg;*.png;*.webp)|*.bmp;*.jpg;*.jpeg;*.png;*.webp";
+            openFileDialog.Filter = _filter;
             if (openFileDialog.ShowDialog() == true)
                 background_4.Text = openFileDialog.FileName;
         }
@@ -81,7 +82,7 @@ namespace Six_Screens_Controller
         private void browseBackground_5_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Image (*.bmp;*.jpg;*.jpeg;*.png;*.webp)|*.bmp;*.jpg;*.jpeg;*.png;*.webp";
+            openFileDialog.Filter = _filter;
             if (openFileDialog.ShowDialog() == true)
                 background_5.Text = openFileDialog.FileName;
         }
@@ -89,7 +90,7 @@ namespace Six_Screens_Controller
         private void browseBackground_6_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Image (*.bmp;*.jpg;*.jpeg;*.png;*.webp)|*.bmp;*.jpg;*.jpeg;*.png;*.webp";
+            openFileDialog.Filter = _filter;
             if (openFileDialog.ShowDialog() == true)
                 background_6.Text = openFileDialog.FileName;
         }

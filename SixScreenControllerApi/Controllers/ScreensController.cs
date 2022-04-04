@@ -34,20 +34,7 @@ namespace SixScreenControllerApi.Controllers
             }
             else
             {
-                CurrentScreenTemplate = new ScreenTemplate
-                {
-                    Id = 0,
-                    Title = "default",
-                    ScreenTemplateElements = new List<ScreenTemplateElement>(6)
-                    {
-                        new ScreenTemplateElement(){ ScreenNumber = 1, Path=defaultPath},
-                        new ScreenTemplateElement(){ ScreenNumber = 2, Path=defaultPath},
-                        new ScreenTemplateElement(){ ScreenNumber = 3, Path=defaultPath},
-                        new ScreenTemplateElement(){ ScreenNumber = 4, Path=defaultPath},
-                        new ScreenTemplateElement(){ ScreenNumber = 5, Path=defaultPath},
-                        new ScreenTemplateElement(){ ScreenNumber = 6, Path=defaultPath}
-                    }
-                };
+                CurrentScreenTemplate = new ScreenTemplate(defaultPath);
                 cache.Set("CurrentScreenTemplate", CurrentScreenTemplate);
             }
             if (cache.TryGetValue("CurrentState", out ScreenTemplate curState))
@@ -56,20 +43,7 @@ namespace SixScreenControllerApi.Controllers
             }
             else
             {
-                CurrentState = new ScreenTemplate
-                {
-                    Id = 0,
-                    Title = "default",
-                    ScreenTemplateElements = new List<ScreenTemplateElement>(6)
-                    {
-                        new ScreenTemplateElement(){ ScreenNumber = 1, Path=defaultPath},
-                        new ScreenTemplateElement(){ ScreenNumber = 2, Path=defaultPath},
-                        new ScreenTemplateElement(){ ScreenNumber = 3, Path=defaultPath},
-                        new ScreenTemplateElement(){ ScreenNumber = 4, Path=defaultPath},
-                        new ScreenTemplateElement(){ ScreenNumber = 5, Path=defaultPath},
-                        new ScreenTemplateElement(){ ScreenNumber = 6, Path=defaultPath}
-                    }
-                };
+                CurrentState = new ScreenTemplate(defaultPath);
                 cache.Set("CurrentState", CurrentState);
             }
             if (cache.TryGetValue("IsPlaylists", out List<bool> isPlaylists))

@@ -73,18 +73,7 @@ namespace Six_Screens_Controller.Views
                 {
                     SetDefaultImage();
 
-                    ScreenTemplate screenTemplate = new ScreenTemplate()
-                    {
-                        ScreenTemplateElements =
-                        {
-                            new ScreenTemplateElement(){Path = $"{Directory.GetCurrentDirectory()}/assets/Default.jpg", IsPlaylist = false, ScreenNumber = 1},
-                            new ScreenTemplateElement(){Path = $"{Directory.GetCurrentDirectory()}/assets/Default.jpg", IsPlaylist = false, ScreenNumber = 2},
-                            new ScreenTemplateElement(){Path = $"{Directory.GetCurrentDirectory()}/assets/Default.jpg", IsPlaylist = false, ScreenNumber = 3},
-                            new ScreenTemplateElement(){Path = $"{Directory.GetCurrentDirectory()}/assets/Default.jpg", IsPlaylist = false, ScreenNumber = 4},
-                            new ScreenTemplateElement(){Path = $"{Directory.GetCurrentDirectory()}/assets/Default.jpg", IsPlaylist = false, ScreenNumber = 5},
-                            new ScreenTemplateElement(){Path = $"{Directory.GetCurrentDirectory()}/assets/Default.jpg", IsPlaylist = false, ScreenNumber = 6},
-                        }
-                    };
+                    ScreenTemplate screenTemplate = new ScreenTemplate($"{Directory.GetCurrentDirectory()}/assets/Default.jpg");
                     Utils.PostRequestScreensAsync(screenTemplate);
 
                     string presentationsPath = ((string[])e.Data.GetData(DataFormats.FileDrop))[0];
@@ -140,18 +129,7 @@ namespace Six_Screens_Controller.Views
                     _currentSlide = number;
                     Image slide = Utils.CreateImage(newSlide);
                     CurrentSlide.Source = slide.Source;
-                    ScreenTemplate screenTemplate = new ScreenTemplate()
-                    {
-                        ScreenTemplateElements =
-                        {
-                            new ScreenTemplateElement(){Path = newSlide, IsPlaylist = false, ScreenNumber = 1},
-                            new ScreenTemplateElement(){Path = newSlide, IsPlaylist = false, ScreenNumber = 2},
-                            new ScreenTemplateElement(){Path = newSlide, IsPlaylist = false, ScreenNumber = 3},
-                            new ScreenTemplateElement(){Path = newSlide, IsPlaylist = false, ScreenNumber = 4},
-                            new ScreenTemplateElement(){Path = newSlide, IsPlaylist = false, ScreenNumber = 5},
-                            new ScreenTemplateElement(){Path = newSlide, IsPlaylist = false, ScreenNumber = 6},
-                        }
-                    };
+                    ScreenTemplate screenTemplate = new ScreenTemplate(newSlide);
                     Utils.PostRequestScreensAsync(screenTemplate);
                 }
             }
