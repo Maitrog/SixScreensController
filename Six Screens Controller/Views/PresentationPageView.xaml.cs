@@ -17,10 +17,8 @@ namespace Six_Screens_Controller.Views
     {
         private string _currentPresentation;
         private int _currentSlide;
-        private Dictionary<string, long> _existingPresentations;
 
         static private readonly string _presentationsFolderPath = $"{Directory.GetCurrentDirectory()}\\Presentations";
-        static private readonly string _presentationsJsonPath = $"{_presentationsFolderPath}\\presentations.json";
         public PresentationPageView()
         {
             InitializeComponent();
@@ -41,11 +39,6 @@ namespace Six_Screens_Controller.Views
             if (CurrentSlide.Source == null)
             {
                 SetDefaultImage();
-            }
-            _existingPresentations = JsonConvert.DeserializeObject<Dictionary<string, long>>(File.ReadAllText(_presentationsJsonPath));
-            if (_existingPresentations == null)
-            {
-                _existingPresentations = new Dictionary<string, long>();
             }
         }
 
@@ -88,32 +81,37 @@ namespace Six_Screens_Controller.Views
 
         private void SetPresentation(string presentationsPath)
         {
-            _currentPresentation = $"{_presentationsFolderPath}\\{presentationsPath.Split('\\').Last().Split('.')[0]}";
-            ConvertPresentationToImage(presentationsPath);
+            PresentationInfo presentationInfo = new PresentationInfo(presentationsPath);
+            using (PresentationContext context = new PresentationContext())
+            {
+                PresentationInfo fromDb = context.Presentations.Where(x => x.Name == presentationInfo.Name).FirstOrDefault();
+                if (fromDb == null || fromDb.HashSum != presentationInfo.HashSum)
+                {
+                    _currentPresentation = $"{_presentationsFolderPath}\\{context.Presentations.Count()}";
+                    context.Add(presentationInfo);
+                    context.SaveChanges();
+                    ConvertPresentationToImage(presentationsPath);
+                }
+                else
+                {
+                    _currentPresentation = $"{_presentationsFolderPath}\\{fromDb.Id}";
+                }
+            }
             ChangeSlide(1);
         }
 
         private void ConvertPresentationToImage(string presentationsPath)
         {
-            FileInfo presentationInfo = new FileInfo(presentationsPath);
-            if (IsPresentationExists(presentationInfo))
-            {
-                return;
-            }
-
             NetOffice.PowerPointApi.Application pptApplication = new NetOffice.PowerPointApi.Application();
             Presentation pptPresentation = pptApplication.Presentations.Open(presentationsPath, false, false, false);
 
-            if (!Directory.GetDirectories($"{_presentationsFolderPath}\\Presentations").Contains(_currentPresentation))
+            if (!Directory.GetDirectories($"{_presentationsFolderPath}").Contains(_currentPresentation))
             {
                 Directory.CreateDirectory($"{_currentPresentation}");
                 for (int i = 1; i <= pptPresentation.Slides.Count; i++)
                 {
                     pptPresentation.Slides[i].Export($"{_currentPresentation}\\{i}.png", "png", 1920, 1080);
                 }
-                
-                _existingPresentations.Add(presentationInfo.Name, presentationInfo.Length);
-                File.WriteAllText(_presentationsJsonPath, JsonConvert.SerializeObject(_existingPresentations));
             }
             pptPresentation.Close();
             pptApplication.Quit();
@@ -144,33 +142,6 @@ namespace Six_Screens_Controller.Views
             {
                 Directory.CreateDirectory(_presentationsFolderPath);
             }
-            if (!File.Exists(_presentationsJsonPath))
-            {
-                File.Create(_presentationsJsonPath);
-            }
-        }
-
-        private bool IsPresentationExists(FileInfo presentationInfo)
-        {
-            if (_existingPresentations.TryGetValue(presentationInfo.Name, out long length))
-            {
-                if (length != presentationInfo.Length)
-                {
-                    GC.Collect(GC.GetGeneration(CurrentSlide));
-                    GC.WaitForPendingFinalizers();
-
-                    if (Directory.Exists(_currentPresentation))
-                    {
-                        Directory.Delete(_currentPresentation, true);
-                    }
-
-                    _existingPresentations.Remove(presentationInfo.Name);
-                    File.WriteAllText(_presentationsJsonPath, JsonConvert.SerializeObject(_existingPresentations));
-                    return false;
-                }
-                return true;
-            }
-            return false;
         }
     }
 }
