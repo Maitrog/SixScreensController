@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Six_Screens_Controller.Models;
 using Six_Screens_Controller.Converters;
+using System.Windows.Shapes;
 
 namespace Six_Screens_Controller.Views
 {
@@ -31,7 +32,7 @@ namespace Six_Screens_Controller.Views
             {
                 string defDir = Directory.GetCurrentDirectory();
                 string defFile = $"{defDir}/assets/Default.jpg";
-                for(int i = 0; i < 6; i++)
+                for (int i = 0; i < 6; i++)
                 {
                     screenTemplate.ScreenTemplateElements[i].Path = defFile;
                 }
@@ -209,6 +210,34 @@ namespace Six_Screens_Controller.Views
                     MediaElement video = Utils.CreateVideo(CurrentScreenTemplate.ScreenTemplateElements[screenNumber - 1].Path);
                     (Elements.Children[screenNumber - 1] as ListViewItem).Content = video;
                 }
+            }
+        }
+
+        public void SetOnline(bool[] onlineStatuses)
+        {
+            try
+            {
+                for (int i = 0; i < onlineStatuses.Length; i++)
+                {
+                    bool item = onlineStatuses[i];
+
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        Ellipse ellipse = (onlineStatusesGrid.Children[i]) as Ellipse;
+                        if (item)
+                        {
+                            ellipse.Fill = new SolidColorBrush(Colors.Green);
+                        }
+                        else
+                        {
+                            ellipse.Fill = new SolidColorBrush(Colors.Red);
+                        }
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 

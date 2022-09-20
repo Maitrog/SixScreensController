@@ -9,7 +9,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Six_Screens_Controller.Models;
-
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace Six_Screens_Controller
 {
@@ -20,6 +21,7 @@ namespace Six_Screens_Controller
         private static readonly ScreenTemplate _screenTemplateNow = new ScreenTemplate(_config.DefaultImage);
         private readonly ScreensPageView _screensPage = new ScreensPageView(_screenTemplateNow);
         private readonly PresentationPageView _presentationPageControl = new PresentationPageView();
+        private readonly bool[] _screenOnlineStatuses = { false, false, false, false, false, false };
 
         public MainWindow()
         {
@@ -40,6 +42,7 @@ namespace Six_Screens_Controller
         {
             _hubConnection = new HubConnectionBuilder().WithUrl($"{_config.Protocol}://{_config.Host}:{_config.Port}/refresh").WithAutomaticReconnect().Build();
             _hubConnection.On<int>("Refresh", screenNumber => Refresh(screenNumber));
+            OnlineScreenAsync(CancellationToken.None);
             try
             {
                 await _hubConnection.StartAsync();
@@ -108,7 +111,7 @@ namespace Six_Screens_Controller
                     Grid.SetColumn(_presentationPageControl, 2);
                     MainGrid.Children.RemoveAt(2);
                     MainGrid.Children.Insert(2, _presentationPageControl);
-                    
+
                     ChangeButtonColor(2);
                 }
             }
@@ -179,6 +182,37 @@ namespace Six_Screens_Controller
 
                 }
             }
+        }
+
+        private void OnlineScreenAsync(CancellationToken cancellationToken)
+        {
+            Task.Run(async () =>
+            {
+                HubConnection hubConnection = new HubConnectionBuilder().WithUrl($"{_config.Protocol}://{_config.Host}:{_config.Port}/refresh").WithAutomaticReconnect().Build();
+                hubConnection.On<string>("Ping", screenNumber => _screenOnlineStatuses[int.Parse(screenNumber[..1]) - 1] = true);
+                try
+                {
+                    await hubConnection.StartAsync();
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Не удалось подключиться к серверу. Проверьте параметры подключения.");
+                }
+
+                while (true)
+                {
+                    for (int i = 1; i < 7; i++)
+                    {
+                        await hubConnection.SendAsync("Ping", $"{i}");
+                    }
+                    await Task.Delay(3000);
+                    _screensPage.SetOnline(_screenOnlineStatuses);
+                    for (   int i = 0; i < 6; i++)
+                    {
+                        _screenOnlineStatuses[i] = false;
+                    }
+                }
+            });
         }
     }
 }
