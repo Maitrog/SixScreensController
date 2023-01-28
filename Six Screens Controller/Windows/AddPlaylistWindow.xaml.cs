@@ -61,10 +61,10 @@ namespace Six_Screens_Controller
                 {
                     string path = fileName;
                     string exp = path.Split("\\").LastOrDefault().Split('.').LastOrDefault();
-                    if (Utils.imageExp.Contains(exp))
+                    if (Utils.ImageExp.Contains(exp))
                         elements.Add(new PlaylistElement { Path = fileName.Replace("\\", "/") });
 
-                    if (Utils.videoExp.Contains(exp))
+                    if (Utils.VideoExp.Contains(exp))
                     {
                         MediaElement video = new MediaElement
                         {

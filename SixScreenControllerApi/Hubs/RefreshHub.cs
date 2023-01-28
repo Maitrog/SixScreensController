@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR;
 
 namespace SixScreenControllerApi.Hubs
 {
@@ -19,7 +19,7 @@ namespace SixScreenControllerApi.Hubs
         [HubMethodName("Ping")]
         public Task SendOnlineScreen(string screenNumber)
         {
-            return Clients.Others.SendAsync("Ping",screenNumber);
+            return Clients.Others.SendAsync("Ping", screenNumber);
         }
     }
 }

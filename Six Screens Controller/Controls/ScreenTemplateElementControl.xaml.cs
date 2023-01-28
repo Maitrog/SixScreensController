@@ -1,8 +1,8 @@
-﻿using Microsoft.Win32;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Win32;
 using Six_Screens_Controller.Models;
 
 namespace Six_Screens_Controller

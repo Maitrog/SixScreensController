@@ -20,10 +20,10 @@ namespace Six_Screens_Controller
     /// </summary>
     internal static class Utils
     {
-        public static readonly string[] imageExp = new string[] { "jpg", "jpeg", "bmp", "png", "webp" };
-        public static readonly string[] videoExp = new string[] { "mp4", "avi", "mpeg", "mkv", "3gp", "3g2" };
-        public static Config config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
-        private static readonly HttpClient client = new HttpClient();
+        public static readonly string[] ImageExp = new string[] { "jpg", "jpeg", "bmp", "png", "webp" };
+        public static readonly string[] VideoExp = new string[] { "mp4", "avi", "mpeg", "mkv", "3gp", "3g2" };
+        public static Config Config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
+        private static readonly HttpClient Client = new HttpClient();
 
         /// <summary>
         /// Create a new instance of the <see cref="Image"/>
@@ -44,6 +44,7 @@ namespace Six_Screens_Controller
 
             return img;
         }
+
         /// <summary>
         /// Create a instance of the <see cref="MediaElement"/>
         /// </summary>
@@ -79,7 +80,7 @@ namespace Six_Screens_Controller
 
         public static Size GetVideoSize(string path)
         {
-            Size videoSize = new Size();
+            Size videoSize = default(Size);
             MediaElement video = new MediaElement
             {
                 Volume = 0,
@@ -96,6 +97,7 @@ namespace Six_Screens_Controller
         }
 
         #region Screens controller methods
+
         /// <summary>
         /// Put request to /api/screens/{screenNumber} – change current content on screen with number {screenNumber}
         /// </summary>
@@ -104,7 +106,7 @@ namespace Six_Screens_Controller
         public static async void PutRequestScreensAsync(int screenNumber, ScreenTemplateElement element)
         {
             string url = GetUrl($"screens/{screenNumber}");
-            HttpResponseMessage response = await client.PutAsJsonAsync(url, element);
+            HttpResponseMessage response = await Client.PutAsJsonAsync(url, element);
             response.EnsureSuccessStatusCode();
         }
 
@@ -117,7 +119,7 @@ namespace Six_Screens_Controller
             try
             {
                 string url = GetUrl("screens");
-                HttpResponseMessage response = await client.PostAsJsonAsync(url, screenTemplate);
+                HttpResponseMessage response = await Client.PostAsJsonAsync(url, screenTemplate);
                 response.EnsureSuccessStatusCode();
             }
             catch (HttpRequestException)
@@ -132,7 +134,7 @@ namespace Six_Screens_Controller
         public static async Task<ScreenTemplate> GetRequestScreensAsync()
         {
             string url = GetUrl("screens");
-            string response = await client.GetStringAsync(url);
+            string response = await Client.GetStringAsync(url);
             ScreenTemplate template = JsonConvert.DeserializeObject<ScreenTemplate>(response);
             return template;
         }
@@ -145,13 +147,14 @@ namespace Six_Screens_Controller
         public static async Task<ScreenTemplateElement> GetRequestScreensAsync(int screenNumber)
         {
             string url = GetUrl($"screens/{screenNumber}");
-            string response = await client.GetStringAsync(url);
+            string response = await Client.GetStringAsync(url);
             ScreenTemplateElement element = JsonConvert.DeserializeObject<ScreenTemplateElement>(response);
             return element;
         }
         #endregion
 
         #region Playlist controller methods
+
         /// <summary>
         /// Get async request to /api/playlist – get all playlists from database
         /// </summary>
@@ -159,7 +162,7 @@ namespace Six_Screens_Controller
         public static async Task<List<Playlist>> GetRequestPlaylistAsync()
         {
             string url = GetUrl("playlist");
-            string response = await client.GetStringAsync(url);
+            string response = await Client.GetStringAsync(url);
             List<Playlist> playlists = JsonConvert.DeserializeObject<List<Playlist>>(response);
             return playlists;
         }
@@ -172,7 +175,7 @@ namespace Six_Screens_Controller
         public static async Task<Playlist> GetRequestPlaylistAsync(int id)
         {
             string url = GetUrl($"playlist/{id}");
-            string response = await client.GetStringAsync(url);
+            string response = await Client.GetStringAsync(url);
             Playlist playlist = JsonConvert.DeserializeObject<Playlist>(response);
             return playlist;
         }
@@ -204,7 +207,7 @@ namespace Six_Screens_Controller
         public static async void PostRequestPlaylistAsync(Playlist playlist)
         {
             string url = GetUrl("playlist");
-            HttpResponseMessage response = await client.PostAsJsonAsync(url, playlist);
+            HttpResponseMessage response = await Client.PostAsJsonAsync(url, playlist);
             response.EnsureSuccessStatusCode();
         }
 
@@ -239,7 +242,7 @@ namespace Six_Screens_Controller
         public static async void DeleteRequestPlaylistAsync(int id)
         {
             string url = GetUrl($"playlist/{id}");
-            HttpResponseMessage response = await client.DeleteAsync(url);
+            HttpResponseMessage response = await Client.DeleteAsync(url);
             response.EnsureSuccessStatusCode();
         }
 
@@ -269,6 +272,7 @@ namespace Six_Screens_Controller
         #endregion
 
         #region ScreenTemplates controller methods
+
         /// <summary>
         /// Get request to /api/screentemplates – get all <see cref="ScreenTemplate"/> from database
         /// </summary>
@@ -276,7 +280,7 @@ namespace Six_Screens_Controller
         public static async Task<List<ScreenTemplate>> GetRequestScreenTemplatesAsync()
         {
             string url = GetUrl("screentemplates");
-            string response = await client.GetStringAsync(url);
+            string response = await Client.GetStringAsync(url);
 
             List<ScreenTemplate> screenTemplates = JsonConvert.DeserializeObject<List<ScreenTemplate>>(response);
             return screenTemplates;
@@ -290,7 +294,7 @@ namespace Six_Screens_Controller
         public static async Task<ScreenTemplate> GetRequestScreenTemplatesAsync(int id)
         {
             string url = GetUrl($"screentemplates/{id}");
-            string response = await client.GetStringAsync(url);
+            string response = await Client.GetStringAsync(url);
 
             ScreenTemplate screenTemplates = JsonConvert.DeserializeObject<ScreenTemplate>(response);
             return screenTemplates;
@@ -303,7 +307,7 @@ namespace Six_Screens_Controller
         public static async void PostRequestScreenTemplatesAsync(ScreenTemplate screenTemplate)
         {
             string url = GetUrl("screentemplates");
-            HttpResponseMessage response = await client.PostAsJsonAsync(url, screenTemplate);
+            HttpResponseMessage response = await Client.PostAsJsonAsync(url, screenTemplate);
             response.EnsureSuccessStatusCode();
         }
 
@@ -338,7 +342,7 @@ namespace Six_Screens_Controller
         public static async void DeleteRequestScreenTemplatesAsync(int id)
         {
             string url = GetUrl($"screentemplates/{id}");
-            HttpResponseMessage response = await client.DeleteAsync(url);
+            HttpResponseMessage response = await Client.DeleteAsync(url);
             response.EnsureSuccessStatusCode();
         }
 
@@ -374,12 +378,13 @@ namespace Six_Screens_Controller
         public static async void PutRequestScreenTemplatesAsync(int id, ScreenTemplate screenTemplate)
         {
             string url = GetUrl($"screentemplates/{id}");
-            HttpResponseMessage response = await client.PutAsJsonAsync(url, screenTemplate);
+            HttpResponseMessage response = await Client.PutAsJsonAsync(url, screenTemplate);
             response.EnsureSuccessStatusCode();
         }
         #endregion
 
         #region Other request
+
         /// <summary>
         /// Request to /refresh – refresh screen
         /// </summary>
@@ -387,7 +392,7 @@ namespace Six_Screens_Controller
         public static async void RefreshRequestAsync(int screenNumber = 0)
         {
             HubConnection HubConnection = new HubConnectionBuilder()
-            .WithUrl($"{config.Protocol}://{config.Host}:{config.Port}/refresh")
+            .WithUrl($"{Config.Protocol}://{Config.Host}:{Config.Port}/refresh")
             .Build();
             HubConnection.On<int>("Refresh", screenNumber => Console.WriteLine(screenNumber));
             await HubConnection.StartAsync();
@@ -399,7 +404,7 @@ namespace Six_Screens_Controller
         {
             Background background = new Background { Path = backgroundPath };
             string url = GetUrl($"background/{screenNumber}");
-            HttpResponseMessage response = await client.PostAsJsonAsync(url, background);
+            HttpResponseMessage response = await Client.PostAsJsonAsync(url, background);
             response.EnsureSuccessStatusCode();
         }
 

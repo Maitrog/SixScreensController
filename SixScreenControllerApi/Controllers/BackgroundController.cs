@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR.Client;
-using Microsoft.Extensions.Caching.Memory;
-using SixScreenControllerApi.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.Caching.Memory;
+using SixScreenControllerApi.Models;
 
 namespace SixScreenControllerApi.Controllers
 {
@@ -54,6 +54,7 @@ namespace SixScreenControllerApi.Controllers
             {
                 return PhysicalFile(path, "image/jpeg", enableRangeProcessing: true);
             }
+
             return BadRequest();
         }
 
@@ -78,6 +79,7 @@ namespace SixScreenControllerApi.Controllers
             {
                 Post(i, backgrounds[i - 1]);
             }
+
             return Ok();
         }
 

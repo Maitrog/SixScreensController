@@ -207,7 +207,7 @@ namespace Six_Screens_Controller
                     }
                     await Task.Delay(3000);
                     _screensPage.SetOnline(_screenOnlineStatuses);
-                    for (   int i = 0; i < 6; i++)
+                    for (int i = 0; i < 6; i++)
                     {
                         _screenOnlineStatuses[i] = false;
                     }

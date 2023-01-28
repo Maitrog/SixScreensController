@@ -161,12 +161,12 @@ namespace Six_Screens_Controller.Views
                     if (!string.IsNullOrEmpty(CurrentScreenTemplate.ScreenTemplateElements[i].Path))
                     {
                         string exp = CurrentScreenTemplate.ScreenTemplateElements[i].Path.Split("\\").LastOrDefault().Split('.').LastOrDefault();
-                        if (Utils.imageExp.Contains(exp))
+                        if (Utils.ImageExp.Contains(exp))
                         {
                             Image img = Utils.CreateImage(CurrentScreenTemplate.ScreenTemplateElements[i].Path);
                             (Elements.Children[i] as ListViewItem).Content = img;
                         }
-                        else if (Utils.videoExp.Contains(exp))
+                        else if (Utils.VideoExp.Contains(exp))
                         {
                             Canvas video = CreateVideoCanvas(i);
                             (Elements.Children[i] as ListViewItem).Content = video;
@@ -195,12 +195,12 @@ namespace Six_Screens_Controller.Views
             {
                 CurrentScreenTemplate.ScreenTemplateElements[screenNumber - 1] = element;
                 string exp = CurrentScreenTemplate.ScreenTemplateElements[screenNumber - 1].Path.Split("\\").LastOrDefault().Split('.').LastOrDefault();
-                if (Utils.imageExp.Contains(exp))
+                if (Utils.ImageExp.Contains(exp))
                 {
                     Image img = Utils.CreateImage(CurrentScreenTemplate.ScreenTemplateElements[screenNumber - 1].Path);
                     (Elements.Children[screenNumber - 1] as ListViewItem).Content = img;
                 }
-                else if (Utils.videoExp.Contains(exp))
+                else if (Utils.VideoExp.Contains(exp))
                 {
                     Canvas video = CreateVideoCanvas(screenNumber - 1);
                     (Elements.Children[screenNumber - 1] as ListViewItem).Content = video;

@@ -1,14 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using SixScreenControllerApi.Models;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
 
 namespace SixScreenControllerApi.Controllers
 {
@@ -165,7 +165,6 @@ namespace SixScreenControllerApi.Controllers
 
             if (!element.IsPlaylist)
             {
-
                 CurrentScreenTemplate.ScreenTemplateElements[screenNumber - 1] = element;
                 cache.Set("CurrentScreenTemplate", CurrentScreenTemplate);
 

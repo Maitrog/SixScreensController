@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SixScreenControllerApi.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace SixScreenControllerApi.Controllers
 {
@@ -10,7 +10,7 @@ namespace SixScreenControllerApi.Controllers
     [ApiController]
     public class PlaylistController : ControllerBase
     {
-        readonly SixScreenControllerContext db;
+        private readonly SixScreenControllerContext db;
 
         public PlaylistController(SixScreenControllerContext context)
         {

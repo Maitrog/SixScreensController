@@ -1,11 +1,11 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Newtonsoft.Json;
 using Six_Screens_Controller.Models;
 
 namespace Six_Screens_Controller
@@ -22,6 +22,7 @@ namespace Six_Screens_Controller
                 {
                     CreateConfigFile();
                 }
+
                 config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
 
                 if (!string.IsNullOrEmpty(config.Protocol) && !string.IsNullOrEmpty(config.Host) && !string.IsNullOrEmpty(config.Port))
