@@ -4,9 +4,9 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Six_Screens_Controller.Models
+namespace SixScreensController.Data.Presentation.Entities
 {
-    internal class PresentationInfo
+    public class PresentationInfo
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -22,7 +22,7 @@ namespace Six_Screens_Controller.Models
             using (SHA256 sha256 = SHA256.Create())
             {
                 string data = File.ReadAllText(path);
-                HashSum = GetHash(sha256, data);  
+                HashSum = GetHash(sha256, data);
             }
         }
 

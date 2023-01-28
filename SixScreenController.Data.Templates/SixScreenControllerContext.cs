@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SixScreenController.Data.Templates.Entities;
 
-namespace SixScreenControllerApi.Models
+namespace SixScreenController.Data.Templates
 {
     /// <summary>
     /// Database with paylists, playlist elements, screen templates, screen template elments

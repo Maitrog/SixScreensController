@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SixScreenControllerApi.Models;
+using SixScreenController.Data.Templates;
+using SixScreenController.Data.Templates.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

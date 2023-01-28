@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using Six_Screens_Controller.Models;
+using Newtonsoft.Json;
+using SixScreenController.Data.Templates.Entities;
 
 namespace Six_Screens_Controller
 {
@@ -16,7 +16,7 @@ namespace Six_Screens_Controller
         public ScreenTemplate ScreenTemplate { get; private set; }
 
         /// <summary>
-        /// Initialize a new instance of the <see cref = "AddTemplateWindow"/> class
+        /// Initializes a new instance of the <see cref = "AddTemplateWindow"/> class
         /// </summary>
         public AddTemplateWindow()
         {

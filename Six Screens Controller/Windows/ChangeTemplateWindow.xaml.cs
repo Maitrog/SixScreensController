@@ -1,9 +1,8 @@
-﻿using Newtonsoft.Json;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using Six_Screens_Controller.Models;
+using Newtonsoft.Json;
 using Six_Screens_Controller.Comparators;
-
+using SixScreenController.Data.Templates.Entities;
 
 namespace Six_Screens_Controller
 {
@@ -18,12 +17,12 @@ namespace Six_Screens_Controller
             ScreenTemplate.ScreenTemplateElements.Sort(new ScreenTemplateElementCopm());
 
             title.Text = screenTemplate.Title;
-            for(int i = 4; i < StackPanel.Children.Count; i+=2)
+            for (int i = 4; i < StackPanel.Children.Count; i += 2)
             {
                 if (screenTemplate.ScreenTemplateElements[(i - 4) / 2].IsPlaylist)
                 {
                     (StackPanel.Children[i] as ScreenTemplateElementControl).IsPlaylistScreen.IsChecked = true;
-                    dynamic tmp =  JsonConvert.DeserializeObject(screenTemplate.ScreenTemplateElements[(i - 4) / 2].Path);
+                    dynamic tmp = JsonConvert.DeserializeObject(screenTemplate.ScreenTemplateElements[(i - 4) / 2].Path);
                     (StackPanel.Children[i] as ScreenTemplateElementControl).ElementDefaultId = tmp.Id;
                 }
                 else

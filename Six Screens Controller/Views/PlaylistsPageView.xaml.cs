@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using Six_Screens_Controller.Models;
+using Newtonsoft.Json;
+using SixScreenController.Data.Templates.Entities;
 
 namespace Six_Screens_Controller.Views
 {
@@ -12,12 +12,12 @@ namespace Six_Screens_Controller.Views
     public partial class PlaylistsPageView : UserControl
     {
         /// <summary>
-        /// Selected playlist
+        /// Gets or sets selected playlist
         /// </summary>
         public ScreenTemplateElement Playlist { get; set; } = new ScreenTemplateElement();
 
         /// <summary>
-        /// Initialize a new instance of the <see cref = "PlaylistsPageView"/> class
+        /// Initializes a new instance of the <see cref = "PlaylistsPageView"/> class.
         /// </summary>
         public PlaylistsPageView()
         {

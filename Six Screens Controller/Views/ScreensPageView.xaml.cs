@@ -1,5 +1,4 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -8,9 +7,10 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using Six_Screens_Controller.Models;
-using Six_Screens_Controller.Converters;
 using System.Windows.Shapes;
+using Microsoft.Win32;
+using Six_Screens_Controller.Converters;
+using SixScreenController.Data.Templates.Entities;
 
 namespace Six_Screens_Controller.Views
 {
@@ -23,7 +23,7 @@ namespace Six_Screens_Controller.Views
         private int clickedScreenNumber;
 
         /// <summary>
-        /// Initialize a new instance of the <see cref = "ScreensPageView"/> class with the specified <see cref="ScreenTemplate"/>
+        /// Initializes a new instance of the <see cref = "ScreensPageView"/> class with the specified <see cref="ScreenTemplate"/>
         /// </summary>
         /// <param name="screenTemplate"></param>
         public ScreensPageView(ScreenTemplate screenTemplate)
@@ -66,7 +66,9 @@ namespace Six_Screens_Controller.Views
                 {
                     (Elements.Children[i] as ListViewItem).IsSelected = false;
                 }
-            } (sender as ListViewItem).IsSelected = !(sender as ListViewItem).IsSelected;
+            }
+
+            (sender as ListViewItem).IsSelected = !(sender as ListViewItem).IsSelected;
         }
 
         private void File_Drop(object sender, DragEventArgs e)

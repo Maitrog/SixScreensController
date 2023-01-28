@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
 using Six_Screens_Controller.Models;
+using SixScreenController.Data.Templates.Entities;
 
 namespace Six_Screens_Controller
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using Six_Screens_Controller.Models;
+using SixScreenController.Data.Templates.Entities;
 
 namespace Six_Screens_Controller.Views
 {
@@ -11,12 +11,12 @@ namespace Six_Screens_Controller.Views
     public partial class TemplatesPageView : UserControl
     {
         /// <summary>
-        /// Selected template
+        /// Gets or sets selected template
         /// </summary>
         public ScreenTemplate ScreenTemplate { get; set; }
 
         /// <summary>
-        /// Initialize a new instance of the <see cref = "TemplatesPageView"/> class
+        /// Initializes a new instance of the <see cref = "TemplatesPageView"/> class.
         /// </summary>
         public TemplatesPageView()
         {

@@ -11,10 +11,7 @@ namespace Six_Screens_Controller.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value != null)
-                return !(bool)value;
-
-            return value;
+            return value != null ? !(bool)value : value;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -1,12 +1,12 @@
-﻿using NetOffice.PowerPointApi;
-using Newtonsoft.Json;
-using Six_Screens_Controller.Models;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using NetOffice.PowerPointApi;
+using SixScreensController.Data.Presentation;
+using SixScreensController.Data.Presentation.Entities;
+using SixScreenController.Data.Templates.Entities;
 
 namespace Six_Screens_Controller.Views
 {
@@ -18,7 +18,7 @@ namespace Six_Screens_Controller.Views
         private string _currentPresentation;
         private int _currentSlide;
 
-        static private readonly string _presentationsFolderPath = $"{Directory.GetCurrentDirectory()}\\Presentations";
+        private static readonly string _presentationsFolderPath = $"{Directory.GetCurrentDirectory()}\\Presentations";
         public PresentationPageView()
         {
             InitializeComponent();

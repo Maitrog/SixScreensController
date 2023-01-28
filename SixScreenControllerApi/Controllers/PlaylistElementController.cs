@@ -2,7 +2,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SixScreenControllerApi.Models;
+using SixScreenController.Data.Templates;
+using SixScreenController.Data.Templates.Entities;
 
 namespace SixScreenControllerApi.Controllers
 {

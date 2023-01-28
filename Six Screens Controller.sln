@@ -1,11 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31112.23
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Six Screens Controller", "Six Screens Controller\Six Screens Controller.csproj", "{B3907A60-EBF3-4DC2-97F7-D434988D9105}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SixScreenControllerApi", "SixScreenControllerApi\SixScreenControllerApi.csproj", "{F163D846-3C97-4223-8062-1A52A3F28FFB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SixScreenControllerApi", "SixScreenControllerApi\SixScreenControllerApi.csproj", "{F163D846-3C97-4223-8062-1A52A3F28FFB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SixScreenController.Data.Presentation", "SixScreenController.Data.Presentation\SixScreenController.Data.Presentation.csproj", "{7F84DAD0-6C61-4408-A8E9-E699A5FB6F46}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{F7EC9035-6C18-469A-8157-F1CC450E9896}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SixScreenController.Data.Templates", "SixScreenController.Data.Templates\SixScreenController.Data.Templates.csproj", "{26FE2E90-CBF2-4ADF-B455-04E4CF7FF445}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,9 +37,29 @@ Global
 		{F163D846-3C97-4223-8062-1A52A3F28FFB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F163D846-3C97-4223-8062-1A52A3F28FFB}.Release|x86.ActiveCfg = Release|Any CPU
 		{F163D846-3C97-4223-8062-1A52A3F28FFB}.Release|x86.Build.0 = Release|Any CPU
+		{7F84DAD0-6C61-4408-A8E9-E699A5FB6F46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F84DAD0-6C61-4408-A8E9-E699A5FB6F46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F84DAD0-6C61-4408-A8E9-E699A5FB6F46}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7F84DAD0-6C61-4408-A8E9-E699A5FB6F46}.Debug|x86.Build.0 = Debug|Any CPU
+		{7F84DAD0-6C61-4408-A8E9-E699A5FB6F46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F84DAD0-6C61-4408-A8E9-E699A5FB6F46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F84DAD0-6C61-4408-A8E9-E699A5FB6F46}.Release|x86.ActiveCfg = Release|Any CPU
+		{7F84DAD0-6C61-4408-A8E9-E699A5FB6F46}.Release|x86.Build.0 = Release|Any CPU
+		{26FE2E90-CBF2-4ADF-B455-04E4CF7FF445}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26FE2E90-CBF2-4ADF-B455-04E4CF7FF445}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26FE2E90-CBF2-4ADF-B455-04E4CF7FF445}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{26FE2E90-CBF2-4ADF-B455-04E4CF7FF445}.Debug|x86.Build.0 = Debug|Any CPU
+		{26FE2E90-CBF2-4ADF-B455-04E4CF7FF445}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26FE2E90-CBF2-4ADF-B455-04E4CF7FF445}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26FE2E90-CBF2-4ADF-B455-04E4CF7FF445}.Release|x86.ActiveCfg = Release|Any CPU
+		{26FE2E90-CBF2-4ADF-B455-04E4CF7FF445}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7F84DAD0-6C61-4408-A8E9-E699A5FB6F46} = {F7EC9035-6C18-469A-8157-F1CC450E9896}
+		{26FE2E90-CBF2-4ADF-B455-04E4CF7FF445} = {F7EC9035-6C18-469A-8157-F1CC450E9896}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D4457C2C-0FCB-4142-9BA9-30EDC450730F}

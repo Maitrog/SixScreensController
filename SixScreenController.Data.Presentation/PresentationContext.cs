@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SixScreensController.Data.Presentation.Entities;
 
-namespace Six_Screens_Controller.Models
+namespace SixScreensController.Data.Presentation
 {
-    internal class PresentationContext: DbContext
+    public class PresentationContext : DbContext
     {
         public DbSet<PresentationInfo> Presentations { get; set; }
 

@@ -1,8 +1,7 @@
-﻿using Microsoft.Win32;
-using Microsoft.WindowsAPICodePack.Dialogs;
-using Newtonsoft.Json;
-using System.IO;
+﻿using System.IO;
 using System.Windows;
+using Microsoft.Win32;
+using Newtonsoft.Json;
 using Six_Screens_Controller.Models;
 
 namespace Six_Screens_Controller
@@ -18,8 +17,9 @@ namespace Six_Screens_Controller
         public Config config;
 
         private const string _filter = "Image (*.bmp;*.jpg;*.jpeg;*.png;*.webp)|*.bmp;*.jpg;*.jpeg;*.png;*.webp";
+        
         /// <summary>
-        /// Initialize a new instance of the <see cref = "SettingsWindow"/> class
+        /// Initializes a new instance of the <see cref = "SettingsWindow"/> class.
         /// </summary>
         public SettingsWindow()
         {

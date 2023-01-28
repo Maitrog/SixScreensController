@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Caching.Memory;
-using SixScreenControllerApi.Models;
+using SixScreenController.Data.Templates.Entities;
 
 namespace SixScreenControllerApi.Controllers
 {

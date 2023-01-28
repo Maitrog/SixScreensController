@@ -1,16 +1,15 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
-using Newtonsoft.Json;
-using Six_Screens_Controller.Views;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Microsoft.AspNetCore.SignalR.Client;
+using Newtonsoft.Json;
 using Six_Screens_Controller.Models;
-using System.Threading.Tasks;
-using System.Threading;
+using Six_Screens_Controller.Views;
+using SixScreenController.Data.Templates.Entities;
 
 namespace Six_Screens_Controller
 {

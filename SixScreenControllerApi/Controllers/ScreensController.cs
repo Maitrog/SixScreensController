@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
-using SixScreenControllerApi.Models;
+using SixScreenController.Data.Templates.Entities;
 
 namespace SixScreenControllerApi.Controllers
 {

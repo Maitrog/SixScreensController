@@ -1,13 +1,12 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using Six_Screens_Controller.Models;
+using Microsoft.Win32;
 using Six_Screens_Controller.Converters;
-
+using SixScreenController.Data.Templates.Entities;
 
 //TODO: исправить добавление одинаковых элементов
 namespace Six_Screens_Controller
@@ -21,13 +20,14 @@ namespace Six_Screens_Controller
         /// <see cref="PlaylistElement"/>s for adding to <see cref="Playlist"/>
         /// </summary>
         public ObservableCollection<PlaylistElement> elements = new ObservableCollection<PlaylistElement>();
+
         /// <summary>
         /// Playlist title
         /// </summary>
         public string PlaylistTitle { get; set; }
 
         /// <summary>
-        /// Initialize a new instance of the <see cref = "AddPlaylistWindow"/> class
+        /// Initializes a new instance of the <see cref="AddPlaylistWindow"/> class.
         /// </summary>
         public AddPlaylistWindow()
         {
@@ -50,9 +50,9 @@ namespace Six_Screens_Controller
 
         private void addElement_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog 
-            { 
-                Multiselect = true 
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Multiselect = true
             };
 
             if (openFileDialog.ShowDialog() == true)
@@ -76,7 +76,7 @@ namespace Six_Screens_Controller
                         video.MediaOpened += new System.Windows.RoutedEventHandler(Media_MediaOpened);
 
                         video.Play();
-                        while (!video.NaturalDuration.HasTimeSpan) { }  //NaturalDuration is equal to Automatic without this line
+                        while (!video.NaturalDuration.HasTimeSpan) { } // NaturalDuration is equal to Automatic without this line
                         double dur = video.NaturalDuration.TimeSpan.TotalSeconds;
                         video.Close();
 
@@ -91,8 +91,12 @@ namespace Six_Screens_Controller
         {
             int size = elemetsList.SelectedCells.Count;
             if (size > 0)
+            {
                 for (int i = 0; i < size; size -= 2)
+                {
                     elements.Remove(elemetsList.SelectedCells[i].Item as PlaylistElement);
+                }
+            }
         }
 
         private void Ok_Click(object sender, RoutedEventArgs e)

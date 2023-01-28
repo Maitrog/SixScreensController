@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SixScreenControllerApi.Models
+namespace SixScreenController.Data.Templates.Entities
 {
     /// <summary>
     /// Represents playlist 
