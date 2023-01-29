@@ -1,15 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Xml.Linq;
 using Microsoft.Win32;
 using Six_Screens_Controller.Converters;
+using SixScreenController.Data.History;
+using SixScreenController.Data.History.Entities;
 using SixScreenController.Data.Templates.Entities;
 
 namespace Six_Screens_Controller.Views
@@ -37,6 +42,7 @@ namespace Six_Screens_Controller.Views
                     screenTemplate.ScreenTemplateElements[i].Path = defFile;
                 }
             }
+
             InitializeComponent();
             Loaded += ScreensPageView_Loaded;
             try
@@ -47,6 +53,7 @@ namespace Six_Screens_Controller.Views
             {
                 MessageBox.Show(e.Message);
             }
+
             SetScreenTemplate(screenTemplate);
         }
 
@@ -71,7 +78,7 @@ namespace Six_Screens_Controller.Views
             (sender as ListViewItem).IsSelected = !(sender as ListViewItem).IsSelected;
         }
 
-        private void File_Drop(object sender, DragEventArgs e)
+        private async void File_Drop(object sender, DragEventArgs e)
         {
             try
             {
@@ -153,7 +160,7 @@ namespace Six_Screens_Controller.Views
         /// Sets the value of the <see cref="ScreenTemplate"/>
         /// </summary>
         /// <param name="screenTemplate">The element to set</param>
-        public void SetScreenTemplate(ScreenTemplate screenTemplate)
+        public async void SetScreenTemplate(ScreenTemplate screenTemplate)
         {
             CurrentScreenTemplate = screenTemplate;
             try
@@ -178,8 +185,10 @@ namespace Six_Screens_Controller.Views
                             MediaElement video = Utils.CreateVideo(CurrentScreenTemplate.ScreenTemplateElements[i].Path);
                             (Elements.Children[i] as ListViewItem).Content = video;
                         }
+
                     }
                 }
+                await UpdateHistory(screenTemplate.ScreenTemplateElements.FirstOrDefault());
             }
             catch (Exception ex)
             {
@@ -191,12 +200,16 @@ namespace Six_Screens_Controller.Views
         /// </summary>
         /// <param name="screenNumber">Screen number</param>
         /// <param name="element">The element to set</param>
-        public void SetScreenTemplateElement(int screenNumber, ScreenTemplateElement element)
+        public async void SetScreenTemplateElement(int screenNumber, ScreenTemplateElement element)
         {
             if (element != null && element.Path != null)
             {
                 CurrentScreenTemplate.ScreenTemplateElements[screenNumber - 1] = element;
-                string exp = CurrentScreenTemplate.ScreenTemplateElements[screenNumber - 1].Path.Split("\\").LastOrDefault().Split('.').LastOrDefault();
+                string exp = CurrentScreenTemplate.ScreenTemplateElements[screenNumber - 1].Path
+                    .Split("\\")
+                    .LastOrDefault()
+                    .Split('.')
+                    .LastOrDefault();
                 if (Utils.ImageExp.Contains(exp))
                 {
                     Image img = Utils.CreateImage(CurrentScreenTemplate.ScreenTemplateElements[screenNumber - 1].Path);
@@ -212,6 +225,8 @@ namespace Six_Screens_Controller.Views
                     MediaElement video = Utils.CreateVideo(CurrentScreenTemplate.ScreenTemplateElements[screenNumber - 1].Path);
                     (Elements.Children[screenNumber - 1] as ListViewItem).Content = video;
                 }
+
+                await UpdateHistory(element);
             }
         }
 
@@ -225,7 +240,7 @@ namespace Six_Screens_Controller.Views
 
                     Application.Current.Dispatcher.Invoke(() =>
                     {
-                        Ellipse ellipse = (onlineStatusesGrid.Children[i]) as Ellipse;
+                        Ellipse ellipse = onlineStatusesGrid.Children[i] as Ellipse;
                         if (item)
                         {
                             ellipse.Fill = new SolidColorBrush(Colors.Green);
@@ -248,10 +263,14 @@ namespace Six_Screens_Controller.Views
             VideoDrawing videoDrawing = Utils.CreateVideoDrawing(CurrentScreenTemplate.ScreenTemplateElements[screenNumber].Path);
             DrawingBrush brush = new DrawingBrush(videoDrawing);
 
-            Binding bindingHeight = new Binding("ActualHeight");
-            bindingHeight.Source = (Elements.Children[screenNumber] as ListViewItem);
-            Binding bindingWidth = new Binding("ActualWidth");
-            bindingWidth.Source = (Elements.Children[screenNumber] as ListViewItem);
+            Binding bindingHeight = new Binding("ActualHeight")
+            {
+                Source = Elements.Children[screenNumber] as ListViewItem
+            };
+            Binding bindingWidth = new Binding("ActualWidth")
+            {
+                Source = Elements.Children[screenNumber] as ListViewItem
+            };
 
             Size videoSize = Utils.GetVideoSize(CurrentScreenTemplate.ScreenTemplateElements[screenNumber].Path);
 
@@ -298,6 +317,39 @@ namespace Six_Screens_Controller.Views
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private async Task UpdateHistory(ScreenTemplateElement element)
+        {
+            using HistoryDbContext historyContext = new HistoryDbContext();
+            await historyContext.History.AddAsync(new History
+            {
+                Id = Guid.NewGuid(),
+                Changed = DateTime.Now,
+                ScreenTemplate = new ScreenTemplate
+                {
+                    ScreenTemplateElements = GetCopy(CurrentScreenTemplate),
+                    Title = element.Path
+                }
+            });
+
+            await historyContext.SaveChangesAsync();
+        }
+
+        private List<ScreenTemplateElement> GetCopy(ScreenTemplate screenTemplate)
+        {
+            List<ScreenTemplateElement> screenTemplateElements = new List<ScreenTemplateElement>();
+            foreach (var item in screenTemplate.ScreenTemplateElements)
+            {
+                screenTemplateElements.Add(new ScreenTemplateElement
+                {
+                    IsPlaylist = item.IsPlaylist,
+                    Path = item.Path,
+                    ScreenNumber = item.ScreenNumber
+                });
+            }
+
+            return screenTemplateElements;
         }
     }
 }
