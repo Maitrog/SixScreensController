@@ -44,6 +44,7 @@
                     <RowDefinition Height="12.5*" MaxHeight="80"/>
                     <RowDefinition Height="12.5*" MaxHeight="80"/>
                     <RowDefinition Height="12.5*" MaxHeight="80"/>
+                    <RowDefinition Height="12.5*" MaxHeight="80"/>
                     <RowDefinition Height="31.5*"/>
                 </Grid.RowDefinitions>
 
@@ -80,7 +81,7 @@
                             <ColumnDefinition Width="2*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Image Source="assets/TemplateIcon50x50.png" HorizontalAlignment="Left" 
+                        <Image Source="assets/Pic50x50.png" HorizontalAlignment="Left" 
                            Grid.Column="0" Margin="15,0,0,0" Width="30"/>
                         <TextBlock Text="презентации" Grid.Column="1" VerticalAlignment="Center" 
                                Margin="5,0,0,0" Foreground="#595959" FontSize="16"
@@ -128,8 +129,28 @@
                     </Grid>
                 </Button>
 
+                <Button Grid.Row="6" x:Name="HistoryButton" HorizontalAlignment="Stretch" 
+                    Click="HistoryButton_Click"
+                    Height="{Binding ElementName=LeftMenu, Path=Width}"
+                    BorderThickness="0" Background="White">
 
-                <StackPanel Grid.Row="6" VerticalAlignment="Bottom" HorizontalAlignment="Center"
+                    <Grid Width="{Binding ElementName=PlaylistButton, Path=ActualWidth}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Image Source="assets/History50x50.png" Width="30"
+                           HorizontalAlignment="Left"
+                           Grid.Column="0" Margin="15,0,0,0"/>
+                        <TextBlock Text="история" Grid.Column="1" VerticalAlignment="Center" 
+                               Margin="5,0,0,0" Foreground="#595959" FontSize="16"
+                               FontFamily="Rounded Mplus" FontWeight="SemiBold"/>
+                    </Grid>
+                </Button>
+
+
+                <StackPanel Grid.Row="7" VerticalAlignment="Bottom" HorizontalAlignment="Center"
                         Margin="0,0,0,10">
                     <TextBlock Text="МИЭТ" HorizontalAlignment="Center" Foreground="#B9B9B9" FontSize="17"
                                FontFamily="Rounded Mplus" FontWeight="SemiBold"/>

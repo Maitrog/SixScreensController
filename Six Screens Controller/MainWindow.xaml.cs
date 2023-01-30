@@ -57,7 +57,7 @@ namespace Six_Screens_Controller
             if (screenNumber == 0)
             {
                 ScreenTemplate screenTemplate = await Utils.GetRequestScreensAsync();
-                _screensPage.SetScreenTemplate(screenTemplate);
+                _screensPage.SetScreenTemplate(screenTemplate, true);
             }
             else
             {
@@ -88,6 +88,18 @@ namespace Six_Screens_Controller
                 MainGrid.Children.RemoveAt(2);
                 MainGrid.Children.Insert(2, playlistsPageControl);
                 ChangeButtonColor(4);
+            }
+        }
+
+        private void HistoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!(MainGrid.Children[2] is HistoryPageView))
+            {
+                HistoryPageView historyPageView = new HistoryPageView();
+                Grid.SetColumn(historyPageView, 2);
+                MainGrid.Children.RemoveAt(2);
+                MainGrid.Children.Insert(2, historyPageView);
+                ChangeButtonColor(5);
             }
         }
 
@@ -173,7 +185,7 @@ namespace Six_Screens_Controller
         {
             ((MainGrid.Children[0] as Grid).Children[currentButton] as Button).Background = new SolidColorBrush(Color.FromRgb(197, 197, 197));
 
-            for (int i = 1; i < 5; i++)
+            for (int i = 1; i < 6; i++)
             {
                 if (i != currentButton)
                 {

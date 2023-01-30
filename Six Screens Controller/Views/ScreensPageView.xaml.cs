@@ -12,7 +12,9 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Xml.Linq;
 using Microsoft.Win32;
+using Newtonsoft.Json;
 using Six_Screens_Controller.Converters;
+using Six_Screens_Controller.Models;
 using SixScreenController.Data.History;
 using SixScreenController.Data.History.Entities;
 using SixScreenController.Data.Templates.Entities;
@@ -54,7 +56,7 @@ namespace Six_Screens_Controller.Views
                 MessageBox.Show(e.Message);
             }
 
-            SetScreenTemplate(screenTemplate);
+            SetScreenTemplate(screenTemplate, false);
         }
 
         private void ScreensPageView_Loaded(object sender, RoutedEventArgs e)
@@ -160,7 +162,7 @@ namespace Six_Screens_Controller.Views
         /// Sets the value of the <see cref="ScreenTemplate"/>
         /// </summary>
         /// <param name="screenTemplate">The element to set</param>
-        public async void SetScreenTemplate(ScreenTemplate screenTemplate)
+        public async void SetScreenTemplate(ScreenTemplate screenTemplate, bool saveHistory)
         {
             CurrentScreenTemplate = screenTemplate;
             try
@@ -188,7 +190,11 @@ namespace Six_Screens_Controller.Views
 
                     }
                 }
-                await UpdateHistory(screenTemplate.ScreenTemplateElements.FirstOrDefault());
+
+                if (saveHistory)
+                {
+                    await UpdateHistory(screenTemplate.ScreenTemplateElements.FirstOrDefault());
+                }
             }
             catch (Exception ex)
             {
@@ -226,7 +232,11 @@ namespace Six_Screens_Controller.Views
                     (Elements.Children[screenNumber - 1] as ListViewItem).Content = video;
                 }
 
-                await UpdateHistory(element);
+                // TODO : Вынести в конфиг
+                if (element.Path.Split("/")[^1] != "Default.jpg")
+                {
+                    await UpdateHistory(element);
+                }
             }
         }
 
