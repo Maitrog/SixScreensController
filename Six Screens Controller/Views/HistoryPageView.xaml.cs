@@ -1,20 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using Microsoft.EntityFrameworkCore;
 using SixScreenController.Data.History;
 using SixScreenController.Data.History.Entities;
 using SixScreenController.Data.Templates.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Six_Screens_Controller.Views
 {
@@ -34,7 +25,7 @@ namespace Six_Screens_Controller.Views
         private async void HistoryPage_Loaded(object sender, RoutedEventArgs e)
         {
             using HistoryDbContext historyContext = new HistoryDbContext();
-            historyList.ItemsSource = await historyContext.History.Include(x => x.ScreenTemplate)
+            historyList.ItemsSource = await historyContext.History.AsNoTracking().Include(x => x.ScreenTemplate)
                 .OrderByDescending(x => x.Changed).ToListAsync();
         }
 

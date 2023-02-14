@@ -11,7 +11,9 @@
   <ItemGroup>
     <None Remove="assets\AddIcon50x50.png" />
     <None Remove="assets\BrowseIcon50x50.png" />
+    <None Remove="assets\History50x50.png" />
     <None Remove="assets\Logo50x50.png" />
+    <None Remove="assets\Pic50x50.png" />
     <None Remove="assets\PickAllIcon50x50.png" />
     <None Remove="assets\PlaylistIcon50x50.png" />
     <None Remove="assets\RefreshIcon50x50.png" />
@@ -39,9 +41,9 @@
   <ItemGroup>
     <Resource Include="assets\AddIcon50x50.png" />
     <Resource Include="assets\BrowseIcon50x50.png" />
-    <Resource Include="assets\Logo50x50.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    <Resource Include="assets\History50x50.png" />
+    <Resource Include="assets\Logo50x50.png" />
+    <Resource Include="assets\Pic50x50.png" />
     <Resource Include="assets\PickAllIcon50x50.png" />
     <Resource Include="assets\PlaylistIcon50x50.png" />
     <Resource Include="assets\RefreshIcon50x50.png" />
