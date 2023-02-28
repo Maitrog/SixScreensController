@@ -1,15 +1,20 @@
 ﻿using System;
 using System.IO;
+using System.IO.Compression;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
 using System.Windows.Media;
 using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json;
 using Six_Screens_Controller.Models;
 using Six_Screens_Controller.Views;
 using SixScreenController.Data.Templates.Entities;
+using Button = System.Windows.Controls.Button;
+using MessageBox = System.Windows.MessageBox;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 namespace Six_Screens_Controller
 {
@@ -224,6 +229,67 @@ namespace Six_Screens_Controller
                     }
                 }
             });
+        }
+
+        private void ImportDB_Click(object sender, RoutedEventArgs e)
+        {
+            using SaveFileDialog sfd = new SaveFileDialog
+            {
+                Filter = "Zip (*.zip)|*.zip"
+            };
+
+            if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                var fileName = sfd.FileName;
+                if (fileName.Split('.')[^1].ToLower() != "zip")
+                {
+                    fileName += ".zip";
+                }
+
+                using var fs = File.Create(fileName);
+                using ZipArchive archive = new ZipArchive(fs, ZipArchiveMode.Update);
+                AddEntryToArchive(archive, "History.db");
+                AddEntryToArchive(archive, "Presentations.db");
+                AddEntryToArchive(archive, "VkScreenController.db");
+                AddDirectoryToArchive(archive, "Presentations");
+            }
+        }
+
+        private static void AddDirectoryToArchive(ZipArchive archive, string dirName)
+        {
+            if (Directory.Exists(dirName))
+            {
+                var files = Directory.GetFiles(dirName);
+                foreach (var file in files)
+                {
+                    AddEntryToArchive(archive, file);
+                }
+
+                var dirs = Directory.GetDirectories(dirName);
+                foreach (var dir in dirs)
+                {
+                    AddDirectoryToArchive(archive, dir);
+                }
+            }
+        }
+
+        private static void AddEntryToArchive(ZipArchive archive, string entryName)
+        {
+            ZipArchiveEntry readmeEntry = archive.CreateEntry(entryName);
+            using BinaryWriter writer = new BinaryWriter(readmeEntry.Open());
+            writer.Write(File.ReadAllBytes(entryName));
+        }
+
+        private void ExportDB_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "Zip (*.zip)|*.zip"
+            };
+
+            string fileName;
+            if (openFileDialog.ShowDialog() == true)
+                fileName = openFileDialog.FileName;
         }
     }
 }
