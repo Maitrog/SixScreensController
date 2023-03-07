@@ -5,6 +5,8 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Six_Screens_Controller.Models;
 
@@ -12,9 +14,31 @@ namespace Six_Screens_Controller
 {
     public partial class App : Application
     {
-        public Config config;
+        public Config Config { get; set; }
 
-        private void App_Startup(object sender, StartupEventArgs e)
+        public IServiceProvider ServiceProvider { get; private set; }
+        public IConfiguration Configuration { get; private set; }
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            BeforeStartup();
+
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
+            Configuration = builder.Build();
+
+            var serviceCollection = new ServiceCollection();
+            ConfigureServices(serviceCollection);
+
+            ServiceProvider = serviceCollection.BuildServiceProvider();
+
+            var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
+            mainWindow.Show();
+        }
+
+        private void BeforeStartup()
         {
             try
             {
@@ -23,11 +47,11 @@ namespace Six_Screens_Controller
                     CreateConfigFile();
                 }
 
-                config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
+                Config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
 
-                if (!string.IsNullOrEmpty(config.Protocol) && !string.IsNullOrEmpty(config.Host) && !string.IsNullOrEmpty(config.Port))
+                if (!string.IsNullOrEmpty(Config.Protocol) && !string.IsNullOrEmpty(Config.Host) && !string.IsNullOrEmpty(Config.Port))
                 {
-                    string[] args = { "--urls", $"{config.Protocol}://{config.Host}:{config.Port}" };
+                    string[] args = { "--urls", $"{Config.Protocol}://{Config.Host}:{Config.Port}" };
                     Task.Run(() =>
                     {
                         SixScreenControllerApi.Program.Main(args);
@@ -38,6 +62,11 @@ namespace Six_Screens_Controller
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void ConfigureServices(IServiceCollection services)
+        {
+            services.AddTransient<MainWindow>();
         }
 
         private static void CreateConfigFile()
