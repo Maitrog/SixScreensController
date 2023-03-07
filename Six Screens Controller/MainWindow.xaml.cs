@@ -287,9 +287,15 @@ namespace Six_Screens_Controller
                 Filter = "Zip (*.zip)|*.zip"
             };
 
-            string fileName;
+            string fileName = "";
             if (openFileDialog.ShowDialog() == true)
+            {
                 fileName = openFileDialog.FileName;
+            }
+
+            var fs = new FileStream(fileName, FileMode.Open);
+            using var archive = new ZipArchive(fs);
+            archive.ExtractToDirectory(Directory.GetCurrentDirectory(), true);
         }
     }
 }
