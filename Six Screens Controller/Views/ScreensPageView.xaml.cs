@@ -29,11 +29,18 @@ namespace Six_Screens_Controller.Views
         public ScreenTemplate CurrentScreenTemplate { get; set; } = new ScreenTemplate();
         private int clickedScreenNumber;
 
+        public ScreensPageView() {}
+
         /// <summary>
         /// Initializes a new instance of the <see cref = "ScreensPageView"/> class with the specified <see cref="ScreenTemplate"/>
         /// </summary>
         /// <param name="screenTemplate"></param>
         public ScreensPageView(ScreenTemplate screenTemplate)
+        {
+            Init(screenTemplate);
+        }
+
+        public void Init(ScreenTemplate screenTemplate)
         {
             if (string.IsNullOrEmpty(screenTemplate.ScreenTemplateElements[0].Path) || !File.Exists(screenTemplate.ScreenTemplateElements[0].Path))
             {

@@ -9,6 +9,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Six_Screens_Controller.Models;
+using Six_Screens_Controller.Views;
+using SixScreenController.Data.History;
+using SixScreenController.Data.Templates;
+using SixScreensController.Data.Presentation;
 
 namespace Six_Screens_Controller
 {
@@ -67,6 +71,21 @@ namespace Six_Screens_Controller
         private void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<MainWindow>();
+            services.AddTransient<AboutUsWindow>();
+            services.AddTransient<SettingsWindow>();
+            services.AddTransient<AddPlaylistWindow>();
+            services.AddTransient<AddTemplateWindow>();
+            services.AddTransient<ChangeTemplateWindow>();
+
+            services.AddTransient<HistoryPageView>();
+            services.AddTransient<PlaylistsPageView>();
+            services.AddSingleton<PresentationPageView>();
+            services.AddSingleton<ScreensPageView>();
+            services.AddTransient<TemplatesPageView>();
+
+            services.AddDbContext<HistoryDbContext>();
+            services.AddDbContext<PresentationContext>();
+            services.AddDbContext<SixScreenControllerContext>();
         }
 
         private static void CreateConfigFile()

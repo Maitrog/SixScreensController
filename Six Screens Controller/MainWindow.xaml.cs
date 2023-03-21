@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Media;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Six_Screens_Controller.Models;
 using Six_Screens_Controller.Views;
@@ -21,14 +22,20 @@ namespace Six_Screens_Controller
     public partial class MainWindow : Window
     {
         private static readonly Config _config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(@"config.json"));
-        private static HubConnection _hubConnection;
         private static readonly ScreenTemplate _screenTemplateNow = new ScreenTemplate(_config.DefaultImage);
-        private readonly ScreensPageView _screensPage = new ScreensPageView(_screenTemplateNow);
-        private readonly PresentationPageView _presentationPageControl = new PresentationPageView();
-        private readonly bool[] _screenOnlineStatuses = { false, false, false, false, false, false };
+        private static HubConnection _hubConnection;
 
-        public MainWindow()
+        private readonly ScreensPageView _screensPage;
+        private readonly PresentationPageView _presentationPageView;
+        private readonly bool[] _screenOnlineStatuses = { false, false, false, false, false, false };
+        private readonly IServiceProvider _services;
+
+        public MainWindow(IServiceProvider services, PresentationPageView presentationPageView, ScreensPageView screensPageView)
         {
+            _services = services;
+            _presentationPageView = presentationPageView;
+            _screensPage = screensPageView;
+            _screensPage.Init(_screenTemplateNow);
             try
             {
                 Grid.SetColumn(_screensPage, 2);
@@ -36,9 +43,9 @@ namespace Six_Screens_Controller
                 Loaded += MainWindow_Loaded;
                 MainGrid.Children.Insert(2, _screensPage);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -76,7 +83,7 @@ namespace Six_Screens_Controller
             if (!(MainGrid.Children[2] is TemplatesPageView))
             {
 
-                TemplatesPageView templatesPageControl = new TemplatesPageView();
+                TemplatesPageView templatesPageControl = _services.GetRequiredService<TemplatesPageView>();
                 Grid.SetColumn(templatesPageControl, 2);
                 MainGrid.Children.RemoveAt(2);
                 MainGrid.Children.Insert(2, templatesPageControl);
@@ -88,7 +95,7 @@ namespace Six_Screens_Controller
         {
             if (!(MainGrid.Children[2] is PlaylistsPageView))
             {
-                PlaylistsPageView playlistsPageControl = new PlaylistsPageView();
+                PlaylistsPageView playlistsPageControl = _services.GetRequiredService<PlaylistsPageView>();
                 Grid.SetColumn(playlistsPageControl, 2);
                 MainGrid.Children.RemoveAt(2);
                 MainGrid.Children.Insert(2, playlistsPageControl);
@@ -100,7 +107,7 @@ namespace Six_Screens_Controller
         {
             if (!(MainGrid.Children[2] is HistoryPageView))
             {
-                HistoryPageView historyPageView = new HistoryPageView();
+                HistoryPageView historyPageView = _services.GetService<HistoryPageView>();
                 Grid.SetColumn(historyPageView, 2);
                 MainGrid.Children.RemoveAt(2);
                 MainGrid.Children.Insert(2, historyPageView);
@@ -124,9 +131,9 @@ namespace Six_Screens_Controller
             {
                 if (!(MainGrid.Children[2] is PresentationPageView))
                 {
-                    Grid.SetColumn(_presentationPageControl, 2);
+                    Grid.SetColumn(_presentationPageView, 2);
                     MainGrid.Children.RemoveAt(2);
-                    MainGrid.Children.Insert(2, _presentationPageControl);
+                    MainGrid.Children.Insert(2, _presentationPageView);
 
                     ChangeButtonColor(2);
                 }
@@ -140,7 +147,7 @@ namespace Six_Screens_Controller
         private void Settings_Click(object sender, RoutedEventArgs e)
         {
             Config Config = JsonConvert.DeserializeObject<Config>(File.ReadAllText("config.json"));
-            SettingsWindow settingsWindow = new SettingsWindow();
+            SettingsWindow settingsWindow = _services.GetService<SettingsWindow>();
             if (settingsWindow.ShowDialog() == true)
             {
                 if (Config.Background_1 != settingsWindow.config.Background_1)
@@ -182,7 +189,7 @@ namespace Six_Screens_Controller
 
         private void AboutUs_Click(object sender, RoutedEventArgs e)
         {
-            AboutUsWindow aboutUs = new AboutUsWindow();
+            AboutUsWindow aboutUs = _services.GetService<AboutUsWindow>();
             aboutUs.ShowDialog();
         }
 
