@@ -34,7 +34,7 @@ namespace Six_Screens_Controller.Views
             using HistoryDbContext historyContext = new HistoryDbContext();
             ScreenTemplate = historyContext.History.Include(x => x.ScreenTemplate)
                                                    .Include(x => x.ScreenTemplate.ScreenTemplateElements)
-                                                   .FirstOrDefault(x => x.Id == (historyList.SelectedItem as History).Id).ScreenTemplate;
+                                                   .FirstOrDefault(x => x.Id == (historyList.SelectedItem as History).Id)?.ScreenTemplate;
 
             try
             {

@@ -87,7 +87,7 @@ namespace Six_Screens_Controller.Views
             (sender as ListViewItem).IsSelected = !(sender as ListViewItem).IsSelected;
         }
 
-        private async void File_Drop(object sender, DragEventArgs e)
+        private void File_Drop(object sender, DragEventArgs e)
         {
             try
             {
@@ -346,7 +346,7 @@ namespace Six_Screens_Controller.Views
                 ScreenTemplate = new ScreenTemplate
                 {
                     ScreenTemplateElements = GetCopy(CurrentScreenTemplate),
-                    Title = element.Path
+                    Title = element?.Path
                 }
             });
 
