@@ -6,6 +6,7 @@
     <RootNamespace>Six_Screens_Controller</RootNamespace>
     <UseWPF>true</UseWPF>
     <Platforms>AnyCPU;x86</Platforms>
+	<Version>3.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

@@ -13,6 +13,7 @@ namespace Six_Screens_Controller
         public AboutUsWindow()
         {
             InitializeComponent();
+            Version.Text = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
 
         private void Ok_Click(object sender, RoutedEventArgs e)
